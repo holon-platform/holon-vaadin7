@@ -26,10 +26,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.holonplatform.core.i18n.LocalizationContext;
+import com.holonplatform.core.internal.Logger;
 import com.holonplatform.core.internal.utils.ConversionUtils;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.property.Property;
@@ -41,6 +39,7 @@ import com.holonplatform.vaadin.components.ItemListing;
 import com.holonplatform.vaadin.components.Selectable;
 import com.holonplatform.vaadin.data.ItemDataSource;
 import com.holonplatform.vaadin.data.ItemDataSource.ItemSort;
+import com.holonplatform.vaadin.internal.VaadinLogger;
 import com.holonplatform.vaadin.internal.converters.FontIconPresentationConverter;
 import com.holonplatform.vaadin.internal.converters.PropertyPresentationConverter;
 import com.vaadin.data.Container;
@@ -94,7 +93,7 @@ public class DefaultItemListing<T, P> extends CustomComponent
 	/**
 	 * Logger
 	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(DefaultItemListing.class);
+	private static final Logger LOGGER = VaadinLogger.create();
 
 	/**
 	 * Listing rendering mode

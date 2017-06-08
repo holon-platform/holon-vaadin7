@@ -20,9 +20,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.holonplatform.core.internal.Logger;
+import com.holonplatform.core.internal.Logger.Level;
+import com.holonplatform.vaadin.internal.VaadinLogger;
 import com.holonplatform.vaadin.navigator.annotations.StatefulView;
 import com.holonplatform.vaadin.navigator.internal.ViewConfiguration.ViewConfigurationException;
 import com.holonplatform.vaadin.navigator.internal.ViewConfiguration.ViewConfigurationProvider;
@@ -56,7 +56,7 @@ public class DefaultViewProvider implements ViewProcessorProvider {
 
 	private static final long serialVersionUID = 875397403732197765L;
 
-	private final static Logger logger = LoggerFactory.getLogger(DefaultViewProvider.class);
+	private static final Logger LOGGER = VaadinLogger.create();
 
 	/*
 	 * View name - class map
@@ -118,9 +118,7 @@ public class DefaultViewProvider implements ViewProcessorProvider {
 			// register
 			views.put(viewName, viewClass);
 
-			if (logger.isDebugEnabled()) {
-				logger.debug("Registered view name " + viewName + " mapped to view class " + viewClass.getName());
-			}
+			LOGGER.debug(() -> "Registered view name " + viewName + " mapped to view class " + viewClass.getName());
 		}
 	}
 
@@ -130,9 +128,8 @@ public class DefaultViewProvider implements ViewProcessorProvider {
 	 */
 	@Override
 	public String getViewName(String viewAndParameters) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("Retreiving view name from [{}]", viewAndParameters);
-		}
+		LOGGER.debug(() -> "Retreiving view name from [" + viewAndParameters + "]");
+
 		String viewName = null;
 		if (isValidViewName(viewAndParameters)) {
 			viewName = viewAndParameters;
@@ -141,22 +138,22 @@ public class DefaultViewProvider implements ViewProcessorProvider {
 			String viewPart = viewAndParameters;
 			while ((lastSlash = viewPart.lastIndexOf('/')) > -1) {
 				viewPart = viewPart.substring(0, lastSlash);
-				if (logger.isDebugEnabled()) {
-					logger.debug("Checking if [{}] is a valid view", viewPart);
-				}
 				if (isValidViewName(viewPart)) {
 					viewName = viewPart;
 					break;
 				}
 			}
 		}
-		if (logger.isDebugEnabled()) {
-			if (viewName == null) {
-				logger.debug("Found no valid view name in [{}]", viewAndParameters);
+
+		if (LOGGER.isEnabled(Level.DEBUG)) {
+			final String vn = viewName;
+			if (vn == null) {
+				LOGGER.debug(() -> "Found no valid view name in [" + viewAndParameters + "]");
 			} else {
-				logger.debug("[{}] is a valid view name", viewName);
+				LOGGER.debug(() -> "[" + vn + "] is a valid view name");
 			}
 		}
+
 		return viewName;
 	}
 

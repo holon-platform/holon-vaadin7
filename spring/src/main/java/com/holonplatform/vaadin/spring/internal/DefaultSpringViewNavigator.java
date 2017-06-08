@@ -17,20 +17,20 @@ package com.holonplatform.vaadin.spring.internal;
 
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
+import com.holonplatform.core.internal.Logger;
+import com.holonplatform.vaadin.internal.VaadinLogger;
 import com.holonplatform.vaadin.navigator.ViewNavigator;
 import com.holonplatform.vaadin.navigator.internal.AbstractNavigatorBuilder;
 import com.holonplatform.vaadin.navigator.internal.ContainerViewDisplay;
 import com.holonplatform.vaadin.navigator.internal.NavigatorActuator;
 import com.holonplatform.vaadin.navigator.internal.SingleContainerViewDisplay;
 import com.holonplatform.vaadin.navigator.internal.ViewConfiguration;
-import com.holonplatform.vaadin.navigator.internal.ViewNavigatorAdapter;
 import com.holonplatform.vaadin.navigator.internal.ViewConfiguration.ViewConfigurationException;
 import com.holonplatform.vaadin.navigator.internal.ViewConfiguration.ViewWindowConfiguration;
+import com.holonplatform.vaadin.navigator.internal.ViewNavigatorAdapter;
 import com.holonplatform.vaadin.spring.AccessDeniedView;
 import com.holonplatform.vaadin.spring.DefaultView;
 import com.holonplatform.vaadin.spring.ErrorView;
@@ -60,7 +60,7 @@ public class DefaultSpringViewNavigator extends SpringNavigator implements ViewN
 
 	private static final long serialVersionUID = 8020818607275925064L;
 
-	private final static Logger LOGGER = LoggerFactory.getLogger(DefaultSpringViewNavigator.class);
+	private static final Logger LOGGER = VaadinLogger.create();
 
 	@Autowired(required = false)
 	private SpringViewProvider viewProvider;

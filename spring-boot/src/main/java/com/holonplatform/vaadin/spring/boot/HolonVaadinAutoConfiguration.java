@@ -15,8 +15,6 @@
  */
 package com.holonplatform.vaadin.spring.boot;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -24,6 +22,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Configuration;
 
+import com.holonplatform.core.internal.Logger;
+import com.holonplatform.vaadin.internal.VaadinLogger;
 import com.holonplatform.vaadin.spring.SpringViewNavigator;
 import com.holonplatform.vaadin.spring.config.EnableViewAuthorization;
 import com.holonplatform.vaadin.spring.config.EnableViewNavigator;
@@ -46,14 +46,14 @@ public class HolonVaadinAutoConfiguration {
 	/**
 	 * Logger
 	 */
-	private static Logger logger = LoggerFactory.getLogger(HolonVaadinAutoConfiguration.class);
+	private static final Logger LOGGER = VaadinLogger.create();
 
 	@Configuration
 	@EnableVaadin
 	static class EnableVaadinConfiguration implements InitializingBean {
 		@Override
 		public void afterPropertiesSet() throws Exception {
-			logger.debug("{} initialized", getClass().getName());
+			LOGGER.debug(() -> EnableVaadinConfiguration.class.getName() + " initialized");
 		}
 	}
 
@@ -65,7 +65,7 @@ public class HolonVaadinAutoConfiguration {
 	static class EnableViewNavigatorConfiguration implements InitializingBean {
 		@Override
 		public void afterPropertiesSet() throws Exception {
-			logger.debug("{} initialized", getClass().getName());
+			LOGGER.debug(() -> EnableViewNavigatorConfiguration.class.getName() + " initialized");
 		}
 	}
 

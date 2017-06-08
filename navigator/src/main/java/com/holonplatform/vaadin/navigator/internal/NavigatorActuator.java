@@ -24,17 +24,16 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Stack;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.holonplatform.auth.AuthContext;
 import com.holonplatform.auth.annotations.Authenticate;
 import com.holonplatform.auth.exceptions.AuthenticationException;
 import com.holonplatform.core.Context;
 import com.holonplatform.core.i18n.LocalizationContext;
+import com.holonplatform.core.internal.Logger;
 import com.holonplatform.core.internal.utils.AnnotationUtils;
 import com.holonplatform.core.utils.SizedStack;
 import com.holonplatform.vaadin.VaadinHttpRequest;
+import com.holonplatform.vaadin.internal.VaadinLogger;
 import com.holonplatform.vaadin.navigator.SubViewContainer;
 import com.holonplatform.vaadin.navigator.ViewNavigator;
 import com.holonplatform.vaadin.navigator.ViewNavigator.ViewNavigationException;
@@ -68,7 +67,7 @@ public class NavigatorActuator<N extends Navigator & ViewNavigatorAdapter> imple
 	/**
 	 * Logger
 	 */
-	private final static Logger logger = LoggerFactory.getLogger(DefaultViewNavigator.class);
+	private static final Logger LOGGER = VaadinLogger.create();
 
 	/**
 	 * Default navigation history limit
@@ -381,7 +380,7 @@ public class NavigatorActuator<N extends Navigator & ViewNavigatorAdapter> imple
 	public void navigateTo(View view, String viewName, String parameters) {
 		// check view display
 		if (getDefaultViewDisplay() == null) {
-			logger.warn("No ViewDisplay is bound to this Navigator! Check ViewNavigator init and setup.");
+			LOGGER.warn("No ViewDisplay is bound to this Navigator! Check ViewNavigator init and setup.");
 		}
 
 		// check sub-view
@@ -570,7 +569,7 @@ public class NavigatorActuator<N extends Navigator & ViewNavigatorAdapter> imple
 				if (configuration != null) {
 					ViewNavigationUtils.fireViewOnLeave(event.getOldView(), configuration, event);
 				} else {
-					logger.warn("Failed to obtain ViewConfiguration for view class " + event.getOldView().getClass()
+					LOGGER.warn("Failed to obtain ViewConfiguration for view class " + event.getOldView().getClass()
 							+ ": OnLeave methods firing skipped");
 				}
 			}
@@ -582,7 +581,7 @@ public class NavigatorActuator<N extends Navigator & ViewNavigatorAdapter> imple
 			if (configuration != null) {
 				ViewNavigationUtils.setViewParameters(event.getNewView(), configuration, event.getParameters(), null);
 			} else {
-				logger.warn("Failed to obtain ViewConfiguration for view class " + event.getNewView().getClass()
+				LOGGER.warn("Failed to obtain ViewConfiguration for view class " + event.getNewView().getClass()
 						+ ": View parameters setting skipped");
 			}
 
@@ -601,7 +600,7 @@ public class NavigatorActuator<N extends Navigator & ViewNavigatorAdapter> imple
 			if (configuration != null) {
 				ViewNavigationUtils.fireViewOnShow(event.getNewView(), configuration, event, false);
 			} else {
-				logger.warn("Failed to obtain ViewConfiguration for view class " + event.getOldView().getClass()
+				LOGGER.warn("Failed to obtain ViewConfiguration for view class " + event.getOldView().getClass()
 						+ ": OnShow methods firing skipped");
 			}
 		}

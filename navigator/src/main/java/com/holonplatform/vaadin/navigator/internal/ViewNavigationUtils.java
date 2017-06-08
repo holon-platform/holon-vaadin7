@@ -50,16 +50,16 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.holonplatform.auth.annotations.Authenticate;
 import com.holonplatform.core.Context;
 import com.holonplatform.core.i18n.Caption;
+import com.holonplatform.core.internal.Logger;
 import com.holonplatform.core.internal.utils.AnnotationUtils;
 import com.holonplatform.core.internal.utils.ConversionUtils;
 import com.holonplatform.core.internal.utils.TypeUtils;
 import com.holonplatform.core.temporal.TemporalType;
+import com.holonplatform.vaadin.internal.VaadinLogger;
 import com.holonplatform.vaadin.navigator.SubViewContainer;
 import com.holonplatform.vaadin.navigator.ViewContentProvider;
 import com.holonplatform.vaadin.navigator.ViewNavigator;
@@ -91,7 +91,7 @@ public final class ViewNavigationUtils implements Serializable {
 	/**
 	 * Logger
 	 */
-	private final static Logger logger = LoggerFactory.getLogger(ViewNavigationUtils.class);
+	private static final Logger LOGGER = VaadinLogger.create();
 
 	private static final ThreadLocal<DateFormat> DEFAULT_PARAM_DATE_FORMAT = new ThreadLocal<DateFormat>() {
 		@Override
@@ -1089,7 +1089,7 @@ public final class ViewNavigationUtils implements Serializable {
 					}
 				}
 			} else {
-				logger.warn("No ViewConfiguration available for view class " + view.getClass().getName()
+				LOGGER.warn("No ViewConfiguration available for view class " + view.getClass().getName()
 						+ ": Context informations injection skipped");
 			}
 		}
