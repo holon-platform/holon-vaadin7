@@ -1,6 +1,6 @@
 = Holon Vaadin UI
 :revnumber: {project-version}
-:apidir: ../../api/holon-vaadin
+:apidir: ../api/holon-vaadin
 :linkattrs:
 :sectnums:
 :nofooter:
