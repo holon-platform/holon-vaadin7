@@ -30,7 +30,7 @@ public interface ItemStore<ITEM> extends Serializable {
 	/**
 	 * Default items cache max size
 	 */
-	public static final int DEFAULT_MAX_CACHE_SIZE = 100;
+	public static final int DEFAULT_MAX_CACHE_SIZE = 1000;
 
 	/**
 	 * Listener for actions performed on store items
