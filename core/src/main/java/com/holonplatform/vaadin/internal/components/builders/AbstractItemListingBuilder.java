@@ -548,7 +548,7 @@ public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, 
 	public B withPostProcessor(ComponentPostProcessor<X> postProcessor) {
 		ObjectUtils.argumentNotNull(postProcessor, "ComponentPostProcessor must be not null");
 		postProcessors.add(postProcessor);
-		return null;
+		return builder();
 	}
 
 	/*
