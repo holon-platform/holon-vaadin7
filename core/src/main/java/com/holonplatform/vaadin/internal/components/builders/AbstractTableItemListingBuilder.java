@@ -22,6 +22,7 @@ import com.holonplatform.vaadin.internal.components.DefaultItemListing;
 import com.vaadin.event.Action.Handler;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.server.Resource;
+import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.FooterClickListener;
 import com.vaadin.ui.Table.HeaderClickListener;
 import com.vaadin.ui.Table.RowGenerator;
@@ -39,7 +40,7 @@ import com.vaadin.ui.Table.TableDragMode;
  * @since 5.0.0
  */
 public abstract class AbstractTableItemListingBuilder<T, P, C extends ItemListing<T, P>, I extends DefaultItemListing<T, P>, B extends BaseTableItemListingBuilder<T, P, C, B>>
-		extends AbstractItemListingBuilder<T, P, C, I, B> implements BaseTableItemListingBuilder<T, P, C, B> {
+		extends AbstractItemListingBuilder<T, P, C, I, B, Table> implements BaseTableItemListingBuilder<T, P, C, B> {
 
 	private TableFooterGenerator<T, P> footerGenerator;
 
@@ -143,8 +144,7 @@ public abstract class AbstractTableItemListingBuilder<T, P, C extends ItemListin
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.components.builders.ItemListingBuilder.BaseTableItemListingBuilder#dropHandler(com.
+	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder.BaseTableItemListingBuilder#dropHandler(com.
 	 * vaadin.event.dd.DropHandler)
 	 */
 	@Override

@@ -42,6 +42,7 @@ import com.vaadin.data.util.converter.Converter;
 import com.vaadin.event.Action;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.server.Resource;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.FooterRow;
 import com.vaadin.ui.Grid.HeaderRow;
@@ -60,11 +61,12 @@ import com.vaadin.ui.renderers.Renderer;
  * @param <C> Component type
  * @param <P> Item property type
  * @param <B> Concrete builder type
+ * @param <X> Concrete backing component type
  * 
  * @since 5.0.0
  */
-public interface ItemListingBuilder<T, P, C extends ItemListing<T, P>, B extends ItemListingBuilder<T, P, C, B>>
-		extends ItemDataSourceComponentBuilder<T, C, B> {
+public interface ItemListingBuilder<T, P, C extends ItemListing<T, P>, B extends ItemListingBuilder<T, P, C, B, X>, X extends Component>
+		extends ItemDataSourceComponentBuilder<T, C, B>, ComponentPostProcessorSupport<X, B> {
 
 	/**
 	 * Set whether given property is sortable.
@@ -105,7 +107,7 @@ public interface ItemListingBuilder<T, P, C extends ItemListing<T, P>, B extends
 	 * @return this
 	 */
 	B sortGenerator(P property, PropertySortGenerator<P> generator);
-	
+
 	/**
 	 * Set the handler to use to persist item set modifications.
 	 * @param commitHandler Handler to set (not null)
@@ -301,7 +303,7 @@ public interface ItemListingBuilder<T, P, C extends ItemListing<T, P>, B extends
 	 * @return this
 	 */
 	B columnReorderingAllowed(boolean columnReorderingAllowed);
-	
+
 	/**
 	 * Set whether the listing footer is visible.
 	 * @param footerVisible whether the listing footer is visible
@@ -346,7 +348,7 @@ public interface ItemListingBuilder<T, P, C extends ItemListing<T, P>, B extends
 	 * @param <B> Concrete builder type
 	 */
 	public interface BaseGridItemListingBuilder<T, P, C extends ItemListing<T, P>, B extends BaseGridItemListingBuilder<T, P, C, B>>
-			extends ItemListingBuilder<T, P, C, B> {
+			extends ItemListingBuilder<T, P, C, B, Grid> {
 
 		/**
 		 * Set the height of the listing defined by its contents.
@@ -582,7 +584,7 @@ public interface ItemListingBuilder<T, P, C extends ItemListing<T, P>, B extends
 	 * @param <B> Concrete builder type
 	 */
 	public interface BaseTableItemListingBuilder<T, P, C extends ItemListing<T, P>, B extends BaseTableItemListingBuilder<T, P, C, B>>
-			extends ItemListingBuilder<T, P, C, B> {
+			extends ItemListingBuilder<T, P, C, B, Table> {
 
 		/**
 		 * Set the expand ratio of the column which corresponds to given property.
@@ -674,7 +676,7 @@ public interface ItemListingBuilder<T, P, C extends ItemListing<T, P>, B extends
 		 * @return this
 		 */
 		B withActionHandler(Action.Handler actionHandler);
-		
+
 		/**
 		 * Set the table row generator
 		 * @param rowGenerator Row generator to set
@@ -710,7 +712,7 @@ public interface ItemListingBuilder<T, P, C extends ItemListing<T, P>, B extends
 		 * @return the new row
 		 */
 		ROWTYPE appendRow();
-		
+
 		/**
 		 * Get the section row at given index.
 		 * @param index Row index

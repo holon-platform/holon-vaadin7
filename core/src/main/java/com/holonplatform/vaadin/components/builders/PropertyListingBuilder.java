@@ -28,6 +28,7 @@ import com.holonplatform.vaadin.data.ItemDataSource.CommitHandler;
 import com.holonplatform.vaadin.internal.data.DatastoreCommitHandler;
 import com.holonplatform.vaadin.internal.data.DatastoreItemDataProvider;
 import com.vaadin.data.util.converter.Converter;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.renderers.Renderer;
@@ -36,12 +37,13 @@ import com.vaadin.ui.renderers.Renderer;
  * An {@link ItemListingBuilder} using {@link Property} as item properties and {@link PropertyBox} as item data type.
  *
  * @param <B> Concrete builder type
+ * @param <X> Concrete backing component type
  *
  * @since 5.0.0
  */
 @SuppressWarnings("rawtypes")
-public interface PropertyListingBuilder<B extends PropertyListingBuilder<B>>
-		extends ItemListingBuilder<PropertyBox, Property, PropertyListing, B> {
+public interface PropertyListingBuilder<B extends PropertyListingBuilder<B, X>, X extends Component>
+		extends ItemListingBuilder<PropertyBox, Property, PropertyListing, B, X> {
 
 	/**
 	 * Add properties to include in {@link PropertyBox} items.
@@ -87,7 +89,7 @@ public interface PropertyListingBuilder<B extends PropertyListingBuilder<B>>
 	/**
 	 * Builder to create {@link PropertyListing} components using a {@link Grid} as backing component.
 	 */
-	public interface GridPropertyListingBuilder extends PropertyListingBuilder<GridPropertyListingBuilder>,
+	public interface GridPropertyListingBuilder extends PropertyListingBuilder<GridPropertyListingBuilder, Grid>,
 			BaseGridItemListingBuilder<PropertyBox, Property, PropertyListing, GridPropertyListingBuilder> {
 
 		/**
@@ -113,7 +115,7 @@ public interface PropertyListingBuilder<B extends PropertyListingBuilder<B>>
 	/**
 	 * Builder to create {@link PropertyListing} components using a {@link Table} as backing component.
 	 */
-	public interface TablePropertyListingBuilder extends PropertyListingBuilder<TablePropertyListingBuilder>,
+	public interface TablePropertyListingBuilder extends PropertyListingBuilder<TablePropertyListingBuilder, Table>,
 			BaseTableItemListingBuilder<PropertyBox, Property, PropertyListing, TablePropertyListingBuilder> {
 
 	}

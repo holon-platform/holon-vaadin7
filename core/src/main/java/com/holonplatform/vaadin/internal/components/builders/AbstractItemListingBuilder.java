@@ -15,6 +15,9 @@
  */
 package com.holonplatform.vaadin.internal.components.builders;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import com.holonplatform.core.Path;
 import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.internal.utils.ObjectUtils;
@@ -33,16 +36,18 @@ import com.holonplatform.vaadin.components.ItemListing.PropertyVisibilityListene
 import com.holonplatform.vaadin.components.ItemListing.RowStyleGenerator;
 import com.holonplatform.vaadin.components.Selectable.SelectionListener;
 import com.holonplatform.vaadin.components.Selectable.SelectionMode;
+import com.holonplatform.vaadin.components.builders.ComponentPostProcessor;
 import com.holonplatform.vaadin.components.builders.ItemListingBuilder;
 import com.holonplatform.vaadin.data.ItemDataProvider;
-import com.holonplatform.vaadin.data.ItemIdentifierProvider;
 import com.holonplatform.vaadin.data.ItemDataSource.CommitHandler;
 import com.holonplatform.vaadin.data.ItemDataSource.PropertySortGenerator;
+import com.holonplatform.vaadin.data.ItemIdentifierProvider;
 import com.holonplatform.vaadin.data.container.ItemAdapter;
 import com.holonplatform.vaadin.data.container.ItemDataSourceContainer;
 import com.holonplatform.vaadin.data.container.ItemDataSourceContainerBuilder.BaseItemDataSourceContainerBuilder;
 import com.holonplatform.vaadin.internal.components.DefaultItemListing;
 import com.holonplatform.vaadin.internal.data.container.BeanItemAdapter;
+import com.vaadin.ui.Component;
 
 /**
  * Base {@link ItemListingBuilder} implementation.
@@ -52,14 +57,17 @@ import com.holonplatform.vaadin.internal.data.container.BeanItemAdapter;
  * @param <C> Component type
  * @param <I> Internal instance
  * @param <B> Concrete builder type
+ * @param <X> Concrete backing component type
  *
  * @since 5.0.0
  */
-public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, P>, I extends DefaultItemListing<T, P>, B extends ItemListingBuilder<T, P, C, B>>
-		extends AbstractComponentBuilder<C, I, B> implements ItemListingBuilder<T, P, C, B> {
+public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, P>, I extends DefaultItemListing<T, P>, B extends ItemListingBuilder<T, P, C, B, X>, X extends Component>
+		extends AbstractComponentBuilder<C, I, B> implements ItemListingBuilder<T, P, C, B, X> {
+
+	protected final List<ComponentPostProcessor<X>> postProcessors = new LinkedList<>();
 
 	private PropertyReorderListener<P> reorderListener;
-	
+
 	/**
 	 * Data source builder.
 	 */
@@ -103,7 +111,8 @@ public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, 
 		return builder();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#sortable(java.lang.Object, boolean)
 	 */
 	@Override
@@ -113,7 +122,8 @@ public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, 
 		return builder();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#readOnly(java.lang.Object, boolean)
 	 */
 	@Override
@@ -123,8 +133,10 @@ public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, 
 		return builder();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#defaultValue(java.lang.Object, java.lang.Object)
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#defaultValue(java.lang.Object,
+	 * java.lang.Object)
 	 */
 	@Override
 	public B defaultValue(P property, Object defaultValue) {
@@ -133,8 +145,10 @@ public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, 
 		return builder();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#sortUsing(java.lang.Object, com.holonplatform.core.Path)
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#sortUsing(java.lang.Object,
+	 * com.holonplatform.core.Path)
 	 */
 	@Override
 	public B sortUsing(P property, final Path<?> sortPath) {
@@ -143,8 +157,10 @@ public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, 
 		return builder();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#sortGenerator(java.lang.Object, com.holonplatform.vaadin.data.ItemDataSource.PropertySortGenerator)
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#sortGenerator(java.lang.Object,
+	 * com.holonplatform.vaadin.data.ItemDataSource.PropertySortGenerator)
 	 */
 	@Override
 	public B sortGenerator(P property, PropertySortGenerator<P> generator) {
@@ -221,8 +237,7 @@ public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, 
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.components.builders.BaseItemDataSourceComponentBuilder#fixedSort(com.holonplatform.
+	 * @see com.holonplatform.vaadin.components.builders.BaseItemDataSourceComponentBuilder#fixedSort(com.holonplatform.
 	 * core.query.QuerySort)
 	 */
 	@Override
@@ -255,8 +270,10 @@ public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, 
 		return builder();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#commitHandler(com.holonplatform.vaadin.data.ItemDataSource.CommitHandler)
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#commitHandler(com.holonplatform.vaadin.data.
+	 * ItemDataSource.CommitHandler)
 	 */
 	@Override
 	public B commitHandler(CommitHandler<T> commitHandler) {
@@ -265,8 +282,11 @@ public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, 
 		return builder();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#withRowStyle(com.holonplatform.vaadin.components.ItemListing.RowStyleGenerator)
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.holonplatform.vaadin.components.builders.ItemListingBuilder#withRowStyle(com.holonplatform.vaadin.components.
+	 * ItemListing.RowStyleGenerator)
 	 */
 	@Override
 	public B withRowStyle(RowStyleGenerator<T> rowStyleGenerator) {
@@ -274,8 +294,10 @@ public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, 
 		return builder();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#header(java.lang.Object, com.holonplatform.core.i18n.Localizable)
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#header(java.lang.Object,
+	 * com.holonplatform.core.i18n.Localizable)
 	 */
 	@Override
 	public B header(P property, Localizable header) {
@@ -285,8 +307,10 @@ public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, 
 		return builder();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#alignment(java.lang.Object, com.holonplatform.vaadin.components.ItemListing.ColumnAlignment)
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#alignment(java.lang.Object,
+	 * com.holonplatform.vaadin.components.ItemListing.ColumnAlignment)
 	 */
 	@Override
 	public B alignment(P property, ColumnAlignment alignment) {
@@ -296,7 +320,8 @@ public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, 
 		return builder();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#width(java.lang.Object, int)
 	 */
 	@Override
@@ -306,7 +331,8 @@ public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, 
 		return builder();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#editable(java.lang.Object, boolean)
 	 */
 	@Override
@@ -316,8 +342,10 @@ public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, 
 		return builder();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#editor(java.lang.Object, com.holonplatform.vaadin.components.ItemListing.PropertyEditorFactory)
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#editor(java.lang.Object,
+	 * com.holonplatform.vaadin.components.ItemListing.PropertyEditorFactory)
 	 */
 	@Override
 	public B editor(P property, PropertyEditorFactory<P> propertyEditorFactory) {
@@ -327,7 +355,8 @@ public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, 
 		return builder();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#hidable(java.lang.Object, boolean)
 	 */
 	@Override
@@ -337,7 +366,8 @@ public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, 
 		return builder();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#hidden(java.lang.Object, boolean)
 	 */
 	@Override
@@ -347,7 +377,8 @@ public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, 
 		return builder();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#hideHeaders()
 	 */
 	@Override
@@ -356,8 +387,10 @@ public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, 
 		return builder();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#style(java.lang.Object, com.holonplatform.vaadin.components.ItemListing.CellStyleGenerator)
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#style(java.lang.Object,
+	 * com.holonplatform.vaadin.components.ItemListing.CellStyleGenerator)
 	 */
 	@Override
 	public B style(P property, CellStyleGenerator<T, P> cellStyleGenerator) {
@@ -367,7 +400,8 @@ public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, 
 		return builder();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#buffered(boolean)
 	 */
 	@Override
@@ -377,8 +411,11 @@ public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, 
 		return builder();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#selectionMode(com.holonplatform.vaadin.components.Selectable.SelectionMode)
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.holonplatform.vaadin.components.builders.ItemListingBuilder#selectionMode(com.holonplatform.vaadin.components
+	 * .Selectable.SelectionMode)
 	 */
 	@Override
 	public B selectionMode(SelectionMode selectionMode) {
@@ -387,8 +424,11 @@ public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, 
 		return builder();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#withSelectionListener(com.holonplatform.vaadin.components.Selectable.SelectionListener)
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.holonplatform.vaadin.components.builders.ItemListingBuilder#withSelectionListener(com.holonplatform.vaadin.
+	 * components.Selectable.SelectionListener)
 	 */
 	@Override
 	public B withSelectionListener(SelectionListener<T> selectionListener) {
@@ -397,7 +437,8 @@ public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, 
 		return builder();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#editable(boolean)
 	 */
 	@Override
@@ -406,8 +447,11 @@ public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, 
 		return builder();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#withItemClickListener(com.holonplatform.vaadin.components.ItemListing.ItemClickListener)
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.holonplatform.vaadin.components.builders.ItemListingBuilder#withItemClickListener(com.holonplatform.vaadin.
+	 * components.ItemListing.ItemClickListener)
 	 */
 	@Override
 	public B withItemClickListener(ItemClickListener<T, P> listener) {
@@ -415,8 +459,11 @@ public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, 
 		return builder();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#withPropertyReorderListener(com.holonplatform.vaadin.components.ItemListing.PropertyReorderListener)
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.holonplatform.vaadin.components.builders.ItemListingBuilder#withPropertyReorderListener(com.holonplatform.
+	 * vaadin.components.ItemListing.PropertyReorderListener)
 	 */
 	@Override
 	public B withPropertyReorderListener(PropertyReorderListener<P> listener) {
@@ -425,8 +472,11 @@ public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, 
 		return builder();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#withPropertyResizeListener(com.holonplatform.vaadin.components.ItemListing.PropertyResizeListener)
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.holonplatform.vaadin.components.builders.ItemListingBuilder#withPropertyResizeListener(com.holonplatform.
+	 * vaadin.components.ItemListing.PropertyResizeListener)
 	 */
 	@Override
 	public B withPropertyResizeListener(PropertyResizeListener<P> listener) {
@@ -434,8 +484,11 @@ public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, 
 		return builder();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#withPropertyVisibilityListener(com.holonplatform.vaadin.components.ItemListing.PropertyVisibilityListener)
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.holonplatform.vaadin.components.builders.ItemListingBuilder#withPropertyVisibilityListener(com.holonplatform.
+	 * vaadin.components.ItemListing.PropertyVisibilityListener)
 	 */
 	@Override
 	public B withPropertyVisibilityListener(PropertyVisibilityListener<P> listener) {
@@ -443,8 +496,11 @@ public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, 
 		return builder();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#itemDescriptionGenerator(com.holonplatform.vaadin.components.ItemListing.ItemDescriptionGenerator)
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.holonplatform.vaadin.components.builders.ItemListingBuilder#itemDescriptionGenerator(com.holonplatform.vaadin
+	 * .components.ItemListing.ItemDescriptionGenerator)
 	 */
 	@Override
 	public B itemDescriptionGenerator(ItemDescriptionGenerator<T> rowDescriptionGenerator) {
@@ -452,7 +508,8 @@ public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, 
 		return builder();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#columnHidingAllowed(boolean)
 	 */
 	@Override
@@ -461,7 +518,8 @@ public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, 
 		return builder();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#columnReorderingAllowed(boolean)
 	 */
 	@Override
@@ -470,13 +528,27 @@ public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, 
 		return builder();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#footerVisible(boolean)
 	 */
 	@Override
 	public B footerVisible(boolean footerVisible) {
 		getInstance().setFooterVisible(footerVisible);
 		return builder();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.holonplatform.vaadin.components.builders.ComponentPostProcessorSupport#withPostProcessor(com.holonplatform.
+	 * vaadin.components.builders.ComponentPostProcessor)
+	 */
+	@Override
+	public B withPostProcessor(ComponentPostProcessor<X> postProcessor) {
+		ObjectUtils.argumentNotNull(postProcessor, "ComponentPostProcessor must be not null");
+		postProcessors.add(postProcessor);
+		return null;
 	}
 
 	/*
@@ -515,19 +587,25 @@ public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, 
 		// visible columns
 		listing.setPropertyColumns(
 				(visibleColumns != null) ? visibleColumns : dataSource.getConfiguration().getProperties());
-		
+
 		// additional configuration
 		configure(listing);
-		
+
 		// Reorder listener
 		if (reorderListener != null) {
 			listing.addPropertyReorderListener(reorderListener);
 		}
 
+		// build
+		C built = build(listing);
+
+		// post processors
+		postProcessors.forEach(p -> p.process(built));
+
 		// done
-		return build(listing);
+		return built;
 	}
-	
+
 	/**
 	 * Additional listing configuration
 	 * @param instance Building instance

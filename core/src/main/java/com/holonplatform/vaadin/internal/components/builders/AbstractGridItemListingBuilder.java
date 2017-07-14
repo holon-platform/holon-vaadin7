@@ -39,7 +39,7 @@ import com.vaadin.ui.Grid.HeaderRow;
  * @since 5.0.0
  */
 public abstract class AbstractGridItemListingBuilder<T, P, C extends ItemListing<T, P>, I extends DefaultItemListing<T, P>, B extends BaseGridItemListingBuilder<T, P, C, B>>
-		extends AbstractItemListingBuilder<T, P, C, I, B> implements BaseGridItemListingBuilder<T, P, C, B> {
+		extends AbstractItemListingBuilder<T, P, C, I, B, Grid> implements BaseGridItemListingBuilder<T, P, C, B> {
 
 	private int frozenColumns = 0;
 
