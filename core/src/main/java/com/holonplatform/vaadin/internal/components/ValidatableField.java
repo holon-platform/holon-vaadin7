@@ -13,9 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.holonplatform.vaadin.components;
+package com.holonplatform.vaadin.internal.components;
 
 import com.holonplatform.core.Validator;
+import com.holonplatform.vaadin.components.builders.InvalidFieldNotificationMode;
 import com.vaadin.ui.Field;
 
 /**
@@ -27,45 +28,6 @@ import com.vaadin.ui.Field;
  * @since 5.0.0
  */
 public interface ValidatableField<T> extends Field<T> {
-
-	/**
-	 * Enumeration for {@link Field} validation error notification behaviours.
-	 * 
-	 * @since 5.0.0
-	 */
-	public enum InvalidFieldNotificationMode {
-
-		/**
-		 * Never notify validation errors
-		 */
-		NEVER,
-
-		/**
-		 * Always notify validation errors (any value change, including {@link Field#setValue(Object)}, value changes
-		 * originated from user input, and explict {@link Field#validate()} actions).
-		 */
-		ALWAYS,
-
-		/**
-		 * Notify validation errors for value changes originated from user input and explict {@link Field#validate()}
-		 * actions.
-		 */
-		USER_INPUT_AND_EXPLICIT_VALIDATION,
-
-		/**
-		 * Notify validation errors only for and explict {@link Field#validate()} actions.
-		 */
-		ONLY_EXPLICIT_VALIDATION;
-
-		/**
-		 * Gets the default validation error notification mode
-		 * @return Default validation error notification mode
-		 */
-		public static InvalidFieldNotificationMode defaultMode() {
-			return USER_INPUT_AND_EXPLICIT_VALIDATION;
-		}
-
-	}
 
 	/**
 	 * Adds a Field value {@link Validator}

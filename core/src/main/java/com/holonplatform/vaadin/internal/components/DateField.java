@@ -19,8 +19,8 @@ import java.util.Date;
 
 import com.holonplatform.core.Validator;
 import com.holonplatform.core.internal.utils.ObjectUtils;
-import com.holonplatform.vaadin.components.ValidatableField;
 import com.holonplatform.vaadin.components.builders.DateFieldBuilder;
+import com.holonplatform.vaadin.components.builders.InvalidFieldNotificationMode;
 import com.holonplatform.vaadin.internal.components.builders.AbstractDateFieldBuilder;
 import com.vaadin.data.Property;
 import com.vaadin.data.Validator.InvalidValueException;

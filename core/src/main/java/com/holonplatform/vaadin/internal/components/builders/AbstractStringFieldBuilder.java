@@ -17,8 +17,8 @@ package com.holonplatform.vaadin.internal.components.builders;
 
 import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.i18n.LocalizationContext;
-import com.holonplatform.vaadin.components.ValidatableField;
 import com.holonplatform.vaadin.components.builders.StringFieldBuilder;
+import com.holonplatform.vaadin.internal.components.ValidatableField;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.TextChangeListener;

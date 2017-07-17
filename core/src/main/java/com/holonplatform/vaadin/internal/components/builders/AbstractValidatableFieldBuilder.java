@@ -16,9 +16,9 @@
 package com.holonplatform.vaadin.internal.components.builders;
 
 import com.holonplatform.core.Validator;
-import com.holonplatform.vaadin.components.ValidatableField;
-import com.holonplatform.vaadin.components.ValidatableField.InvalidFieldNotificationMode;
+import com.holonplatform.vaadin.components.builders.InvalidFieldNotificationMode;
 import com.holonplatform.vaadin.components.builders.ValidatableFieldBuilder;
+import com.holonplatform.vaadin.internal.components.ValidatableField;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Field;
 

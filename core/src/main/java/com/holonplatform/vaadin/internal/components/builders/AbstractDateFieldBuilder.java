@@ -20,9 +20,9 @@ import java.util.TimeZone;
 
 import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.i18n.LocalizationContext;
-import com.holonplatform.vaadin.components.ValidatableField;
 import com.holonplatform.vaadin.components.builders.CalendarFieldBuilder;
 import com.holonplatform.vaadin.components.builders.DateFieldBuilder;
+import com.holonplatform.vaadin.internal.components.ValidatableField;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Field;

@@ -15,12 +15,10 @@
  */
 package com.holonplatform.vaadin.components.builders;
 
-import com.holonplatform.vaadin.components.ValidatableField;
-import com.holonplatform.vaadin.components.ValidatableField.InvalidFieldNotificationMode;
 import com.vaadin.ui.Field;
 
 /**
- * Builder to create {@link ValidatableField} instances.
+ * Builder for input components whith {@link InvalidFieldNotificationMode} support.
  *
  * @param <T> Field type
  * @param <C> Field component type
@@ -28,7 +26,8 @@ import com.vaadin.ui.Field;
  * 
  * @since 5.0.0
  */
-public interface ValidatableFieldBuilder<T, C extends Field<T>, B extends ValidatableFieldBuilder<T, C, B>> extends FieldBuilder<T, C, B> {
+public interface ValidatableFieldBuilder<T, C extends Field<T>, B extends ValidatableFieldBuilder<T, C, B>>
+		extends FieldBuilder<T, C, B> {
 
 	/**
 	 * Sets the invalid Field error notification mode

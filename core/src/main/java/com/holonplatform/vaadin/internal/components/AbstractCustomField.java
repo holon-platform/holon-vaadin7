@@ -18,7 +18,7 @@ package com.holonplatform.vaadin.internal.components;
 import com.holonplatform.core.Validator;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.vaadin.components.Components;
-import com.holonplatform.vaadin.components.ValidatableField;
+import com.holonplatform.vaadin.components.builders.InvalidFieldNotificationMode;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.converter.Converter.ConversionException;
 import com.vaadin.ui.AbstractComponent;

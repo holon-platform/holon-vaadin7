@@ -25,8 +25,7 @@ import com.holonplatform.core.Validator.Validatable;
 import com.holonplatform.core.Validator.ValidationException;
 import com.holonplatform.core.i18n.LocalizationContext;
 import com.holonplatform.core.internal.utils.ObjectUtils;
-import com.holonplatform.vaadin.components.ValidatableField;
-import com.holonplatform.vaadin.components.ValidatableField.InvalidFieldNotificationMode;
+import com.holonplatform.vaadin.components.builders.InvalidFieldNotificationMode;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.server.ClientConnector;
 
