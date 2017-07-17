@@ -29,41 +29,41 @@ import com.holonplatform.vaadin.components.Dialog.QuestionDialogBuilder;
 import com.holonplatform.vaadin.components.PropertyFieldGroup.PropertyFieldGroupBuilder;
 import com.holonplatform.vaadin.components.PropertyForm.Composer;
 import com.holonplatform.vaadin.components.PropertyForm.PropertyFormBuilder;
+import com.holonplatform.vaadin.components.builders.BaseSelectFieldBuilder.RenderingMode;
 import com.holonplatform.vaadin.components.builders.BooleanFieldBuilder;
 import com.holonplatform.vaadin.components.builders.ButtonBuilder;
 import com.holonplatform.vaadin.components.builders.ButtonConfigurator;
+import com.holonplatform.vaadin.components.builders.ButtonConfigurator.BaseButtonConfigurator;
 import com.holonplatform.vaadin.components.builders.ClickableLayoutConfigurator;
+import com.holonplatform.vaadin.components.builders.ClickableLayoutConfigurator.BaseClickableLayoutConfigurator;
 import com.holonplatform.vaadin.components.builders.ComponentConfigurator;
+import com.holonplatform.vaadin.components.builders.ComponentConfigurator.BaseComponentConfigurator;
 import com.holonplatform.vaadin.components.builders.CssLayoutBuilder;
 import com.holonplatform.vaadin.components.builders.DateFieldBuilder;
 import com.holonplatform.vaadin.components.builders.FieldBuilder;
 import com.holonplatform.vaadin.components.builders.FieldConfigurator;
+import com.holonplatform.vaadin.components.builders.FieldConfigurator.BaseFieldConfigurator;
 import com.holonplatform.vaadin.components.builders.FormLayoutBuilder;
 import com.holonplatform.vaadin.components.builders.GridLayoutBuilder;
 import com.holonplatform.vaadin.components.builders.HorizontalLayoutBuilder;
+import com.holonplatform.vaadin.components.builders.ItemListingBuilder.GridItemListingBuilder;
+import com.holonplatform.vaadin.components.builders.ItemListingBuilder.TableItemListingBuilder;
 import com.holonplatform.vaadin.components.builders.LabelBuilder;
 import com.holonplatform.vaadin.components.builders.LayoutConfigurator;
+import com.holonplatform.vaadin.components.builders.LayoutConfigurator.BaseLayoutConfigurator;
 import com.holonplatform.vaadin.components.builders.MultiSelectFieldBuilder;
 import com.holonplatform.vaadin.components.builders.NumberFieldBuilder;
 import com.holonplatform.vaadin.components.builders.OrderedLayoutConfigurator;
+import com.holonplatform.vaadin.components.builders.OrderedLayoutConfigurator.BaseOrderedLayoutConfigurator;
 import com.holonplatform.vaadin.components.builders.PanelBuilder;
+import com.holonplatform.vaadin.components.builders.PropertyListingBuilder.GridPropertyListingBuilder;
+import com.holonplatform.vaadin.components.builders.PropertyListingBuilder.TablePropertyListingBuilder;
 import com.holonplatform.vaadin.components.builders.SecretFieldBuilder;
 import com.holonplatform.vaadin.components.builders.SingleSelectFieldBuilder;
 import com.holonplatform.vaadin.components.builders.StringFieldBuilder;
-import com.holonplatform.vaadin.components.builders.VerticalLayoutBuilder;
-import com.holonplatform.vaadin.components.builders.BaseSelectFieldBuilder.RenderingMode;
-import com.holonplatform.vaadin.components.builders.ButtonConfigurator.BaseButtonConfigurator;
-import com.holonplatform.vaadin.components.builders.ClickableLayoutConfigurator.BaseClickableLayoutConfigurator;
-import com.holonplatform.vaadin.components.builders.ComponentConfigurator.BaseComponentConfigurator;
-import com.holonplatform.vaadin.components.builders.FieldConfigurator.BaseFieldConfigurator;
-import com.holonplatform.vaadin.components.builders.ItemListingBuilder.GridItemListingBuilder;
-import com.holonplatform.vaadin.components.builders.ItemListingBuilder.TableItemListingBuilder;
-import com.holonplatform.vaadin.components.builders.LayoutConfigurator.BaseLayoutConfigurator;
-import com.holonplatform.vaadin.components.builders.OrderedLayoutConfigurator.BaseOrderedLayoutConfigurator;
-import com.holonplatform.vaadin.components.builders.PropertyListingBuilder.GridPropertyListingBuilder;
-import com.holonplatform.vaadin.components.builders.PropertyListingBuilder.TablePropertyListingBuilder;
 import com.holonplatform.vaadin.components.builders.TemporalFieldBuilder.TemporalWithTimeFieldBuilder;
 import com.holonplatform.vaadin.components.builders.TemporalFieldBuilder.TemporalWithoutTimeFieldBuilder;
+import com.holonplatform.vaadin.components.builders.VerticalLayoutBuilder;
 import com.holonplatform.vaadin.internal.components.BooleanField;
 import com.holonplatform.vaadin.internal.components.DateField;
 import com.holonplatform.vaadin.internal.components.Filler;
@@ -130,11 +130,6 @@ public final class Components implements Serializable {
 	 */
 	public static final Localizable DEFAULT_REQUIRED_ERROR = Localizable.builder().message("Value is required")
 			.messageCode(Validator.DEFAULT_MESSAGE_CODE_PREFIX + "required").build();
-
-	/**
-	 * Default style class name for invalid Fields
-	 */
-	public static final String DEFAULT_INVALID_FIELD_STYLE_CLASS = "error";
 
 	/*
 	 * Empty private constructor: this class is intended only to provide constants ad utility methods.
@@ -456,7 +451,7 @@ public final class Components implements Serializable {
 	public static <T> MultiSelectFieldBuilder<T> multiSelect(Class<? extends T> type) {
 		return MultiSelect.builder(type);
 	}
-	
+
 	/**
 	 * Builder to create an {@link ItemListing} instance using a {@link Grid} as backing component.
 	 * @param <T> Item data type
@@ -466,7 +461,7 @@ public final class Components implements Serializable {
 	public static <T, P> GridItemListingBuilder<T, P> gridListing() {
 		return new DefaultGridItemListingBuilder<>();
 	}
-	
+
 	/**
 	 * Builder to create an {@link ItemListing} instance using a {@link Table} as backing component.
 	 * @param <T> Item data type
@@ -550,11 +545,11 @@ public final class Components implements Serializable {
 	}
 
 	/**
-	 * Gets a builder to create a {@link FieldsValidator} to perform validations on a set of {@link Fields}.
-	 * @return {@link FieldsValidator} builder
+	 * Gets a builder to create a {@link InputGroup} to perform validations on a set of {@link Fields}.
+	 * @return {@link InputGroup} builder
 	 */
-	public static FieldsValidator.Builder fieldsValidator() {
-		return FieldsValidator.builder();
+	public static InputGroup.Builder fieldsValidator() {
+		return InputGroup.builder();
 	}
 
 	/**
@@ -569,8 +564,8 @@ public final class Components implements Serializable {
 	/**
 	 * Gets a builder to create and open a question {@link Dialog} window. The dialog will present by default a
 	 * <em>yes</em> and a <em>no</em> button. Use
-	 * {@link QuestionDialogBuilder#callback(com.holonplatform.vaadin.components.Dialog.QuestionCallback)} to handle
-	 * the user selected answer.
+	 * {@link QuestionDialogBuilder#callback(com.holonplatform.vaadin.components.Dialog.QuestionCallback)} to handle the
+	 * user selected answer.
 	 * @return QuestionDialogBuilder
 	 */
 	public static QuestionDialogBuilder questionDialog() {

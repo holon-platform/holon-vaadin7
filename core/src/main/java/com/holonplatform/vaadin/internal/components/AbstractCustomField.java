@@ -16,8 +16,10 @@
 package com.holonplatform.vaadin.internal.components;
 
 import com.holonplatform.core.Validator;
+import com.holonplatform.core.Validator.ValidationException;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.vaadin.components.Components;
+import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.builders.InvalidFieldNotificationMode;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.converter.Converter.ConversionException;
@@ -46,9 +48,15 @@ import com.vaadin.ui.Field;
  * @since 5.0.0
  */
 @SuppressWarnings("rawtypes")
-public abstract class AbstractCustomField<T, F extends Field> extends CustomField<T> implements ValidatableField<T> {
+public abstract class AbstractCustomField<T, F extends Field> extends CustomField<T>
+		implements Input<T>, ValidatableField<T> {
 
 	private static final long serialVersionUID = -5952052029882768908L;
+
+	/**
+	 * Default style class name for invalid fields
+	 */
+	static final String DEFAULT_INVALID_FIELD_STYLE_CLASS = "error";
 
 	/**
 	 * Field type
@@ -82,7 +90,7 @@ public abstract class AbstractCustomField<T, F extends Field> extends CustomFiel
 		if (composed) {
 			try {
 				setSuspendValidationNotification(false);
-				validate();
+				validateValue();
 			} catch (@SuppressWarnings("unused") InvalidValueException ive) {
 			}
 		}
@@ -215,8 +223,9 @@ public abstract class AbstractCustomField<T, F extends Field> extends CustomFiel
 			getInternalField().addStyleName(styleName);
 		}
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
 	 * @see com.vaadin.ui.AbstractComponent#removeStyleName(java.lang.String)
 	 */
 	@Override
@@ -238,11 +247,33 @@ public abstract class AbstractCustomField<T, F extends Field> extends CustomFiel
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.vaadin.ui.AbstractField#validate()
+	 * @see com.holonplatform.vaadin.components.Input#getComponent()
+	 */
+	@Override
+	public Component getComponent() {
+		return this;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.ValidatableValue#validateValue()
+	 */
+	@Override
+	public void validateValue() throws ValidationException {
+		try {
+			validate();
+		} catch (InvalidValueException e) {
+			throw ValidationUtils.translateValidationException(e);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.vaadin.ui.AbstractField#validateValue()
 	 */
 	@Override
 	public void validate() throws InvalidValueException {
-		getInternalField().removeStyleName(Components.DEFAULT_INVALID_FIELD_STYLE_CLASS);
+		getInternalField().removeStyleName(DEFAULT_INVALID_FIELD_STYLE_CLASS);
 
 		ValidationUtils.preValidate(this);
 
@@ -250,7 +281,7 @@ public abstract class AbstractCustomField<T, F extends Field> extends CustomFiel
 			super.validate();
 		} catch (InvalidValueException ive) {
 			if (isValidationVisible()) {
-				getInternalField().addStyleName(Components.DEFAULT_INVALID_FIELD_STYLE_CLASS);
+				getInternalField().addStyleName(DEFAULT_INVALID_FIELD_STYLE_CLASS);
 			}
 			throw ive;
 		}
@@ -297,7 +328,7 @@ public abstract class AbstractCustomField<T, F extends Field> extends CustomFiel
 		this.invalidFieldNotificationMode = invalidFieldNotificationMode;
 
 		if (invalidFieldNotificationMode != InvalidFieldNotificationMode.ALWAYS) {
-			getInternalField().removeStyleName(Components.DEFAULT_INVALID_FIELD_STYLE_CLASS);
+			getInternalField().removeStyleName(DEFAULT_INVALID_FIELD_STYLE_CLASS);
 		}
 		ValidationUtils.setupInvalidFieldNotificationMode(this);
 
@@ -364,7 +395,7 @@ public abstract class AbstractCustomField<T, F extends Field> extends CustomFiel
 	@Override
 	public void setValue(T newFieldValue) throws com.vaadin.data.Property.ReadOnlyException, ConversionException {
 		ValidationUtils.preValueSet(this);
-		getInternalField().removeStyleName(Components.DEFAULT_INVALID_FIELD_STYLE_CLASS);
+		getInternalField().removeStyleName(DEFAULT_INVALID_FIELD_STYLE_CLASS);
 		super.setValue(newFieldValue);
 	}
 

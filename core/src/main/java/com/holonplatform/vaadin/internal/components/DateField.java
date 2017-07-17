@@ -18,12 +18,15 @@ package com.holonplatform.vaadin.internal.components;
 import java.util.Date;
 
 import com.holonplatform.core.Validator;
+import com.holonplatform.core.Validator.ValidationException;
 import com.holonplatform.core.internal.utils.ObjectUtils;
+import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.builders.DateFieldBuilder;
 import com.holonplatform.vaadin.components.builders.InvalidFieldNotificationMode;
 import com.holonplatform.vaadin.internal.components.builders.AbstractDateFieldBuilder;
 import com.vaadin.data.Property;
 import com.vaadin.data.Validator.InvalidValueException;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
 
 /**
@@ -32,7 +35,7 @@ import com.vaadin.ui.Field;
  * 
  * @since 5.0.0
  */
-public class DateField extends com.vaadin.ui.DateField implements ValidatableField<Date> {
+public class DateField extends com.vaadin.ui.DateField implements Input<Date>, ValidatableField<Date> {
 
 	private static final long serialVersionUID = -4077699329772463783L;
 
@@ -104,6 +107,15 @@ public class DateField extends com.vaadin.ui.DateField implements ValidatableFie
 		addStyleName("h-datefield");
 
 		ValidationUtils.setupInvalidFieldNotificationMode(this);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.Input#getComponent()
+	 */
+	@Override
+	public Component getComponent() {
+		return this;
 	}
 
 	/*
@@ -207,6 +219,19 @@ public class DateField extends com.vaadin.ui.DateField implements ValidatableFie
 	public void validate() throws InvalidValueException {
 		ValidationUtils.preValidate(this);
 		super.validate();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.ValidatableValue#validateValue()
+	 */
+	@Override
+	public void validateValue() throws ValidationException {
+		try {
+			validate();
+		} catch (InvalidValueException e) {
+			throw ValidationUtils.translateValidationException(e);
+		}
 	}
 
 	/*

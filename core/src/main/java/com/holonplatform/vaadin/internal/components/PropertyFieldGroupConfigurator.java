@@ -16,9 +16,9 @@
 package com.holonplatform.vaadin.internal.components;
 
 import com.holonplatform.core.Validator;
-import com.holonplatform.core.Validator.ValidationErrorHandler;
 import com.holonplatform.core.property.Property;
 import com.holonplatform.vaadin.components.PropertyFieldGroup;
+import com.holonplatform.vaadin.components.ValidationErrorHandler;
 import com.vaadin.ui.Field;
 
 /**

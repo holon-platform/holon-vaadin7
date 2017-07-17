@@ -16,6 +16,7 @@
 package com.holonplatform.vaadin.internal.components;
 
 import com.holonplatform.core.Validator;
+import com.holonplatform.core.Validator.ValidatorSupport;
 import com.holonplatform.vaadin.components.builders.InvalidFieldNotificationMode;
 import com.vaadin.ui.Field;
 
@@ -27,19 +28,7 @@ import com.vaadin.ui.Field;
  *
  * @since 5.0.0
  */
-public interface ValidatableField<T> extends Field<T> {
-
-	/**
-	 * Adds a Field value {@link Validator}
-	 * @param validator The validator to add
-	 */
-	void addValidator(Validator<T> validator);
-
-	/**
-	 * Removes a Field value {@link Validator}
-	 * @param validator The validator to remove
-	 */
-	void removeValidator(Validator<T> validator);
+public interface ValidatableField<T> extends Field<T>, ValidatorSupport<T> {
 
 	/**
 	 * Gets current invalid Field error notification mode

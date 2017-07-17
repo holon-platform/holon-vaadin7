@@ -26,16 +26,15 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import com.holonplatform.core.Validator;
-import com.holonplatform.core.Validator.ValidationErrorHandler;
 import com.holonplatform.core.Validator.ValidationException;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.property.Property;
 import com.holonplatform.core.property.PropertyBox;
 import com.holonplatform.core.property.PropertyRenderer;
-import com.holonplatform.core.property.VirtualProperty;
 import com.holonplatform.core.property.PropertyRendererRegistry.NoSuitableRendererAvailableException;
-import com.holonplatform.vaadin.components.FieldsValidator;
+import com.holonplatform.core.property.VirtualProperty;
 import com.holonplatform.vaadin.components.PropertyFieldGroup;
+import com.holonplatform.vaadin.components.ValidationErrorHandler;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.ui.Field;
 
@@ -308,9 +307,7 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 	@Override
 	public void validate() throws ValidationException {
 		// validate fields
-		FieldsValidator.builder().defaultValidationErrorHandler(defaultValidationErrorHandler)
-				.stopFieldValidationAtFirstFailure(stopFieldValidationAtFirstFailure).add(getValidatableFields())
-				.build().validate();
+		validateFields();
 		// validate value
 		validate(getValue(false));
 	}
@@ -324,9 +321,10 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 	public boolean validate(ValidationErrorHandler handler) {
 		ObjectUtils.argumentNotNull(handler, "ValidationErrorHandler must be not null");
 		// validate fields
-		if (!FieldsValidator.builder().defaultValidationErrorHandler(defaultValidationErrorHandler)
-				.stopFieldValidationAtFirstFailure(stopFieldValidationAtFirstFailure).add(getValidatableFields())
-				.build().validate(handler)) {
+		try {
+			validate(getValidatableFields());
+		} catch (ValidationException e) {
+			handler.handleValidationError(e);
 			return false;
 		}
 		// validate value
@@ -355,6 +353,53 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 		}
 	}
 
+	/**
+	 * Validate given fields.
+	 * @throws ValidationException If at least one field is not valid
+	 */
+	@SuppressWarnings("rawtypes")
+	private void validate(Iterable<Field> fields) throws ValidationException {
+		LinkedList<ValidationException> validationExceptions = new LinkedList<>();
+		fields.forEach(f -> {
+			ValidationException ve = validateField(f);
+			if (ve != null) {
+				if (isStopFieldValidationAtFirstFailure()) {
+					throw ve;
+				}
+				validationExceptions.add(ve);
+			}
+		});
+		if (!validationExceptions.isEmpty()) {
+			if (validationExceptions.size() == 1) {
+				throw validationExceptions.getFirst();
+			} else {
+				throw new ValidationException(validationExceptions.toArray(new ValidationException[0]));
+			}
+		}
+	}
+
+	private void validateFields() throws ValidationException {
+		if (getDefaultValidationErrorHandler().isPresent()) {
+			validate(getDefaultValidationErrorHandler().get());
+		} else {
+			validate(getValidatableFields());
+		}
+	}
+
+	/**
+	 * Validate given Field and return a translated {@link ValidationException} if validation fails.
+	 * @param field Field to validate
+	 * @return Validation exception
+	 */
+	protected ValidationException validateField(@SuppressWarnings("rawtypes") Field field) {
+		try {
+			field.validate();
+		} catch (InvalidValueException e) {
+			return ValidationUtils.translateValidationException(e);
+		}
+		return null;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.PropertyFieldGroup#getValue(boolean)
@@ -378,9 +423,7 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 
 		if (validate) {
 			// Fields validation
-			FieldsValidator.builder().defaultValidationErrorHandler(defaultValidationErrorHandler)
-					.stopFieldValidationAtFirstFailure(stopFieldValidationAtFirstFailure).add(getValidatableFields())
-					.build().validate();
+			validateFields();
 		}
 
 		properties.forEach(p -> {
@@ -401,8 +444,7 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.components.PropertyFieldGroup#setValue(com.holonplatform.core.property.PropertyBox,
+	 * @see com.holonplatform.vaadin.components.PropertyFieldGroup#setValue(com.holonplatform.core.property.PropertyBox,
 	 * boolean)
 	 */
 	@SuppressWarnings("unchecked")
@@ -939,8 +981,7 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 
 		/*
 		 * (non-Javadoc)
-		 * @see
-		 * com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#readOnly(com.holonplatform.core.property.
+		 * @see com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#readOnly(com.holonplatform.core.property.
 		 * Property)
 		 */
 		@Override
@@ -952,8 +993,7 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 
 		/*
 		 * (non-Javadoc)
-		 * @see
-		 * com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#required(com.holonplatform.core.property.
+		 * @see com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#required(com.holonplatform.core.property.
 		 * Property)
 		 */
 		@Override
@@ -1088,8 +1128,7 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 
 		/*
 		 * (non-Javadoc)
-		 * @see
-		 * com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#withFieldConfigurator(com.holonplatform.
+		 * @see com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#withFieldConfigurator(com.holonplatform.
 		 * vaadin.components.PropertyFieldGroup.FieldConfigurator)
 		 */
 		@Override

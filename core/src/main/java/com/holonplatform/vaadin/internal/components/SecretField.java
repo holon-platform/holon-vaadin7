@@ -16,11 +16,14 @@
 package com.holonplatform.vaadin.internal.components;
 
 import com.holonplatform.core.Validator;
+import com.holonplatform.core.Validator.ValidationException;
 import com.holonplatform.core.internal.utils.ObjectUtils;
+import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.builders.InvalidFieldNotificationMode;
 import com.holonplatform.vaadin.components.builders.SecretFieldBuilder;
 import com.holonplatform.vaadin.internal.components.builders.AbstractValidatableFieldBuilder;
 import com.vaadin.data.Validator.InvalidValueException;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.PasswordField;
 
@@ -30,7 +33,7 @@ import com.vaadin.ui.PasswordField;
  *
  * @since 5.0.0
  */
-public class SecretField extends PasswordField implements ValidatableField<String> {
+public class SecretField extends PasswordField implements Input<String>, ValidatableField<String> {
 
 	private static final long serialVersionUID = -288626996273192490L;
 
@@ -63,6 +66,15 @@ public class SecretField extends PasswordField implements ValidatableField<Strin
 		addStyleName("h-secretfield");
 
 		ValidationUtils.setupInvalidFieldNotificationMode(this);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.Input#getComponent()
+	 */
+	@Override
+	public Component getComponent() {
+		return this;
 	}
 
 	/**
@@ -200,6 +212,19 @@ public class SecretField extends PasswordField implements ValidatableField<Strin
 
 	/*
 	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.ValidatableValue#validateValue()
+	 */
+	@Override
+	public void validateValue() throws ValidationException {
+		try {
+			validate();
+		} catch (InvalidValueException e) {
+			throw ValidationUtils.translateValidationException(e);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
 	 * @see com.vaadin.ui.AbstractField#validate()
 	 */
 	@Override
@@ -251,7 +276,8 @@ public class SecretField extends PasswordField implements ValidatableField<Strin
 	 *
 	 * @since 5.0.0
 	 */
-	public static class Builder extends AbstractValidatableFieldBuilder<String, Field<String>, SecretField, SecretFieldBuilder>
+	public static class Builder
+			extends AbstractValidatableFieldBuilder<String, Field<String>, SecretField, SecretFieldBuilder>
 			implements SecretFieldBuilder {
 
 		/**

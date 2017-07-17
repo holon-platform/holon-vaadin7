@@ -19,15 +19,14 @@ import java.io.Serializable;
 
 import com.holonplatform.core.Validator;
 import com.holonplatform.core.Validator.Validatable;
-import com.holonplatform.core.Validator.ValidationErrorHandler;
 import com.holonplatform.core.Validator.ValidationException;
 import com.holonplatform.core.Validator.ValidatorSupport;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.property.Property;
+import com.holonplatform.core.property.Property.PropertyNotFoundException;
 import com.holonplatform.core.property.PropertyBox;
 import com.holonplatform.core.property.PropertyRenderer;
 import com.holonplatform.core.property.PropertyRendererRegistry;
-import com.holonplatform.core.property.Property.PropertyNotFoundException;
 import com.holonplatform.vaadin.internal.components.DefaultPropertyFieldGroup;
 import com.vaadin.ui.Field;
 

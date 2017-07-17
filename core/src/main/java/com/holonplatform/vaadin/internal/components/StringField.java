@@ -16,12 +16,15 @@
 package com.holonplatform.vaadin.internal.components;
 
 import com.holonplatform.core.Validator;
+import com.holonplatform.core.Validator.ValidationException;
 import com.holonplatform.core.internal.utils.ObjectUtils;
+import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.builders.InvalidFieldNotificationMode;
 import com.holonplatform.vaadin.components.builders.StringFieldBuilder;
 import com.holonplatform.vaadin.internal.components.builders.AbstractStringFieldBuilder;
 import com.vaadin.data.Property;
 import com.vaadin.data.Validator.InvalidValueException;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.TextField;
 
@@ -30,7 +33,7 @@ import com.vaadin.ui.TextField;
  * 
  * @since 5.0.0
  */
-public class StringField extends TextField implements ValidatableField<String> {
+public class StringField extends TextField implements Input<String>, ValidatableField<String> {
 
 	private static final long serialVersionUID = -4023624843325799165L;
 
@@ -112,6 +115,15 @@ public class StringField extends TextField implements ValidatableField<String> {
 		addStyleName("h-stringfield");
 
 		ValidationUtils.setupInvalidFieldNotificationMode(this);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.Input#getComponent()
+	 */
+	@Override
+	public Component getComponent() {
+		return this;
 	}
 
 	/**
@@ -247,6 +259,19 @@ public class StringField extends TextField implements ValidatableField<String> {
 	@Override
 	public void beforeClientResponse(boolean initial) {
 		ValidationUtils.beforeClientResponse(this, initial, (i) -> super.beforeClientResponse(i));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.ValidatableValue#validateValue()
+	 */
+	@Override
+	public void validateValue() throws ValidationException {
+		try {
+			validate();
+		} catch (InvalidValueException e) {
+			throw ValidationUtils.translateValidationException(e);
+		}
 	}
 
 	/*

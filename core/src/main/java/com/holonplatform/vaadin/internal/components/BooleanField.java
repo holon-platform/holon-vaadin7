@@ -16,7 +16,9 @@
 package com.holonplatform.vaadin.internal.components;
 
 import com.holonplatform.core.Validator;
+import com.holonplatform.core.Validator.ValidationException;
 import com.holonplatform.core.internal.utils.ObjectUtils;
+import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.builders.BooleanFieldBuilder;
 import com.holonplatform.vaadin.components.builders.InvalidFieldNotificationMode;
 import com.holonplatform.vaadin.internal.components.builders.AbstractValidatableFieldBuilder;
@@ -25,6 +27,7 @@ import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
 
 /**
@@ -33,7 +36,7 @@ import com.vaadin.ui.Field;
  *
  * @since 5.0.0
  */
-public class BooleanField extends CheckBox implements ValidatableField<Boolean> {
+public class BooleanField extends CheckBox implements Input<Boolean>, ValidatableField<Boolean> {
 
 	private static final long serialVersionUID = 8256370094165483325L;
 
@@ -221,6 +224,28 @@ public class BooleanField extends CheckBox implements ValidatableField<Boolean> 
 
 	/*
 	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.ValidatableValue#validateValue()
+	 */
+	@Override
+	public void validateValue() throws ValidationException {
+		try {
+			validate();
+		} catch (InvalidValueException e) {
+			throw ValidationUtils.translateValidationException(e);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.Input#getComponent()
+	 */
+	@Override
+	public Component getComponent() {
+		return this;
+	}
+
+	/*
+	 * (non-Javadoc)
 	 * @see com.vaadin.ui.AbstractTextField#setValue(java.lang.Boolean)
 	 */
 	@Override
@@ -255,7 +280,8 @@ public class BooleanField extends CheckBox implements ValidatableField<Boolean> 
 	/**
 	 * Builder to create {@link BooleanField} instances
 	 */
-	public static class Builder extends AbstractValidatableFieldBuilder<Boolean, Field<Boolean>, BooleanField, BooleanFieldBuilder>
+	public static class Builder
+			extends AbstractValidatableFieldBuilder<Boolean, Field<Boolean>, BooleanField, BooleanFieldBuilder>
 			implements BooleanFieldBuilder {
 
 		/**
