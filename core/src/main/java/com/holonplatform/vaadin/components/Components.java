@@ -292,242 +292,6 @@ public interface Components {
 	}
 
 	/**
-	 * Gets a builder to create {@link String} type {@link Input}s.
-	 * @return Input builder
-	 */
-	static StringInputBuilder stringInput() {
-		return new StringField.Builder();
-	}
-
-	/**
-	 * Gets a builder to create {@link String} type {@link Input}s rendered as a text area in UI.
-	 * @return Input builder
-	 */
-	static StringInputBuilder stringArea() {
-		return new StringArea.Builder();
-	}
-
-	/**
-	 * Gets a builder to create {@link String} type {@link Input}s which not display user input on screen, used to enter
-	 * secret text information like passwords.
-	 * @return Input builder
-	 */
-	static SecretInputBuilder secretInput() {
-		return new SecretField.Builder();
-	}
-
-	/**
-	 * Gets a builder to create {@link Number} type {@link Input}s.
-	 * @param <T> Number type
-	 * @param numberClass Concrete number class
-	 * @return Input builder
-	 */
-	static <T extends Number> NumberInputBuilder<T> numberInput(Class<T> numberClass) {
-		return new NumberField.Builder<>(numberClass);
-	}
-
-	/**
-	 * Gets a builder to create {@link Boolean} type {@link Input}s.
-	 * @return Input builder
-	 */
-	static BooleanInputBuilder booleanInput() {
-		return new BooleanField.Builder();
-	}
-
-	/**
-	 * Gets a builder to create {@link Date} type {@link Input}s.
-	 * @param inline <code>true</code> to render the input component using an inline calendar
-	 * @return Input builder
-	 */
-	static DateInputBuilder dateInput(boolean inline) {
-		return inline ? new InlineDateField.Builder() : new DateField.Builder();
-	}
-
-	/**
-	 * Gets a builder to create {@link Date} type {@link Input}s.
-	 * @return Input builder
-	 */
-	static DateInputBuilder dateInput() {
-		return dateInput(false);
-	}
-
-	/**
-	 * Gets a builder to create {@link LocalDate} type {@link Input}s.
-	 * @param inline <code>true</code> to render the input component using an inline calendar
-	 * @return Input builder
-	 */
-	static TemporalWithoutTimeFieldBuilder<LocalDate> localDateInput(boolean inline) {
-		return new LocalDateField.Builder(inline);
-	}
-
-	/**
-	 * Gets a builder to create {@link LocalDate} type {@link Input}s.
-	 * @return Input builder
-	 */
-	static TemporalWithoutTimeFieldBuilder<LocalDate> localDateInput() {
-		return localDateInput(false);
-	}
-
-	/**
-	 * Gets a builder to create {@link LocalDateTime} type {@link Input}s.
-	 * @param inline <code>true</code> to render the input component using an inline calendar
-	 * @return Input builder
-	 */
-	static TemporalWithTimeFieldBuilder<LocalDateTime> localDateTimeInput(boolean inline) {
-		return new LocalDateTimeField.Builder(inline);
-	}
-
-	/**
-	 * Gets a builder to create {@link LocalDateTime} type {@link Input}s.
-	 * @return Input builder
-	 */
-	static TemporalWithTimeFieldBuilder<LocalDateTime> localDateTimeInput() {
-		return localDateTimeInput(false);
-	}
-
-	/**
-	 * Gets a builder to create a single selection {@link Input}.
-	 * @param <T> Selection value type
-	 * @param type Selection value type
-	 * @param renderingMode Rendering mode
-	 * @return Input builder
-	 */
-	static <T> SingleSelectInputBuilder<T> singleSelect(Class<? extends T> type, RenderingMode renderingMode) {
-		return SingleSelect.builder(type, renderingMode);
-	}
-
-	/**
-	 * Gets a builder to create a single selection {@link Input} using default {@link RenderingMode#SELECT}.
-	 * @param <T> Selection value type
-	 * @param type Selection value type
-	 * @return Input builder
-	 */
-	static <T> SingleSelectInputBuilder<T> singleSelect(Class<? extends T> type) {
-		return SingleSelect.builder(type);
-	}
-
-	/**
-	 * Gets a builder to create a multiple selection {@link Input}.
-	 * @param <T> Selection value type
-	 * @param type Selection value type
-	 * @param renderingMode Rendering mode
-	 * @return Input builder
-	 */
-	static <T> MultiSelectInputBuilder<T> multiSelect(Class<? extends T> type, RenderingMode renderingMode) {
-		return MultiSelect.builder(type, renderingMode);
-	}
-
-	/**
-	 * Gets a builder to create a multiple selection {@link Input} using default {@link RenderingMode#OPTIONS}.
-	 * @param <T> Selection value type
-	 * @param type Selection value type
-	 * @return Input builder
-	 */
-	static <T> MultiSelectInputBuilder<T> multiSelect(Class<? extends T> type) {
-		return MultiSelect.builder(type);
-	}
-
-	/**
-	 * Builder to create an {@link ItemListing} instance using a {@link Grid} as backing component.
-	 * @param <T> Item data type
-	 * @param <P> Item property type
-	 * @return Grid {@link ItemListing} builder
-	 */
-	static <T, P> GridItemListingBuilder<T, P> gridListing() {
-		return new DefaultGridItemListingBuilder<>();
-	}
-
-	/**
-	 * Builder to create an {@link ItemListing} instance using a {@link Table} as backing component.
-	 * @param <T> Item data type
-	 * @param <P> Item property type
-	 * @return Table {@link ItemListing} builder
-	 */
-	static <T, P> TableItemListingBuilder<T, P> tableListing() {
-		return new DefaultTableItemListingBuilder<>();
-	}
-
-	/**
-	 * Builder to create an {@link PropertyListing} instance using a {@link Grid} as backing component.
-	 * @return Grid {@link PropertyListing} builder
-	 */
-	static GridPropertyListingBuilder gridPropertyListing() {
-		return new DefaultGridPropertyListingBuilder();
-	}
-
-	/**
-	 * Builder to create an {@link PropertyListing} instance using a {@link Table} as backing component.
-	 * @return Table {@link PropertyListing} builder
-	 */
-	static TablePropertyListingBuilder tablePropertyListing() {
-		return new DefaultTablePropertyListingBuilder();
-	}
-
-	/**
-	 * Gets a builder to create a {@link InputGroup}.
-	 * @return {@link InputGroup} builder
-	 */
-	static InputGroup.Builder inputGroup() {
-		return InputGroup.builder();
-	}
-	
-	/**
-	 * Gets a builder to create a {@link PropertyInputGroup}.
-	 * @return {@link PropertyInputGroup} builder
-	 */
-	static PropertyInputGroupBuilder propertyInputGroup() {
-		return PropertyInputGroup.builder();
-	}
-
-	/**
-	 * Gets a builder to create a {@link PropertyForm}.
-	 * @param <C> Content type
-	 * @param content Form content, where fields will be composed by the form {@link Composer} (not null)
-	 * @return {@link PropertyForm} builder
-	 */
-	static <C extends Component> PropertyFormBuilder<C> propertyForm(C content) {
-		return PropertyForm.builder(content);
-	}
-
-	/**
-	 * Gets a builder to create a {@link PropertyForm} using a {@link FormLayout} as layout component and a default
-	 * {@link PropertyForm#componentContainerComposer()} to compose the fields on layout.
-	 * @return {@link PropertyForm} builder
-	 */
-	static PropertyFormBuilder<FormLayout> propertyForm() {
-		return PropertyForm.builder(formLayout().fullWidth().build())
-				.composer(PropertyForm.componentContainerComposer());
-	}
-
-	/**
-	 * Gets a builder to create a {@link PropertyForm} using a {@link VerticalLayout} as layout component and a default
-	 * {@link PropertyForm#componentContainerComposer()} to compose the fields on layout.
-	 * @return {@link PropertyForm} builder
-	 */
-	static PropertyFormBuilder<VerticalLayout> verticalPropertyForm() {
-		return PropertyForm.builder(vl().fullWidth().build()).composer(PropertyForm.componentContainerComposer());
-	}
-
-	/**
-	 * Gets a builder to create a {@link PropertyForm} using a {@link HorizontalLayout} as layout component and a
-	 * default {@link PropertyForm#componentContainerComposer()} to compose the fields on layout.
-	 * @return {@link PropertyForm} builder
-	 */
-	static PropertyFormBuilder<HorizontalLayout> horizontalPropertyForm() {
-		return PropertyForm.builder(hl().build()).composer(PropertyForm.componentContainerComposer(false));
-	}
-
-	/**
-	 * Gets a builder to create a {@link PropertyForm} using a {@link VerticalLayout} as layout component and a default
-	 * {@link PropertyForm#componentContainerComposer()} to compose the fields on layout.
-	 * @return {@link PropertyForm} builder
-	 */
-	static PropertyFormBuilder<GridLayout> gridPropertyForm() {
-		return PropertyForm.builder(gridLayout().fullWidth().build())
-				.composer(PropertyForm.componentContainerComposer());
-	}
-
-	/**
 	 * Gets a builder to create and open a {@link Dialog} window. The dialog will present by default a single
 	 * <em>ok</em> button.
 	 * @return DialogBuilder
@@ -545,6 +309,315 @@ public interface Components {
 	 */
 	static QuestionDialogBuilder questionDialog() {
 		return Dialog.question();
+	}
+
+	// Inputs
+
+	/**
+	 * {@link Input} type builders provider.
+	 */
+	static interface input {
+
+		/**
+		 * Gets a builder to create {@link String} type {@link Input}s.
+		 * @return Input builder
+		 */
+		static StringInputBuilder string() {
+			return string(false);
+		}
+
+		/**
+		 * Gets a builder to create {@link String} type {@link Input}s.
+		 * @param area <code>true</code> to create an input component rendered as a <em>text area</em>,
+		 *        <code>false</code> for a standard text input
+		 * @return Input builder
+		 */
+		static StringInputBuilder string(boolean area) {
+			return area ? new StringArea.Builder() : new StringField.Builder();
+		}
+
+		/**
+		 * Gets a builder to create {@link String} type {@link Input}s which not display user input on screen, used to
+		 * enter secret text information like passwords.
+		 * @return Input builder
+		 */
+		static SecretInputBuilder secretString() {
+			return new SecretField.Builder();
+		}
+
+		/**
+		 * Gets a builder to create {@link Number} type {@link Input}s.
+		 * @param <T> Number type
+		 * @param numberClass Concrete number class
+		 * @return Input builder
+		 */
+		static <T extends Number> NumberInputBuilder<T> number(Class<T> numberClass) {
+			return new NumberField.Builder<>(numberClass);
+		}
+
+		/**
+		 * Gets a builder to create {@link Boolean} type {@link Input}s.
+		 * @return Input builder
+		 */
+		static BooleanInputBuilder boolean_() {
+			return new BooleanField.Builder();
+		}
+
+		/**
+		 * Gets a builder to create {@link Date} type {@link Input}s.
+		 * @param inline <code>true</code> to render the input component using an inline calendar
+		 * @return Input builder
+		 */
+		static DateInputBuilder date(boolean inline) {
+			return inline ? new InlineDateField.Builder() : new DateField.Builder();
+		}
+
+		/**
+		 * Gets a builder to create {@link Date} type {@link Input}s.
+		 * @return Input builder
+		 */
+		static DateInputBuilder date() {
+			return date(false);
+		}
+
+		/**
+		 * Gets a builder to create {@link LocalDate} type {@link Input}s.
+		 * @param inline <code>true</code> to render the input component using an inline calendar
+		 * @return Input builder
+		 */
+		static TemporalWithoutTimeFieldBuilder<LocalDate> localDate(boolean inline) {
+			return new LocalDateField.Builder(inline);
+		}
+
+		/**
+		 * Gets a builder to create {@link LocalDate} type {@link Input}s.
+		 * @return Input builder
+		 */
+		static TemporalWithoutTimeFieldBuilder<LocalDate> localDate() {
+			return localDate(false);
+		}
+
+		/**
+		 * Gets a builder to create {@link LocalDateTime} type {@link Input}s.
+		 * @param inline <code>true</code> to render the input component using an inline calendar
+		 * @return Input builder
+		 */
+		static TemporalWithTimeFieldBuilder<LocalDateTime> localDateTime(boolean inline) {
+			return new LocalDateTimeField.Builder(inline);
+		}
+
+		/**
+		 * Gets a builder to create {@link LocalDateTime} type {@link Input}s.
+		 * @return Input builder
+		 */
+		static TemporalWithTimeFieldBuilder<LocalDateTime> localDateTime() {
+			return localDateTime(false);
+		}
+
+		/**
+		 * Gets a builder to create a single selection {@link Input}.
+		 * @param <T> Selection value type
+		 * @param type Selection value type
+		 * @param renderingMode Rendering mode
+		 * @return Input builder
+		 */
+		static <T> SingleSelectInputBuilder<T> singleSelect(Class<? extends T> type, RenderingMode renderingMode) {
+			return SingleSelect.builder(type, renderingMode);
+		}
+
+		/**
+		 * Gets a builder to create a single selection {@link Input} using default {@link RenderingMode#SELECT}.
+		 * @param <T> Selection value type
+		 * @param type Selection value type
+		 * @return Input builder
+		 */
+		static <T> SingleSelectInputBuilder<T> singleSelect(Class<? extends T> type) {
+			return SingleSelect.builder(type);
+		}
+
+		/**
+		 * Gets a builder to create a multiple selection {@link Input}.
+		 * @param <T> Selection value type
+		 * @param type Selection value type
+		 * @param renderingMode Rendering mode
+		 * @return Input builder
+		 */
+		static <T> MultiSelectInputBuilder<T> multiSelect(Class<? extends T> type, RenderingMode renderingMode) {
+			return MultiSelect.builder(type, renderingMode);
+		}
+
+		/**
+		 * Gets a builder to create a multiple selection {@link Input} using default {@link RenderingMode#OPTIONS}.
+		 * @param <T> Selection value type
+		 * @param type Selection value type
+		 * @return Input builder
+		 */
+		static <T> MultiSelectInputBuilder<T> multiSelect(Class<? extends T> type) {
+			return MultiSelect.builder(type);
+		}
+
+		/**
+		 * Gets a builder to create a single selection {@link Input} with given {@link Enum} class as data source, using
+		 * all enum constants as selection items.
+		 * @param <E> Enum value type
+		 * @param type Enum value type
+		 * @param renderingMode Rendering mode
+		 * @return Input builder
+		 */
+		static <E extends Enum<E>> SingleSelectInputBuilder<E> enumSingle(Class<E> type, RenderingMode renderingMode) {
+			return singleSelect(type, renderingMode).items(type.getEnumConstants());
+		}
+
+		/**
+		 * Gets a builder to create a single selection {@link Input} with given {@link Enum} class as data source, using
+		 * all enum constants as selection items and default {@link RenderingMode#SELECT} rendering mode.
+		 * @param <E> Enum value type
+		 * @param type Enum value type
+		 * @return Input builder
+		 */
+		static <E extends Enum<E>> SingleSelectInputBuilder<E> enumSingle(Class<E> type) {
+			return singleSelect(type).items(type.getEnumConstants());
+		}
+
+		/**
+		 * Gets a builder to create a multiple selection {@link Input} with given {@link Enum} class as data source,
+		 * using all enum constants as selection items.
+		 * @param <E> Enum value type
+		 * @param type Enum value type
+		 * @param renderingMode Rendering mode
+		 * @return Input builder
+		 */
+		static <E extends Enum<E>> MultiSelectInputBuilder<E> enumMulti(Class<E> type, RenderingMode renderingMode) {
+			return multiSelect(type, renderingMode).items(type.getEnumConstants());
+		}
+
+		/**
+		 * Gets a builder to create a multiple selection {@link Input} with given {@link Enum} class as data source,
+		 * using all enum constants as selection items and default {@link RenderingMode#OPTIONS} rendering mode.
+		 * @param <E> Enum value type
+		 * @param type Enum value type
+		 * @return Input builder
+		 */
+		static <E extends Enum<E>> MultiSelectInputBuilder<E> enumMulti(Class<E> type) {
+			return multiSelect(type).items(type.getEnumConstants());
+		}
+
+		/**
+		 * Gets a builder to create a {@link InputGroup}.
+		 * @return {@link InputGroup} builder
+		 */
+		static InputGroup.Builder group() {
+			return InputGroup.builder();
+		}
+
+		/**
+		 * Gets a builder to create a {@link PropertyInputGroup}.
+		 * @return {@link PropertyInputGroup} builder
+		 */
+		static PropertyInputGroupBuilder propertyGroup() {
+			return PropertyInputGroup.builder();
+		}
+
+	}
+
+	// Item listings
+
+	/**
+	 * {@link ItemListing} builders provider.
+	 */
+	static interface listing {
+
+		/**
+		 * Builder to create an {@link ItemListing} instance using a {@link Grid} as backing component.
+		 * @param <T> Item data type
+		 * @param <P> Item property type
+		 * @return Grid {@link ItemListing} builder
+		 */
+		static <T, P> GridItemListingBuilder<T, P> items() {
+			return new DefaultGridItemListingBuilder<>();
+		}
+
+		/**
+		 * Builder to create an {@link PropertyListing} instance using a {@link Grid} as backing component.
+		 * @return Grid {@link PropertyListing} builder
+		 */
+		static GridPropertyListingBuilder properties() {
+			return new DefaultGridPropertyListingBuilder();
+		}
+
+		/**
+		 * Builder to create an {@link ItemListing} instance using a {@link Table} as backing component.
+		 * @param <T> Item data type
+		 * @param <P> Item property type
+		 * @return Table {@link ItemListing} builder
+		 */
+		static <T, P> TableItemListingBuilder<T, P> itemsUsingTable() {
+			return new DefaultTableItemListingBuilder<>();
+		}
+
+		/**
+		 * Builder to create an {@link PropertyListing} instance using a {@link Table} as backing component.
+		 * @return Table {@link PropertyListing} builder
+		 */
+		static TablePropertyListingBuilder propertiesUsingTable() {
+			return new DefaultTablePropertyListingBuilder();
+		}
+
+	}
+
+	/**
+	 * {@link PropertyForm} builders provider.
+	 */
+	static interface form {
+
+		/**
+		 * Gets a builder to create a {@link PropertyForm}.
+		 * @param <C> Content type
+		 * @param content Form content, where fields will be composed by the form {@link Composer} (not null)
+		 * @return {@link PropertyForm} builder
+		 */
+		static <C extends Component> PropertyFormBuilder<C> builder(C content) {
+			return PropertyForm.builder(content);
+		}
+
+		/**
+		 * Gets a builder to create a {@link PropertyForm} using a {@link FormLayout} as layout component and a default
+		 * {@link PropertyForm#componentContainerComposer()} to compose the fields on layout.
+		 * @return {@link PropertyForm} builder
+		 */
+		static PropertyFormBuilder<FormLayout> builder() {
+			return PropertyForm.builder(formLayout().fullWidth().build())
+					.composer(PropertyForm.componentContainerComposer());
+		}
+
+		/**
+		 * Gets a builder to create a {@link PropertyForm} using a {@link VerticalLayout} as layout component and a
+		 * default {@link PropertyForm#componentContainerComposer()} to compose the fields on layout.
+		 * @return {@link PropertyForm} builder
+		 */
+		static PropertyFormBuilder<VerticalLayout> vertical() {
+			return PropertyForm.builder(vl().fullWidth().build()).composer(PropertyForm.componentContainerComposer());
+		}
+
+		/**
+		 * Gets a builder to create a {@link PropertyForm} using a {@link HorizontalLayout} as layout component and a
+		 * default {@link PropertyForm#componentContainerComposer()} to compose the fields on layout.
+		 * @return {@link PropertyForm} builder
+		 */
+		static PropertyFormBuilder<HorizontalLayout> horizontal() {
+			return PropertyForm.builder(hl().build()).composer(PropertyForm.componentContainerComposer(false));
+		}
+
+		/**
+		 * Gets a builder to create a {@link PropertyForm} using a {@link VerticalLayout} as layout component and a
+		 * default {@link PropertyForm#componentContainerComposer()} to compose the fields on layout.
+		 * @return {@link PropertyForm} builder
+		 */
+		static PropertyFormBuilder<GridLayout> grid() {
+			return PropertyForm.builder(gridLayout().fullWidth().build())
+					.composer(PropertyForm.componentContainerComposer());
+		}
+
 	}
 
 }
