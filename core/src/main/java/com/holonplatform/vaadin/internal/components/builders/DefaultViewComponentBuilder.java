@@ -16,12 +16,12 @@
 package com.holonplatform.vaadin.internal.components.builders;
 
 import com.holonplatform.core.internal.utils.ObjectUtils;
+import com.holonplatform.vaadin.components.ValueHolder.ValueChangeListener;
 import com.holonplatform.vaadin.components.ViewComponent;
 import com.holonplatform.vaadin.components.builders.ViewComponentBuilder;
 import com.holonplatform.vaadin.internal.components.LabelViewComponent;
 import com.holonplatform.vaadin.internal.components.LabelViewComponent.StringValueConverter;
 import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.converter.Converter;
 
 /**
@@ -112,7 +112,7 @@ public class DefaultViewComponentBuilder<T>
 	 * Property.ValueChangeListener)
 	 */
 	@Override
-	public ViewComponentBuilder<T> withValueChangeListener(ValueChangeListener listener) {
+	public ViewComponentBuilder<T> withValueChangeListener(ValueChangeListener<T> listener) {
 		getInstance().addValueChangeListener(listener);
 		return builder();
 	}

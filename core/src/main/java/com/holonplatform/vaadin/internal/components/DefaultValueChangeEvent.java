@@ -15,8 +15,8 @@
  */
 package com.holonplatform.vaadin.internal.components;
 
-import com.holonplatform.vaadin.components.Input;
-import com.holonplatform.vaadin.components.Input.ValueChangeEvent;
+import com.holonplatform.vaadin.components.ValueHolder;
+import com.holonplatform.vaadin.components.ValueHolder.ValueChangeEvent;
 
 /**
  * Default {@link ValueChangeEvent} implementation.
@@ -25,14 +25,14 @@ import com.holonplatform.vaadin.components.Input.ValueChangeEvent;
  *
  * @since 5.0.0
  */
-public class InputValueChangeEvent<V> implements ValueChangeEvent<V> {
+public class DefaultValueChangeEvent<V> implements ValueChangeEvent<V> {
 
 	private static final long serialVersionUID = 1L;
 	
-	private final Input<V> source;
+	private final ValueHolder<V> source;
 	private final V value;
 
-	public InputValueChangeEvent(Input<V> source, V value) {
+	public DefaultValueChangeEvent(ValueHolder<V> source, V value) {
 		super();
 		this.source = source;
 		this.value = value;
@@ -40,16 +40,16 @@ public class InputValueChangeEvent<V> implements ValueChangeEvent<V> {
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.Input.ValueChangeEvent#getSource()
+	 * @see com.holonplatform.vaadin.components.ValueHolder.ValueChangeEvent#getSource()
 	 */
 	@Override
-	public Input<V> getSource() {
+	public ValueHolder<V> getSource() {
 		return source;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.Input.ValueChangeEvent#getValue()
+	 * @see com.holonplatform.vaadin.components.ValueHolder.ValueChangeEvent#getValue()
 	 */
 	@Override
 	public V getValue() {

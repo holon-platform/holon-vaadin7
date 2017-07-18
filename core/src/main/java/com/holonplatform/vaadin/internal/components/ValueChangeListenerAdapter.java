@@ -15,12 +15,12 @@
  */
 package com.holonplatform.vaadin.internal.components;
 
-import com.holonplatform.vaadin.components.Input;
+import com.holonplatform.vaadin.components.ValueHolder;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 
 /**
- * Adapter for input {@link com.holonplatform.vaadin.components.Input.ValueChangeListener}s.
+ * Adapter for {@link com.holonplatform.vaadin.components.ValueHolder.ValueChangeListener}s.
  * 
  * @param <V> Value type
  * 
@@ -30,11 +30,11 @@ public class ValueChangeListenerAdapter<V> implements ValueChangeListener {
 
 	private static final long serialVersionUID = 8418286403853201418L;
 
-	private final Input<V> source;
-	private final com.holonplatform.vaadin.components.Input.ValueChangeListener<V> wrapped;
+	private final ValueHolder<V> source;
+	private final com.holonplatform.vaadin.components.ValueHolder.ValueChangeListener<V> wrapped;
 
-	public ValueChangeListenerAdapter(Input<V> source,
-			com.holonplatform.vaadin.components.Input.ValueChangeListener<V> wrapped) {
+	public ValueChangeListenerAdapter(ValueHolder<V> source,
+			com.holonplatform.vaadin.components.ValueHolder.ValueChangeListener<V> wrapped) {
 		super();
 		this.source = source;
 		this.wrapped = wrapped;
@@ -47,7 +47,7 @@ public class ValueChangeListenerAdapter<V> implements ValueChangeListener {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void valueChange(ValueChangeEvent event) {
-		wrapped.valueChange(new InputValueChangeEvent<>(source, (V) event.getProperty().getValue()));
+		wrapped.valueChange(new DefaultValueChangeEvent<>(source, (V) event.getProperty().getValue()));
 	}
 
 }

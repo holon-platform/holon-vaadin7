@@ -22,6 +22,7 @@ import java.io.Serializable;
  *
  * @since 5.0.0
  */
+@FunctionalInterface
 public interface Registration extends Serializable {
 
 	/**

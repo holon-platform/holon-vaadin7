@@ -15,10 +15,10 @@
  */
 package com.holonplatform.vaadin.components.builders;
 
+import com.holonplatform.vaadin.components.ValueHolder.ValueChangeListener;
 import com.holonplatform.vaadin.components.ViewComponent;
 import com.holonplatform.vaadin.internal.components.LabelViewComponent.StringValueConverter;
 import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.converter.Converter;
 
 /**
@@ -67,6 +67,6 @@ public interface ViewComponentBuilder<T> extends ComponentBuilder<ViewComponent<
 	 * @param listener The ValueChangeListener to add
 	 * @return this
 	 */
-	ViewComponentBuilder<T> withValueChangeListener(ValueChangeListener listener);
+	ViewComponentBuilder<T> withValueChangeListener(ValueChangeListener<T> listener);
 
 }

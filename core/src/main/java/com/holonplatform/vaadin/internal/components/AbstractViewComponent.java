@@ -19,7 +19,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
+import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.internal.utils.TypeUtils;
+import com.holonplatform.vaadin.components.Registration;
 import com.holonplatform.vaadin.components.ViewComponent;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.converter.Converter;
@@ -37,7 +39,7 @@ import com.vaadin.ui.Label;
  * @since 5.0.0
  */
 public abstract class AbstractViewComponent<T> extends CustomComponent
-		implements ViewComponent<T>, Property.ValueChangeListener {
+		implements ViewComponent<T>, Property<T>, Property.Editor, Property.ValueChangeListener {
 
 	private static final long serialVersionUID = 1112624954933562344L;
 
@@ -49,13 +51,12 @@ public abstract class AbstractViewComponent<T> extends CustomComponent
 	/**
 	 * Value change listeners
 	 */
-	private final List<ValueChangeListener> valueChangeListeners = new LinkedList<>();
+	private final List<com.holonplatform.vaadin.components.Input.ValueChangeListener<T>> valueChangeListeners = new LinkedList<>();
 
 	/**
 	 * Data source property
 	 */
-	@SuppressWarnings("rawtypes")
-	private Property dataSource;
+	private Property<T> dataSource;
 
 	/**
 	 * Optional converter to use when component is bound to a data source property
@@ -186,7 +187,7 @@ public abstract class AbstractViewComponent<T> extends CustomComponent
 		// update internal component
 		updateValue(newValue);
 		// fire value change
-		fireValueChange();
+		fireValueChange(newValue);
 	}
 
 	/*
@@ -218,51 +219,35 @@ public abstract class AbstractViewComponent<T> extends CustomComponent
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * com.vaadin.data.Property.ValueChangeNotifier#addValueChangeListener(com.vaadin.data.Property.ValueChangeListener)
+	 * @see com.holonplatform.vaadin.components.ValueHolder#addValueChangeListener(com.holonplatform.vaadin.components.
+	 * ValueHolder.ValueChangeListener)
 	 */
 	@Override
-	public void addValueChangeListener(com.vaadin.data.Property.ValueChangeListener listener) {
+	public Registration addValueChangeListener(
+			com.holonplatform.vaadin.components.Input.ValueChangeListener<T> listener) {
+		ObjectUtils.argumentNotNull(listener, "ValueChangeListener must be not null");
 		valueChangeListeners.add(listener);
-		setImmediate(true);
+		return () -> removeValueChangeListener(listener);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.vaadin.data.Property.ValueChangeNotifier#addListener(com.vaadin.data.Property.ValueChangeListener)
+	/**
+	 * Removes a {@link ValueChangeListener}.
+	 * @param listener the listener to remove
 	 */
-	@Override
-	public void addListener(com.vaadin.data.Property.ValueChangeListener listener) {
-		addValueChangeListener(listener);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.vaadin.data.Property.ValueChangeNotifier#removeValueChangeListener(com.vaadin.data.Property.
-	 * ValueChangeListener)
-	 */
-	@Override
-	public void removeValueChangeListener(com.vaadin.data.Property.ValueChangeListener listener) {
-		valueChangeListeners.remove(listener);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.vaadin.data.Property.ValueChangeNotifier#removeListener(com.vaadin.data.Property.ValueChangeListener)
-	 */
-	@Override
-	public void removeListener(com.vaadin.data.Property.ValueChangeListener listener) {
-		removeValueChangeListener(listener);
+	public void removeValueChangeListener(com.holonplatform.vaadin.components.Input.ValueChangeListener<T> listener) {
+		if (listener != null) {
+			valueChangeListeners.remove(listener);
+		}
 	}
 
 	/**
 	 * Emits the value change event
+	 * @param value the changed value
 	 */
-	protected void fireValueChange() {
-		final ValueChangeEvent valueChangeEvent = new ValueChangeEvent(this);
-		for (ValueChangeListener listener : valueChangeListeners) {
-			listener.valueChange(valueChangeEvent);
-		}
+	protected void fireValueChange(T value) {
+		final com.holonplatform.vaadin.components.Input.ValueChangeEvent<T> valueChangeEvent = new DefaultValueChangeEvent<>(
+				this, value);
+		valueChangeListeners.forEach(l -> l.valueChange(valueChangeEvent));
 	}
 
 	/*
@@ -354,28 +339,8 @@ public abstract class AbstractViewComponent<T> extends CustomComponent
 			// update internal component
 			updateValue(value);
 			// fire value change
-			fireValueChange();
+			fireValueChange(value);
 		}
-	}
-
-	@SuppressWarnings("serial")
-	private static class ValueChangeEvent implements Property.ValueChangeEvent {
-
-		private final Property<?> property;
-
-		public ValueChangeEvent(Property<?> property) {
-			this.property = property;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see com.vaadin.data.Property.ValueChangeEvent#getProperty()
-		 */
-		@Override
-		public Property<?> getProperty() {
-			return property;
-		}
-
 	}
 
 }

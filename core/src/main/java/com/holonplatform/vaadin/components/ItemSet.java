@@ -20,7 +20,7 @@ import java.io.Serializable;
 import com.vaadin.server.Resource;
 
 /**
- * A component wich supports an items set as data source.
+ * Implemented by components which support an item set as data source.
  * 
  * @since 5.0.0
  */

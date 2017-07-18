@@ -15,10 +15,6 @@
  */
 package com.holonplatform.vaadin.components;
 
-import java.io.Serializable;
-import java.util.Objects;
-import java.util.Optional;
-
 import com.holonplatform.core.Validator;
 import com.holonplatform.core.Validator.ValidatorSupport;
 import com.holonplatform.core.property.Property;
@@ -29,6 +25,9 @@ import com.vaadin.ui.Field;
 
 /**
  * Input component representation, i.e. a UI component that has a user-editable value.
+ * <p>
+ * Extends {@link ValueHolder} since handles a value, supporting {@link ValueChangeListener}s registration.
+ * </p>
  * <p>
  * The actual UI {@link Component} which represents the input component can be obtained through {@link #getComponent()}.
  * </p>
@@ -41,59 +40,7 @@ import com.vaadin.ui.Field;
  * 
  * @since 5.0.0
  */
-public interface Input<V> extends Serializable, ValidatorSupport<V>, ValidatableValue {
-
-	/**
-	 * Sets the <code>value</code> of this input component.
-	 * @param value the value to set
-	 * @throws IllegalArgumentException if the value is not valid
-	 */
-	void setValue(V value);
-
-	/**
-	 * Gets the current value of this input component.
-	 * @return the current value
-	 */
-	V getValue();
-
-	/**
-	 * Returns the value that represents an empty value for this input component.
-	 * <p>
-	 * By default, <code>null</code> is returned.
-	 * </p>
-	 * @return the value that represents an empty value for this input component
-	 */
-	public default V getEmptyValue() {
-		return null;
-	}
-
-	/**
-	 * Returns whether this input component is considered to be empty, according to its current value and empty value
-	 * representation.
-	 * @return <code>true</code> if considered empty, <code>false</code> if not
-	 */
-	default boolean isEmpty() {
-		return Objects.equals(getValue(), getEmptyValue());
-	}
-
-	/**
-	 * Clears this input component.
-	 * <p>
-	 * By default, resets the value to the empty one.
-	 * </p>
-	 */
-	default void clear() {
-		setValue(getEmptyValue());
-	}
-
-	/**
-	 * Gets the current value of this input component as an {@link Optional}, which will be empty if the input component
-	 * is considered to be empty.
-	 * @return the current optional value
-	 */
-	default Optional<V> getOptionalValue() {
-		return isEmpty() ? Optional.empty() : Optional.ofNullable(getValue());
-	}
+public interface Input<V> extends ValueHolder<V>, ValidatorSupport<V>, ValidatableValue {
 
 	/**
 	 * Sets the read-only mode of this input component. The user can't change the value when in read-only mode.
@@ -127,13 +74,6 @@ public interface Input<V> extends Serializable, ValidatorSupport<V>, Validatable
 	 * Sets the focus for this input component, if supported by concrete component implementation.
 	 */
 	void focus();
-
-	/**
-	 * Adds a value change listener, called when the {@link Input} value changes.
-	 * @param listener the value change listener to add (not null)
-	 * @return a registration for the listener, which provides the <em>remove</em> operation
-	 */
-	public Registration addValueChangeListener(ValueChangeListener<V> listener);
 
 	/**
 	 * Get the UI {@link Component} which represents this input component.
@@ -191,42 +131,6 @@ public interface Input<V> extends Serializable, ValidatorSupport<V>, Validatable
 		default Input<T> render(Property<T> property) {
 			return Input.from(renderField(property));
 		}
-
-	}
-
-	/**
-	 * A listener for {@link Input} value change events.
-	 * @param <V> Value type
-	 */
-	@FunctionalInterface
-	public interface ValueChangeListener<V> extends Serializable {
-
-		/**
-		 * Invoked when this listener receives a value change event from an {@link Input} source to which it has been
-		 * added.
-		 * @param event the value change event
-		 */
-		void valueChange(ValueChangeEvent<V> event);
-
-	}
-
-	/**
-	 * A {@link ValueChangeListener} event.
-	 * @param <V> Value type
-	 */
-	public interface ValueChangeEvent<V> extends Serializable {
-
-		/**
-		 * Get the source of this value change event.
-		 * @return the {@link Input} source
-		 */
-		Input<V> getSource();
-
-		/**
-		 * Returns the new value that triggered this value change event.
-		 * @return the new value
-		 */
-		V getValue();
 
 	}
 

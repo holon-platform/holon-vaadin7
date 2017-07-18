@@ -17,33 +17,16 @@ package com.holonplatform.vaadin.components;
 
 import com.holonplatform.vaadin.components.builders.ViewComponentBuilder;
 import com.holonplatform.vaadin.internal.components.builders.DefaultViewComponentBuilder;
-import com.vaadin.data.Property;
 import com.vaadin.ui.Component;
 
 /**
- * A {@link Component} to display a value in UI.
+ * A {@link ValueHolder} {@link Component} to display a value in UI.
  * 
- * <p>
- * Extends {@link Viewer} to allow the use of a {@link Property} as data source and {@link ValueChangeNotifier} to
- * register listeners for value change events.
- * </p>
- * 
- * @param <T> Value type
+ * @param <V> Value type
  *
  * @since 5.0.0
  */
-public interface ViewComponent<T> extends Component, Property<T>, Property.Viewer, Property.ValueChangeNotifier {
-
-	/**
-	 * Checks whether the view component is empty, i.e. has no value to display.
-	 * @return <code>true</code> fi view component is empty
-	 */
-	boolean isEmpty();
-
-	/**
-	 * Clears component value
-	 */
-	void clear();
+public interface ViewComponent<V> extends ValueHolder<V>, Component {
 
 	// Builder
 
