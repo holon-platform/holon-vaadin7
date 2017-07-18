@@ -15,13 +15,13 @@
  */
 package com.holonplatform.vaadin.internal;
 
-import static com.holonplatform.vaadin.components.Components.booleanField;
-import static com.holonplatform.vaadin.components.Components.dateField;
-import static com.holonplatform.vaadin.components.Components.localDateField;
-import static com.holonplatform.vaadin.components.Components.localDateTimeField;
-import static com.holonplatform.vaadin.components.Components.numberField;
+import static com.holonplatform.vaadin.components.Components.booleanInput;
+import static com.holonplatform.vaadin.components.Components.dateInput;
+import static com.holonplatform.vaadin.components.Components.localDateInput;
+import static com.holonplatform.vaadin.components.Components.localDateTimeInput;
+import static com.holonplatform.vaadin.components.Components.numberInput;
 import static com.holonplatform.vaadin.components.Components.singleSelect;
-import static com.holonplatform.vaadin.components.Components.stringField;
+import static com.holonplatform.vaadin.components.Components.stringInput;
 
 import java.text.NumberFormat;
 import java.time.LocalDate;
@@ -110,7 +110,7 @@ public class DefaultFieldPropertyRenderer<T> implements PropertyRenderer<Field, 
 	 * @return Field instance
 	 */
 	protected Field<T> renderString(Property<T> property) {
-		return postProcessField(stringField().nullRepresentation("").emptyValuesAsNull(true).asField(), property);
+		return postProcessField(stringInput().nullRepresentation("").emptyValuesAsNull(true).asField(), property);
 	}
 
 	/**
@@ -119,7 +119,7 @@ public class DefaultFieldPropertyRenderer<T> implements PropertyRenderer<Field, 
 	 * @return Field instance
 	 */
 	protected Field<T> renderBoolean(Property<T> property) {
-		return postProcessField(booleanField().nullValueAsFalse(true).asField(), property);
+		return postProcessField(booleanInput().nullValueAsFalse(true).asField(), property);
 	}
 
 	/**
@@ -144,9 +144,9 @@ public class DefaultFieldPropertyRenderer<T> implements PropertyRenderer<Field, 
 		TemporalInputBuilder builder = null;
 
 		if (LocalDate.class.isAssignableFrom(property.getType())) {
-			builder = localDateField(false);
+			builder = localDateInput(false);
 		} else if (LocalDateTime.class.isAssignableFrom(property.getType())) {
-			builder = localDateTimeField(false);
+			builder = localDateTimeInput(false);
 		} else {
 			throw new UnsupportedTemporalTypeException(
 					"Temporal type " + property.getType().getName() + " is not supported by default field renderer");
@@ -168,7 +168,7 @@ public class DefaultFieldPropertyRenderer<T> implements PropertyRenderer<Field, 
 	 */
 	protected Field<T> renderDate(Property<T> property) {
 		final TemporalType type = property.getConfiguration().getTemporalType().orElse(TemporalType.DATE);
-		return postProcessField(dateField(false)
+		return postProcessField(dateInput(false)
 				.resolution((type == TemporalType.DATE_TIME) ? Resolution.MINUTE : Resolution.DAY).asField(), property);
 	}
 
@@ -203,7 +203,7 @@ public class DefaultFieldPropertyRenderer<T> implements PropertyRenderer<Field, 
 			numberFormat.setGroupingUsed(false);
 		}
 
-		return postProcessField(numberField(type).numberFormat(numberFormat).asField(), property);
+		return postProcessField(numberInput(type).numberFormat(numberFormat).asField(), property);
 	}
 
 	/**

@@ -38,11 +38,11 @@ import com.holonplatform.vaadin.components.builders.ComponentConfigurator;
 import com.holonplatform.vaadin.components.builders.ComponentConfigurator.BaseComponentConfigurator;
 import com.holonplatform.vaadin.components.builders.CssLayoutBuilder;
 import com.holonplatform.vaadin.components.builders.DateInputBuilder;
-import com.holonplatform.vaadin.components.builders.InputConfigurator;
-import com.holonplatform.vaadin.components.builders.InputConfigurator.BaseFieldConfigurator;
 import com.holonplatform.vaadin.components.builders.FormLayoutBuilder;
 import com.holonplatform.vaadin.components.builders.GridLayoutBuilder;
 import com.holonplatform.vaadin.components.builders.HorizontalLayoutBuilder;
+import com.holonplatform.vaadin.components.builders.InputConfigurator;
+import com.holonplatform.vaadin.components.builders.InputConfigurator.BaseFieldConfigurator;
 import com.holonplatform.vaadin.components.builders.ItemListingBuilder.GridItemListingBuilder;
 import com.holonplatform.vaadin.components.builders.ItemListingBuilder.TableItemListingBuilder;
 import com.holonplatform.vaadin.components.builders.LabelBuilder;
@@ -95,7 +95,6 @@ import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.GridLayout;
@@ -305,136 +304,136 @@ public final class Components implements Serializable {
 	}
 
 	/**
-	 * Gets a builder to create {@link String} type {@link Field}s.
-	 * @return Field builder
+	 * Gets a builder to create {@link String} type {@link Input}s.
+	 * @return Input builder
 	 */
-	public static StringInputBuilder stringField() {
+	public static StringInputBuilder stringInput() {
 		return new StringField.Builder();
 	}
 
 	/**
-	 * Gets a builder to create {@link String} type {@link Field}s rendered as a text area in UI.
-	 * @return Field builder
+	 * Gets a builder to create {@link String} type {@link Input}s rendered as a text area in UI.
+	 * @return Input builder
 	 */
 	public static StringInputBuilder stringArea() {
 		return new StringArea.Builder();
 	}
 
 	/**
-	 * Gets a builder to create {@link String} type {@link Field}s which not display user input on screen, used to enter
+	 * Gets a builder to create {@link String} type {@link Input}s which not display user input on screen, used to enter
 	 * secret text information like passwords.
-	 * @return Field builder
+	 * @return Input builder
 	 */
-	public static SecretInputBuilder secretField() {
+	public static SecretInputBuilder secretInput() {
 		return new SecretField.Builder();
 	}
 
 	/**
-	 * Gets a builder to create {@link Number} type {@link Field}s.
+	 * Gets a builder to create {@link Number} type {@link Input}s.
 	 * @param <T> Number type
 	 * @param numberClass Concrete number class
-	 * @return Field builder
+	 * @return Input builder
 	 */
-	public static <T extends Number> NumberInputBuilder<T> numberField(Class<T> numberClass) {
+	public static <T extends Number> NumberInputBuilder<T> numberInput(Class<T> numberClass) {
 		return new NumberField.Builder<>(numberClass);
 	}
 
 	/**
-	 * Gets a builder to create {@link Boolean} type {@link Field}s.
-	 * @return Field builder
+	 * Gets a builder to create {@link Boolean} type {@link Input}s.
+	 * @return Input builder
 	 */
-	public static BooleanInputBuilder booleanField() {
+	public static BooleanInputBuilder booleanInput() {
 		return new BooleanField.Builder();
 	}
 
 	/**
-	 * Gets a builder to create {@link Date} type {@link Field}s.
-	 * @param inline <code>true</code> to render field using an inline calendar
-	 * @return Field builder
+	 * Gets a builder to create {@link Date} type {@link Input}s.
+	 * @param inline <code>true</code> to render the input component using an inline calendar
+	 * @return Input builder
 	 */
-	public static DateInputBuilder dateField(boolean inline) {
+	public static DateInputBuilder dateInput(boolean inline) {
 		return inline ? new InlineDateField.Builder() : new DateField.Builder();
 	}
 
 	/**
-	 * Gets a builder to create {@link Date} type {@link Field}s.
-	 * @return Field builder
+	 * Gets a builder to create {@link Date} type {@link Input}s.
+	 * @return Input builder
 	 */
-	public static DateInputBuilder dateField() {
-		return dateField(false);
+	public static DateInputBuilder dateInput() {
+		return dateInput(false);
 	}
 
 	/**
-	 * Gets a builder to create {@link LocalDate} type {@link Field}s.
-	 * @param inline <code>true</code> to render field using an inline calendar
-	 * @return Field builder
+	 * Gets a builder to create {@link LocalDate} type {@link Input}s.
+	 * @param inline <code>true</code> to render the input component using an inline calendar
+	 * @return Input builder
 	 */
-	public static TemporalWithoutTimeFieldBuilder<LocalDate> localDateField(boolean inline) {
+	public static TemporalWithoutTimeFieldBuilder<LocalDate> localDateInput(boolean inline) {
 		return new LocalDateField.Builder(inline);
 	}
 
 	/**
-	 * Gets a builder to create {@link LocalDate} type {@link Field}s.
-	 * @return Field builder
+	 * Gets a builder to create {@link LocalDate} type {@link Input}s.
+	 * @return Input builder
 	 */
-	public static TemporalWithoutTimeFieldBuilder<LocalDate> localDateField() {
-		return localDateField(false);
+	public static TemporalWithoutTimeFieldBuilder<LocalDate> localDateInput() {
+		return localDateInput(false);
 	}
 
 	/**
-	 * Gets a builder to create {@link LocalDateTime} type {@link Field}s.
-	 * @param inline <code>true</code> to render field using an inline calendar
-	 * @return Field builder
+	 * Gets a builder to create {@link LocalDateTime} type {@link Input}s.
+	 * @param inline <code>true</code> to render the input component using an inline calendar
+	 * @return Input builder
 	 */
-	public static TemporalWithTimeFieldBuilder<LocalDateTime> localDateTimeField(boolean inline) {
+	public static TemporalWithTimeFieldBuilder<LocalDateTime> localDateTimeInput(boolean inline) {
 		return new LocalDateTimeField.Builder(inline);
 	}
 
 	/**
-	 * Gets a builder to create {@link LocalDateTime} type {@link Field}s.
-	 * @return Field builder
+	 * Gets a builder to create {@link LocalDateTime} type {@link Input}s.
+	 * @return Input builder
 	 */
-	public static TemporalWithTimeFieldBuilder<LocalDateTime> localDateTimeField() {
-		return localDateTimeField(false);
+	public static TemporalWithTimeFieldBuilder<LocalDateTime> localDateTimeInput() {
+		return localDateTimeInput(false);
 	}
 
 	/**
-	 * Gets a builder to create a single selection {@link Field}.
+	 * Gets a builder to create a single selection {@link Input}.
 	 * @param <T> Selection value type
 	 * @param type Selection value type
 	 * @param renderingMode Rendering mode
-	 * @return Field builder
+	 * @return Input builder
 	 */
 	public static <T> SingleSelectInputBuilder<T> singleSelect(Class<? extends T> type, RenderingMode renderingMode) {
 		return SingleSelect.builder(type, renderingMode);
 	}
 
 	/**
-	 * Gets a builder to create a single selection {@link Field} using default {@link RenderingMode#SELECT}.
+	 * Gets a builder to create a single selection {@link Input} using default {@link RenderingMode#SELECT}.
 	 * @param <T> Selection value type
 	 * @param type Selection value type
-	 * @return Field builder
+	 * @return Input builder
 	 */
 	public static <T> SingleSelectInputBuilder<T> singleSelect(Class<? extends T> type) {
 		return SingleSelect.builder(type);
 	}
 
 	/**
-	 * Gets a builder to create a multiple selection {@link Field}.
+	 * Gets a builder to create a multiple selection {@link Input}.
 	 * @param <T> Selection value type
 	 * @param type Selection value type
 	 * @param renderingMode Rendering mode
-	 * @return Field builder
+	 * @return Input builder
 	 */
 	public static <T> MultiSelectInputBuilder<T> multiSelect(Class<? extends T> type, RenderingMode renderingMode) {
 		return MultiSelect.builder(type, renderingMode);
 	}
 
 	/**
-	 * Gets a builder to create a multiple selection {@link Field} using default {@link RenderingMode#OPTIONS}.
+	 * Gets a builder to create a multiple selection {@link Input} using default {@link RenderingMode#OPTIONS}.
 	 * @param <T> Selection value type
 	 * @param type Selection value type
-	 * @return Field builder
+	 * @return Input builder
 	 */
 	public static <T> MultiSelectInputBuilder<T> multiSelect(Class<? extends T> type) {
 		return MultiSelect.builder(type);
