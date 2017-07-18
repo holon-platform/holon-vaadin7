@@ -30,6 +30,8 @@ import java.time.temporal.Temporal;
 import java.time.temporal.UnsupportedTemporalTypeException;
 import java.util.Locale;
 
+import javax.annotation.Priority;
+
 import com.holonplatform.core.i18n.LocalizationContext;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.internal.utils.TypeUtils;
@@ -50,6 +52,7 @@ import com.vaadin.ui.Field;
  * @since 5.0.0
  */
 @SuppressWarnings("rawtypes")
+@Priority(Integer.MAX_VALUE)
 public class DefaultFieldPropertyRenderer<T> implements PropertyRenderer<Field, T> {
 
 	/*

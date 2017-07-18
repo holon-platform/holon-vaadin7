@@ -15,6 +15,8 @@
  */
 package com.holonplatform.vaadin.internal;
 
+import javax.annotation.Priority;
+
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.property.Property;
 import com.holonplatform.core.property.PropertyRenderer;
@@ -30,6 +32,7 @@ import com.vaadin.ui.Field;
  * @since 5.0.0
  */
 @SuppressWarnings("rawtypes")
+@Priority(Integer.MAX_VALUE)
 public class DefaultInputPropertyRenderer<T> implements PropertyRenderer<Input, T> {
 
 	/*
