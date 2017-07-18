@@ -9,7 +9,7 @@ window.holon_vaadin = {
 	}
 };
 
-window.com_holonframework_vaadin_js_ElementPropertyHandler = function() {
+window.com_holonplatform_vaadin_js_ElementPropertyHandler = function() {
 
 	var el = this.getElement(this.getParentId());
 
