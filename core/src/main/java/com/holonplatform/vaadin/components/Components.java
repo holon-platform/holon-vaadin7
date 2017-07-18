@@ -15,12 +15,9 @@
  */
 package com.holonplatform.vaadin.components;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
-
-import org.mockito.internal.util.reflection.Fields;
 
 import com.holonplatform.vaadin.components.Dialog.DialogBuilder;
 import com.holonplatform.vaadin.components.Dialog.QuestionDialogBuilder;
@@ -105,24 +102,15 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
 /**
- * Main provider of {@link Component} builders and configurators.
- * 
+ * Main provider of UI components builders and configurators.
  * <p>
- * Provide static methods to obtain builder for common UI components type, allowing fluent and implementation-agnostic
+ * Provides static methods to obtain builder for common UI components type, allowing fluent and implementation-agnostic
  * components creation and configuration.
  * </p>
  * 
  * @since 5.0.0
  */
-public final class Components implements Serializable {
-
-	private static final long serialVersionUID = -2338969677506089465L;
-
-	/*
-	 * Empty private constructor: this class is intended only to provide constants ad utility methods.
-	 */
-	private Components() {
-	}
+public interface Components {
 
 	// Configurators
 
@@ -131,7 +119,7 @@ public final class Components implements Serializable {
 	 * @param component Component to configure (not null)
 	 * @return BaseComponentConfigurator
 	 */
-	public static BaseComponentConfigurator configure(AbstractComponent component) {
+	static BaseComponentConfigurator configure(AbstractComponent component) {
 		return new DefaultComponentConfigurator(component);
 	}
 
@@ -140,7 +128,7 @@ public final class Components implements Serializable {
 	 * @param button Button to configure (not null)
 	 * @return BaseButtonConfigurator
 	 */
-	public static BaseButtonConfigurator configure(Button button) {
+	static BaseButtonConfigurator configure(Button button) {
 		return new DefaultButtonConfigurator(button);
 	}
 
@@ -150,7 +138,7 @@ public final class Components implements Serializable {
 	 * @param field Field to configure (not null)
 	 * @return BaseFieldConfigurator
 	 */
-	public static <T> BaseFieldConfigurator<T> configure(AbstractField<T> field) {
+	static <T> BaseFieldConfigurator<T> configure(AbstractField<T> field) {
 		return new DefaultFieldConfigurator<>(field);
 	}
 
@@ -159,7 +147,7 @@ public final class Components implements Serializable {
 	 * @param layout Layout to configure
 	 * @return Layout configurator
 	 */
-	public static BaseOrderedLayoutConfigurator configure(VerticalLayout layout) {
+	static BaseOrderedLayoutConfigurator configure(VerticalLayout layout) {
 		return new DefaultOrderedLayoutConfigurator<>(layout);
 	}
 
@@ -168,7 +156,7 @@ public final class Components implements Serializable {
 	 * @param layout Layout to configure
 	 * @return Layout configurator
 	 */
-	public static BaseOrderedLayoutConfigurator configure(HorizontalLayout layout) {
+	static BaseOrderedLayoutConfigurator configure(HorizontalLayout layout) {
 		return new DefaultOrderedLayoutConfigurator<>(layout);
 	}
 
@@ -177,7 +165,7 @@ public final class Components implements Serializable {
 	 * @param layout Layout to configure
 	 * @return Layout configurator
 	 */
-	public static BaseOrderedLayoutConfigurator configure(FormLayout layout) {
+	static BaseOrderedLayoutConfigurator configure(FormLayout layout) {
 		return new DefaultOrderedLayoutConfigurator<>(layout);
 	}
 
@@ -186,7 +174,7 @@ public final class Components implements Serializable {
 	 * @param layout Layout to configure
 	 * @return Layout configurator
 	 */
-	public static BaseLayoutConfigurator configure(GridLayout layout) {
+	static BaseLayoutConfigurator configure(GridLayout layout) {
 		return new DefaultLayoutConfigurator<>(layout);
 	}
 
@@ -195,7 +183,7 @@ public final class Components implements Serializable {
 	 * @param layout Layout to configure
 	 * @return Layout configurator
 	 */
-	public static BaseClickableLayoutConfigurator configure(CssLayout layout) {
+	static BaseClickableLayoutConfigurator configure(CssLayout layout) {
 		return new DefaultClickableLayoutConfigurator<>(layout);
 	}
 
@@ -204,7 +192,7 @@ public final class Components implements Serializable {
 	 * @param layout Layout to configure
 	 * @return Layout configurator
 	 */
-	public static BaseClickableLayoutConfigurator configure(AbsoluteLayout layout) {
+	static BaseClickableLayoutConfigurator configure(AbsoluteLayout layout) {
 		return new DefaultClickableLayoutConfigurator<>(layout);
 	}
 
@@ -215,7 +203,7 @@ public final class Components implements Serializable {
 	 * content, which can be used with full expand ratio as a space filler in layouts.
 	 * @return Filler
 	 */
-	public static Component filler() {
+	static Component filler() {
 		return new Filler();
 	}
 
@@ -223,7 +211,7 @@ public final class Components implements Serializable {
 	 * Gets a builder to create {@link Label}s.
 	 * @return Label builder
 	 */
-	public static LabelBuilder label() {
+	static LabelBuilder label() {
 		return new DefaultLabelBuilder();
 	}
 
@@ -231,7 +219,7 @@ public final class Components implements Serializable {
 	 * Gets a builder to create {@link Button}s.
 	 * @return Button builder
 	 */
-	public static ButtonBuilder button() {
+	static ButtonBuilder button() {
 		return button(false);
 	}
 
@@ -241,7 +229,7 @@ public final class Components implements Serializable {
 	 *        browsers, using the HTML <code>&lt;button&gt;</code> element.
 	 * @return Button builder
 	 */
-	public static ButtonBuilder button(boolean nativeMode) {
+	static ButtonBuilder button(boolean nativeMode) {
 		return new DefaultButtonBuilder(nativeMode);
 	}
 
@@ -249,7 +237,7 @@ public final class Components implements Serializable {
 	 * Gets a builder to create {@link CssLayout}s.
 	 * @return CssLayout builder
 	 */
-	public static CssLayoutBuilder cssLayout() {
+	static CssLayoutBuilder cssLayout() {
 		return new DefaultCssLayoutBuilder();
 	}
 
@@ -257,7 +245,7 @@ public final class Components implements Serializable {
 	 * Gets a builder to create {@link FormLayout}s.
 	 * @return FormLayout builder
 	 */
-	public static FormLayoutBuilder formLayout() {
+	static FormLayoutBuilder formLayout() {
 		return new DefaultFormLayoutBuilder();
 	}
 
@@ -265,7 +253,7 @@ public final class Components implements Serializable {
 	 * Gets a builder to create {@link FormLayout}s.
 	 * @return FormLayout builder
 	 */
-	public static GridLayoutBuilder gridLayout() {
+	static GridLayoutBuilder gridLayout() {
 		return gridLayout(1, 1);
 	}
 
@@ -275,7 +263,7 @@ public final class Components implements Serializable {
 	 * @param rows Initial number of rows
 	 * @return GridLayout builder
 	 */
-	public static GridLayoutBuilder gridLayout(int columns, int rows) {
+	static GridLayoutBuilder gridLayout(int columns, int rows) {
 		return new DefaultGridLayoutBuilder(columns, rows);
 	}
 
@@ -283,7 +271,7 @@ public final class Components implements Serializable {
 	 * Gets a builder to create {@link HorizontalLayout}s.
 	 * @return HorizontalLayout builder
 	 */
-	public static HorizontalLayoutBuilder hl() {
+	static HorizontalLayoutBuilder hl() {
 		return new DefaultHorizontalLayoutBuilder();
 	}
 
@@ -291,7 +279,7 @@ public final class Components implements Serializable {
 	 * Gets a builder to create {@link VerticalLayout}s.
 	 * @return VerticalLayout builder
 	 */
-	public static VerticalLayoutBuilder vl() {
+	static VerticalLayoutBuilder vl() {
 		return new DefaultVerticalLayoutBuilder();
 	}
 
@@ -299,7 +287,7 @@ public final class Components implements Serializable {
 	 * Gets a builder to create {@link Panel}s.
 	 * @return Panel builder
 	 */
-	public static PanelBuilder panel() {
+	static PanelBuilder panel() {
 		return new DefaultPanelBuilder();
 	}
 
@@ -307,7 +295,7 @@ public final class Components implements Serializable {
 	 * Gets a builder to create {@link String} type {@link Input}s.
 	 * @return Input builder
 	 */
-	public static StringInputBuilder stringInput() {
+	static StringInputBuilder stringInput() {
 		return new StringField.Builder();
 	}
 
@@ -315,7 +303,7 @@ public final class Components implements Serializable {
 	 * Gets a builder to create {@link String} type {@link Input}s rendered as a text area in UI.
 	 * @return Input builder
 	 */
-	public static StringInputBuilder stringArea() {
+	static StringInputBuilder stringArea() {
 		return new StringArea.Builder();
 	}
 
@@ -324,7 +312,7 @@ public final class Components implements Serializable {
 	 * secret text information like passwords.
 	 * @return Input builder
 	 */
-	public static SecretInputBuilder secretInput() {
+	static SecretInputBuilder secretInput() {
 		return new SecretField.Builder();
 	}
 
@@ -334,7 +322,7 @@ public final class Components implements Serializable {
 	 * @param numberClass Concrete number class
 	 * @return Input builder
 	 */
-	public static <T extends Number> NumberInputBuilder<T> numberInput(Class<T> numberClass) {
+	static <T extends Number> NumberInputBuilder<T> numberInput(Class<T> numberClass) {
 		return new NumberField.Builder<>(numberClass);
 	}
 
@@ -342,7 +330,7 @@ public final class Components implements Serializable {
 	 * Gets a builder to create {@link Boolean} type {@link Input}s.
 	 * @return Input builder
 	 */
-	public static BooleanInputBuilder booleanInput() {
+	static BooleanInputBuilder booleanInput() {
 		return new BooleanField.Builder();
 	}
 
@@ -351,7 +339,7 @@ public final class Components implements Serializable {
 	 * @param inline <code>true</code> to render the input component using an inline calendar
 	 * @return Input builder
 	 */
-	public static DateInputBuilder dateInput(boolean inline) {
+	static DateInputBuilder dateInput(boolean inline) {
 		return inline ? new InlineDateField.Builder() : new DateField.Builder();
 	}
 
@@ -359,7 +347,7 @@ public final class Components implements Serializable {
 	 * Gets a builder to create {@link Date} type {@link Input}s.
 	 * @return Input builder
 	 */
-	public static DateInputBuilder dateInput() {
+	static DateInputBuilder dateInput() {
 		return dateInput(false);
 	}
 
@@ -368,7 +356,7 @@ public final class Components implements Serializable {
 	 * @param inline <code>true</code> to render the input component using an inline calendar
 	 * @return Input builder
 	 */
-	public static TemporalWithoutTimeFieldBuilder<LocalDate> localDateInput(boolean inline) {
+	static TemporalWithoutTimeFieldBuilder<LocalDate> localDateInput(boolean inline) {
 		return new LocalDateField.Builder(inline);
 	}
 
@@ -376,7 +364,7 @@ public final class Components implements Serializable {
 	 * Gets a builder to create {@link LocalDate} type {@link Input}s.
 	 * @return Input builder
 	 */
-	public static TemporalWithoutTimeFieldBuilder<LocalDate> localDateInput() {
+	static TemporalWithoutTimeFieldBuilder<LocalDate> localDateInput() {
 		return localDateInput(false);
 	}
 
@@ -385,7 +373,7 @@ public final class Components implements Serializable {
 	 * @param inline <code>true</code> to render the input component using an inline calendar
 	 * @return Input builder
 	 */
-	public static TemporalWithTimeFieldBuilder<LocalDateTime> localDateTimeInput(boolean inline) {
+	static TemporalWithTimeFieldBuilder<LocalDateTime> localDateTimeInput(boolean inline) {
 		return new LocalDateTimeField.Builder(inline);
 	}
 
@@ -393,7 +381,7 @@ public final class Components implements Serializable {
 	 * Gets a builder to create {@link LocalDateTime} type {@link Input}s.
 	 * @return Input builder
 	 */
-	public static TemporalWithTimeFieldBuilder<LocalDateTime> localDateTimeInput() {
+	static TemporalWithTimeFieldBuilder<LocalDateTime> localDateTimeInput() {
 		return localDateTimeInput(false);
 	}
 
@@ -404,7 +392,7 @@ public final class Components implements Serializable {
 	 * @param renderingMode Rendering mode
 	 * @return Input builder
 	 */
-	public static <T> SingleSelectInputBuilder<T> singleSelect(Class<? extends T> type, RenderingMode renderingMode) {
+	static <T> SingleSelectInputBuilder<T> singleSelect(Class<? extends T> type, RenderingMode renderingMode) {
 		return SingleSelect.builder(type, renderingMode);
 	}
 
@@ -414,7 +402,7 @@ public final class Components implements Serializable {
 	 * @param type Selection value type
 	 * @return Input builder
 	 */
-	public static <T> SingleSelectInputBuilder<T> singleSelect(Class<? extends T> type) {
+	static <T> SingleSelectInputBuilder<T> singleSelect(Class<? extends T> type) {
 		return SingleSelect.builder(type);
 	}
 
@@ -425,7 +413,7 @@ public final class Components implements Serializable {
 	 * @param renderingMode Rendering mode
 	 * @return Input builder
 	 */
-	public static <T> MultiSelectInputBuilder<T> multiSelect(Class<? extends T> type, RenderingMode renderingMode) {
+	static <T> MultiSelectInputBuilder<T> multiSelect(Class<? extends T> type, RenderingMode renderingMode) {
 		return MultiSelect.builder(type, renderingMode);
 	}
 
@@ -435,7 +423,7 @@ public final class Components implements Serializable {
 	 * @param type Selection value type
 	 * @return Input builder
 	 */
-	public static <T> MultiSelectInputBuilder<T> multiSelect(Class<? extends T> type) {
+	static <T> MultiSelectInputBuilder<T> multiSelect(Class<? extends T> type) {
 		return MultiSelect.builder(type);
 	}
 
@@ -445,7 +433,7 @@ public final class Components implements Serializable {
 	 * @param <P> Item property type
 	 * @return Grid {@link ItemListing} builder
 	 */
-	public static <T, P> GridItemListingBuilder<T, P> gridListing() {
+	static <T, P> GridItemListingBuilder<T, P> gridListing() {
 		return new DefaultGridItemListingBuilder<>();
 	}
 
@@ -455,7 +443,7 @@ public final class Components implements Serializable {
 	 * @param <P> Item property type
 	 * @return Table {@link ItemListing} builder
 	 */
-	public static <T, P> TableItemListingBuilder<T, P> tableListing() {
+	static <T, P> TableItemListingBuilder<T, P> tableListing() {
 		return new DefaultTableItemListingBuilder<>();
 	}
 
@@ -463,7 +451,7 @@ public final class Components implements Serializable {
 	 * Builder to create an {@link PropertyListing} instance using a {@link Grid} as backing component.
 	 * @return Grid {@link PropertyListing} builder
 	 */
-	public static GridPropertyListingBuilder gridPropertyListing() {
+	static GridPropertyListingBuilder gridPropertyListing() {
 		return new DefaultGridPropertyListingBuilder();
 	}
 
@@ -471,15 +459,23 @@ public final class Components implements Serializable {
 	 * Builder to create an {@link PropertyListing} instance using a {@link Table} as backing component.
 	 * @return Table {@link PropertyListing} builder
 	 */
-	public static TablePropertyListingBuilder tablePropertyListing() {
+	static TablePropertyListingBuilder tablePropertyListing() {
 		return new DefaultTablePropertyListingBuilder();
 	}
 
 	/**
+	 * Gets a builder to create a {@link InputGroup}.
+	 * @return {@link InputGroup} builder
+	 */
+	static InputGroup.Builder inputGroup() {
+		return InputGroup.builder();
+	}
+	
+	/**
 	 * Gets a builder to create a {@link PropertyInputGroup}.
 	 * @return {@link PropertyInputGroup} builder
 	 */
-	public static PropertyInputGroupBuilder propertyFieldGroup() {
+	static PropertyInputGroupBuilder propertyInputGroup() {
 		return PropertyInputGroup.builder();
 	}
 
@@ -489,7 +485,7 @@ public final class Components implements Serializable {
 	 * @param content Form content, where fields will be composed by the form {@link Composer} (not null)
 	 * @return {@link PropertyForm} builder
 	 */
-	public static <C extends Component> PropertyFormBuilder<C> propertyForm(C content) {
+	static <C extends Component> PropertyFormBuilder<C> propertyForm(C content) {
 		return PropertyForm.builder(content);
 	}
 
@@ -498,7 +494,7 @@ public final class Components implements Serializable {
 	 * {@link PropertyForm#componentContainerComposer()} to compose the fields on layout.
 	 * @return {@link PropertyForm} builder
 	 */
-	public static PropertyFormBuilder<FormLayout> propertyForm() {
+	static PropertyFormBuilder<FormLayout> propertyForm() {
 		return PropertyForm.builder(formLayout().fullWidth().build())
 				.composer(PropertyForm.componentContainerComposer());
 	}
@@ -508,7 +504,7 @@ public final class Components implements Serializable {
 	 * {@link PropertyForm#componentContainerComposer()} to compose the fields on layout.
 	 * @return {@link PropertyForm} builder
 	 */
-	public static PropertyFormBuilder<VerticalLayout> verticalPropertyForm() {
+	static PropertyFormBuilder<VerticalLayout> verticalPropertyForm() {
 		return PropertyForm.builder(vl().fullWidth().build()).composer(PropertyForm.componentContainerComposer());
 	}
 
@@ -517,7 +513,7 @@ public final class Components implements Serializable {
 	 * default {@link PropertyForm#componentContainerComposer()} to compose the fields on layout.
 	 * @return {@link PropertyForm} builder
 	 */
-	public static PropertyFormBuilder<HorizontalLayout> horizontalPropertyForm() {
+	static PropertyFormBuilder<HorizontalLayout> horizontalPropertyForm() {
 		return PropertyForm.builder(hl().build()).composer(PropertyForm.componentContainerComposer(false));
 	}
 
@@ -526,17 +522,9 @@ public final class Components implements Serializable {
 	 * {@link PropertyForm#componentContainerComposer()} to compose the fields on layout.
 	 * @return {@link PropertyForm} builder
 	 */
-	public static PropertyFormBuilder<GridLayout> gridPropertyForm() {
+	static PropertyFormBuilder<GridLayout> gridPropertyForm() {
 		return PropertyForm.builder(gridLayout().fullWidth().build())
 				.composer(PropertyForm.componentContainerComposer());
-	}
-
-	/**
-	 * Gets a builder to create a {@link InputGroup} to perform validations on a set of {@link Fields}.
-	 * @return {@link InputGroup} builder
-	 */
-	public static InputGroup.Builder fieldsValidator() {
-		return InputGroup.builder();
 	}
 
 	/**
@@ -544,7 +532,7 @@ public final class Components implements Serializable {
 	 * <em>ok</em> button.
 	 * @return DialogBuilder
 	 */
-	public static DialogBuilder dialog() {
+	static DialogBuilder dialog() {
 		return Dialog.builder();
 	}
 
@@ -555,7 +543,7 @@ public final class Components implements Serializable {
 	 * user selected answer.
 	 * @return QuestionDialogBuilder
 	 */
-	public static QuestionDialogBuilder questionDialog() {
+	static QuestionDialogBuilder questionDialog() {
 		return Dialog.question();
 	}
 
