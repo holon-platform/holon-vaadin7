@@ -19,6 +19,7 @@ import com.holonplatform.core.Validator;
 import com.holonplatform.core.Validator.ValidationException;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.vaadin.components.Input;
+import com.holonplatform.vaadin.components.Registration;
 import com.holonplatform.vaadin.components.builders.InvalidFieldNotificationMode;
 import com.holonplatform.vaadin.components.builders.StringFieldBuilder;
 import com.holonplatform.vaadin.internal.components.builders.AbstractStringFieldBuilder;
@@ -320,6 +321,17 @@ public class StringArea extends TextArea implements Input<String>, ValidatableFi
 		return value;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.Input#addValueChangeListener(com.holonplatform.vaadin.components.Input.
+	 * ValueChangeListener)
+	 */
+	@Override
+	public Registration addValueChangeListener(
+			com.holonplatform.vaadin.components.Input.ValueChangeListener<String> listener) {
+		return ValueChangeNotifierRegistration.adapt(this, this, listener);
+	}
+
 	// Builder
 
 	/**
@@ -349,16 +361,6 @@ public class StringArea extends TextArea implements Input<String>, ValidatableFi
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.internal.components.builders.AbstractComponentBuilder#build(com.vaadin.ui.
-		 * AbstractComponent)
-		 */
-		@Override
-		protected Field<String> build(StringArea instance) {
-			return instance;
-		}
-
-		/*
-		 * (non-Javadoc)
 		 * @see com.holonplatform.vaadin.components.builders.StringFieldBuilder#emptyValuesAsNull(boolean)
 		 */
 		@Override
@@ -375,6 +377,26 @@ public class StringArea extends TextArea implements Input<String>, ValidatableFi
 		public StringFieldBuilder blankValuesAsNull(boolean enable) {
 			getInstance().setBlankValuesAsNull(enable);
 			return builder();
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * com.holonplatform.vaadin.internal.components.builders.AbstractFieldBuilder#build(com.vaadin.ui.AbstractField)
+		 */
+		@Override
+		protected Input<String> build(StringArea instance) {
+			return instance;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see com.holonplatform.vaadin.internal.components.builders.AbstractFieldBuilder#buildAsField(com.vaadin.ui.
+		 * AbstractField)
+		 */
+		@Override
+		protected Field<String> buildAsField(StringArea instance) {
+			return instance;
 		}
 
 	}

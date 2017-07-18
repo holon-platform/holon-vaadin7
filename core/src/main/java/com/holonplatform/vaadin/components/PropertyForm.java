@@ -26,17 +26,17 @@ import com.holonplatform.vaadin.internal.components.ComponentContainerComposer;
 import com.holonplatform.vaadin.internal.components.DefaultPropertyForm;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.Field;
 
 /**
- * A {@link PropertyFieldGroup} component to display the property {@link Field}s on a layout.
+ * A {@link PropertyInputGroup} component to display the property {@link Input}s on a layout.
  * <p>
- * Uses a {@link Composer} to draw the form content, composing the fields on the component setted as form layout.
+ * Uses a {@link Composer} to draw the form content, composing the {@link Input} components on the component setted as
+ * form layout.
  * </p>
  * 
  * @since 5.0.0
  */
-public interface PropertyForm extends Component, PropertyFieldGroup {
+public interface PropertyForm extends Component, PropertyInputGroup {
 
 	/**
 	 * Get the form content component
@@ -45,32 +45,32 @@ public interface PropertyForm extends Component, PropertyFieldGroup {
 	Component getContent();
 
 	/**
-	 * Compose the property {@link Field}s on the form content component using the previously configured
+	 * Compose the property {@link Input}s on the form content component using the previously configured
 	 * {@link Composer}.
 	 * @throws IllegalStateException If the form content component or {@link Composer} are not configured (null)
 	 */
 	void compose();
 
 	/**
-	 * Delegate to compose the form {@link Field}s on the form layout content.
+	 * Delegate to compose the form {@link Input}s on the form layout content.
 	 * @param <C> Form content component type
 	 */
 	public interface Composer<C extends Component> {
 
 		/**
-		 * Compose the form {@link Field}s on the form layout content.
+		 * Compose the form {@link Input}s on the form layout content.
 		 * @param content Form content
-		 * @param propertyFields Property {@link Field}s provider
+		 * @param propertyInputs Property {@link Input}s provider
 		 */
-		void compose(C content, PropertyFieldContainer propertyFields);
+		void compose(C content, PropertyInputContainer propertyInputs);
 
 	}
 
 	// Builders
 
 	/**
-	 * Create a {@link Composer} which uses a {@link ComponentContainer} as composition layout and adds the fields to
-	 * layout in the order they are returned from the {@link PropertyForm}.
+	 * Create a {@link Composer} which uses a {@link ComponentContainer} as composition layout and adds the
+	 * {@link Input}s components to layout in the order they are returned from the {@link PropertyForm}.
 	 * @return A new {@link ComponentContainer} composer
 	 */
 	static Composer<ComponentContainer> componentContainerComposer() {
@@ -78,19 +78,20 @@ public interface PropertyForm extends Component, PropertyFieldGroup {
 	}
 
 	/**
-	 * Create a {@link Composer} which uses a {@link ComponentContainer} as composition layout and adds the fields to
-	 * layout in the order they are returned from the {@link PropertyForm}.
-	 * @param fullWidthFields <code>true</code> to set full width for all composed fields before adding them to layout
+	 * Create a {@link Composer} which uses a {@link ComponentContainer} as composition layout and adds the
+	 * {@link Input}s components to layout in the order they are returned from the {@link PropertyForm}.
+	 * @param fullWidthInputs <code>true</code> to set the width of all composed {@link Input}s to <code>100%</code>
+	 *        before adding them to the layout
 	 * @return A new {@link ComponentContainer} composer
 	 */
-	static Composer<ComponentContainer> componentContainerComposer(boolean fullWidthFields) {
-		return new ComponentContainerComposer(fullWidthFields);
+	static Composer<ComponentContainer> componentContainerComposer(boolean fullWidthInputs) {
+		return new ComponentContainerComposer(fullWidthInputs);
 	}
 
 	/**
 	 * Get a builder to create a {@link PropertyForm}.
 	 * @param <C> Form content component type
-	 * @param content Form content, where fields will be composed by the form {@link Composer} (not null)
+	 * @param content Form content, where {@link Input}s will be composed by the form {@link Composer} (not null)
 	 * @return {@link PropertyForm} builder
 	 */
 	static <C extends Component> PropertyFormBuilder<C> builder(C content) {
@@ -107,51 +108,52 @@ public interface PropertyForm extends Component, PropertyFieldGroup {
 
 		/**
 		 * Set a form content initializer to setup form content component. This initiliazer is called every time form
-		 * fields compisition is triggered.
+		 * inputs compisition is triggered.
 		 * @param initializer Form content initializer (not null)
 		 * @return this
 		 */
 		PropertyFormBuilder<C> initializer(Consumer<C> initializer);
 
 		/**
-		 * Set the form {@link Composer} to be used to compose form fields on the form layout component.
+		 * Set the form {@link Composer} to be used to compose form inputs on the form layout component.
 		 * @param composer The composer to set (not null)
 		 * @return this
 		 */
 		PropertyFormBuilder<C> composer(Composer<? super C> composer);
 
 		/**
-		 * Set whether to compose the form field on the form layout component when {@link PropertyForm} is attached to a
-		 * parent component, only if the form was not already composed using {@link PropertyForm#compose()}.
-		 * @param composeOnAttach <code>true</code> to to compose the form field on the form layout component when
+		 * Set whether to compose the form {@link Input} components on the form layout component when
+		 * {@link PropertyForm} is attached to a parent component, only if the form was not already composed using
+		 * {@link PropertyForm#compose()}.
+		 * @param composeOnAttach <code>true</code> to to compose the form inputs on the form layout component when
 		 *        {@link PropertyForm} is attached to a parent component. If <code>false</code>, the
-		 *        {@link PropertyForm#compose()} must be invoked to compose the form fields.
+		 *        {@link PropertyForm#compose()} must be invoked to compose the form inputs.
 		 * @return this
 		 */
 		PropertyFormBuilder<C> composeOnAttach(boolean composeOnAttach);
 
 		/**
-		 * Set the caption for the {@link Field}s bound to given property. By default, the caption is obtained from
+		 * Set the caption for the input component bound to given property. By default, the caption is obtained from
 		 * {@link Property} itself (which is {@link Localizable}).
-		 * @param property Property for which to set the field caption (not null)
-		 * @param caption Localizable field caption
+		 * @param property Property for which to set the input caption (not null)
+		 * @param caption Localizable input caption
 		 * @return this
 		 */
 		PropertyFormBuilder<C> propertyCaption(Property<?> property, Localizable caption);
 
 		/**
-		 * Set the caption for the {@link Field}s bound to given property. By default, the caption is obtained from
+		 * Set the caption for the input component bound to given property. By default, the caption is obtained from
 		 * {@link Property} itself (which is {@link Localizable}).
-		 * @param property Property for which to set the field caption (not null)
-		 * @param caption Field caption
+		 * @param property Property for which to set the input caption (not null)
+		 * @param caption Input compinent caption
 		 * @return this
 		 */
 		PropertyFormBuilder<C> propertyCaption(Property<?> property, String caption);
 
 		/**
-		 * Set the caption for the {@link Field}s bound to given property. By default, the caption is obtained from
+		 * Set the caption for the input component bound to given property. By default, the caption is obtained from
 		 * {@link Property} itself (which is {@link Localizable}).
-		 * @param property Property for which to set the field caption (not null)
+		 * @param property Property for which to set the input caption (not null)
 		 * @param defaultCaption Default caption if no translation is available for given <code>messageCode</code> for
 		 *        current Locale, or no {@link LocalizationContext} is available at all
 		 * @param messageCode Caption translation message key
@@ -162,8 +164,8 @@ public interface PropertyForm extends Component, PropertyFieldGroup {
 				Object... arguments);
 
 		/**
-		 * Set the caption for the {@link Field}s bound to given property as hidden.
-		 * @param property Property for which to hide the field caption (not null)
+		 * Set the caption for the input component bound to given property as hidden.
+		 * @param property Property for which to hide the input caption (not null)
 		 * @return this
 		 */
 		PropertyFormBuilder<C> hidePropertyCaption(Property<?> property);

@@ -18,14 +18,13 @@ package com.holonplatform.vaadin.components;
 import java.io.Serializable;
 
 import com.vaadin.server.Resource;
-import com.vaadin.ui.Component;
 
 /**
  * A component wich supports an items set as data source.
  * 
  * @since 5.0.0
  */
-public interface ItemSetComponent extends Component {
+public interface ItemSet {
 
 	/**
 	 * Returns the total number of available items.

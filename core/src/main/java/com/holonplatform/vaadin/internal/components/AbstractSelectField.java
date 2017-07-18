@@ -27,7 +27,7 @@ import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.i18n.LocalizationContext;
 import com.holonplatform.core.internal.utils.AnnotationUtils;
 import com.holonplatform.core.internal.utils.ObjectUtils;
-import com.holonplatform.vaadin.components.ItemSetComponent;
+import com.holonplatform.vaadin.components.ItemSet;
 import com.holonplatform.vaadin.components.Selectable;
 import com.holonplatform.vaadin.components.builders.BaseSelectFieldBuilder.RenderingMode;
 import com.holonplatform.vaadin.data.ItemDataSource;
@@ -51,7 +51,7 @@ import com.vaadin.ui.OptionGroup;
  * @param <ITEM> Selection items type
  */
 public abstract class AbstractSelectField<T, S, ITEM> extends AbstractCustomField<T, AbstractSelect>
-		implements Selectable<S>, ItemSetComponent, Container.Viewer {
+		implements Selectable<S>, ItemSet, Container.Viewer {
 
 	private static final long serialVersionUID = -2069614658878818456L;
 

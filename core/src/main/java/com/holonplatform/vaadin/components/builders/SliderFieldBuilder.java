@@ -15,8 +15,8 @@
  */
 package com.holonplatform.vaadin.components.builders;
 
+import com.holonplatform.vaadin.components.Input;
 import com.vaadin.shared.ui.slider.SliderOrientation;
-import com.vaadin.ui.Field;
 
 /**
  * Builder to create Slider field.
@@ -25,7 +25,7 @@ import com.vaadin.ui.Field;
  * 
  * @since 5.0.0
  */
-public interface SliderFieldBuilder<T extends Number> extends FieldBuilder<T, Field<T>, SliderFieldBuilder<T>> {
+public interface SliderFieldBuilder<T extends Number> extends FieldBuilder<T, Input<T>, SliderFieldBuilder<T>> {
 
 	/**
 	 * Set the maximum value. If the current value of the field is larger than this, the value is set to the new

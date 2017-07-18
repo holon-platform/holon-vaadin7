@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.TimeZone;
 
+import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.builders.TemporalFieldBuilder.TemporalWithoutTimeFieldBuilder;
 import com.holonplatform.vaadin.internal.converters.DateToLocalDateConverter;
 import com.vaadin.shared.ui.datefield.Resolution;
@@ -105,11 +106,21 @@ public class LocalDateField extends AbstractTemporalField<LocalDate> {
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.internal.components.builders.AbstractComponentBuilder#build(com.vaadin.ui.
-		 * AbstractComponent)
+		 * @see
+		 * com.holonplatform.vaadin.internal.components.builders.AbstractFieldBuilder#build(com.vaadin.ui.AbstractField)
 		 */
 		@Override
-		protected Field<LocalDate> build(LocalDateField instance) {
+		protected Input<LocalDate> build(LocalDateField instance) {
+			return instance;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see com.holonplatform.vaadin.internal.components.builders.AbstractFieldBuilder#buildAsField(com.vaadin.ui.
+		 * AbstractField)
+		 */
+		@Override
+		protected Field<LocalDate> buildAsField(LocalDateField instance) {
 			return instance;
 		}
 

@@ -107,7 +107,7 @@ public class DefaultFieldPropertyRenderer<T> implements PropertyRenderer<Field, 
 	 * @return Field instance
 	 */
 	protected Field<T> renderString(Property<T> property) {
-		return postProcessField(stringField().nullRepresentation("").emptyValuesAsNull(true).build(), property);
+		return postProcessField(stringField().nullRepresentation("").emptyValuesAsNull(true).asField(), property);
 	}
 
 	/**
@@ -116,7 +116,7 @@ public class DefaultFieldPropertyRenderer<T> implements PropertyRenderer<Field, 
 	 * @return Field instance
 	 */
 	protected Field<T> renderBoolean(Property<T> property) {
-		return postProcessField(booleanField().nullValueAsFalse(true).build(), property);
+		return postProcessField(booleanField().nullValueAsFalse(true).asField(), property);
 	}
 
 	/**
@@ -127,7 +127,7 @@ public class DefaultFieldPropertyRenderer<T> implements PropertyRenderer<Field, 
 	@SuppressWarnings("unchecked")
 	protected Field<T> renderEnum(Property<T> property) {
 		Class<Enum> enumType = (Class<Enum>) property.getType();
-		return postProcessField(singleSelect(enumType).items(enumType.getEnumConstants()).build(), property);
+		return postProcessField(singleSelect(enumType).items(enumType.getEnumConstants()).asField(), property);
 	}
 
 	/**
@@ -155,7 +155,7 @@ public class DefaultFieldPropertyRenderer<T> implements PropertyRenderer<Field, 
 		LocalizationContext.getCurrent().filter(l -> l.isLocalized()).flatMap((c) -> c.getLocale())
 				.ifPresent((l) -> b.locale(l));
 
-		return postProcessField(b.build(), property);
+		return postProcessField(b.asField(), property);
 	}
 
 	/**
@@ -166,7 +166,7 @@ public class DefaultFieldPropertyRenderer<T> implements PropertyRenderer<Field, 
 	protected Field<T> renderDate(Property<T> property) {
 		final TemporalType type = property.getConfiguration().getTemporalType().orElse(TemporalType.DATE);
 		return postProcessField(dateField(false)
-				.resolution((type == TemporalType.DATE_TIME) ? Resolution.MINUTE : Resolution.DAY).build(), property);
+				.resolution((type == TemporalType.DATE_TIME) ? Resolution.MINUTE : Resolution.DAY).asField(), property);
 	}
 
 	/**
@@ -200,7 +200,7 @@ public class DefaultFieldPropertyRenderer<T> implements PropertyRenderer<Field, 
 			numberFormat.setGroupingUsed(false);
 		}
 
-		return postProcessField(numberField(type).numberFormat(numberFormat).build(), property);
+		return postProcessField(numberField(type).numberFormat(numberFormat).asField(), property);
 	}
 
 	/**

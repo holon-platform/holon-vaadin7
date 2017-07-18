@@ -15,6 +15,7 @@
  */
 package com.holonplatform.vaadin.components.builders;
 
+import com.holonplatform.vaadin.components.Input;
 import com.vaadin.ui.Field;
 
 /**
@@ -22,7 +23,7 @@ import com.vaadin.ui.Field;
  * 
  * @since 5.0.0
  */
-public interface StringFieldBuilder extends TextInputFieldBuilder<String, Field<String>, StringFieldBuilder> {
+public interface StringFieldBuilder extends TextInputFieldBuilder<String, Input<String>, StringFieldBuilder> {
 
 	/**
 	 * If field is rendered as a text area in UI, set the number of rows of the text area

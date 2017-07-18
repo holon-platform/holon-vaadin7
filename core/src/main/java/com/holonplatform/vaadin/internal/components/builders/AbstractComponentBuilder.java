@@ -15,8 +15,6 @@
  */
 package com.holonplatform.vaadin.internal.components.builders;
 
-import com.holonplatform.core.i18n.Localizable;
-import com.holonplatform.core.i18n.LocalizationContext;
 import com.holonplatform.vaadin.components.builders.ComponentBuilder;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Component;
@@ -31,15 +29,7 @@ import com.vaadin.ui.Component;
  * @since 5.0.0
  */
 public abstract class AbstractComponentBuilder<C extends Component, I extends AbstractComponent, B extends ComponentBuilder<C, B>>
-		extends AbstractComponentConfigurator<I, B> implements ComponentBuilder<C, B> {
-
-	/**
-	 * Deferred messages localization
-	 */
-	protected boolean deferLocalization = false;
-
-	protected Localizable caption;
-	protected Localizable description;
+		extends AbstractLocalizableComponentConfigurator<I, B> implements ComponentBuilder<C, B> {
 
 	/**
 	 * Constructor
@@ -56,19 +46,6 @@ public abstract class AbstractComponentBuilder<C extends Component, I extends Ab
 	 */
 	protected abstract C build(I instance);
 
-	/**
-	 * Performs messages localization
-	 * @param instance Building instance
-	 */
-	protected void localize(I instance) {
-		if (caption != null) {
-			instance.setCaption(LocalizationContext.translate(caption, true));
-		}
-		if (description != null) {
-			instance.setDescription(LocalizationContext.translate(description, true));
-		}
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.builders.ComponentBuilder#deferLocalization()
@@ -81,38 +58,11 @@ public abstract class AbstractComponentBuilder<C extends Component, I extends Ab
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.components.builders.ComponentBuilder#caption(com.holonplatform.core.i18n.Localizable)
-	 */
-	@Override
-	public B caption(Localizable caption) {
-		this.caption = caption;
-		return builder();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.ComponentBuilder#description(com.holonplatform.core.i18n.
-	 * Localizable)
-	 */
-	@Override
-	public B description(Localizable description) {
-		this.description = description;
-		return builder();
-	}
-
-	/*
-	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.builders.ComponentBuilder#build()
 	 */
 	@Override
 	public C build() {
-		if (deferLocalization) {
-			instance.addAttachListener((e) -> localize(instance));
-		} else {
-			localize(instance);
-		}
-		return build(instance);
+		return build(setupLocalization(instance));
 	}
 
 }

@@ -18,10 +18,11 @@ package com.holonplatform.vaadin.components.builders;
 import java.util.Set;
 
 import com.holonplatform.core.i18n.Localizable;
+import com.holonplatform.vaadin.components.Input;
+import com.holonplatform.vaadin.components.ItemSet.ItemCaptionGenerator;
+import com.holonplatform.vaadin.components.ItemSet.ItemIconGenerator;
 import com.holonplatform.vaadin.components.MultiSelect;
 import com.holonplatform.vaadin.components.SingleSelect;
-import com.holonplatform.vaadin.components.ItemSetComponent.ItemCaptionGenerator;
-import com.holonplatform.vaadin.components.ItemSetComponent.ItemIconGenerator;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.combobox.FilteringMode;
 import com.vaadin.ui.Field;
@@ -37,8 +38,8 @@ import com.vaadin.ui.Field;
  * 
  * @since 5.0.0
  */
-public interface BaseSelectFieldBuilder<T, C extends Field<T>, S, ITEM, B extends BaseSelectFieldBuilder<T, C, S, ITEM, B>>
-		extends ValidatableFieldBuilder<T, C, B>, BaseItemDataSourceComponentBuilder<C, B> {
+public interface BaseSelectFieldBuilder<T, C extends Input<T>, S, ITEM, B extends BaseSelectFieldBuilder<T, C, S, ITEM, B>>
+		extends ValidatableFieldBuilder<T, C, B>, BaseItemDataSourceComponentBuilder<B> {
 
 	/**
 	 * Select UI rendering mode

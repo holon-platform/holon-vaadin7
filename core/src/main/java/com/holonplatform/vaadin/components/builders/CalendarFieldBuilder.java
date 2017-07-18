@@ -21,6 +21,7 @@ import java.util.TimeZone;
 import com.holonplatform.core.Context;
 import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.i18n.LocalizationContext;
+import com.holonplatform.vaadin.components.Input;
 import com.vaadin.ui.Field;
 
 /**
@@ -31,7 +32,7 @@ import com.vaadin.ui.Field;
  * 
  * @since 5.0.0
  */
-public interface CalendarFieldBuilder<T, B extends CalendarFieldBuilder<T, B>> extends ValidatableFieldBuilder<T, Field<T>, B> {
+public interface CalendarFieldBuilder<T, B extends CalendarFieldBuilder<T, B>> extends ValidatableFieldBuilder<T, Input<T>, B> {
 
 	/**
 	 * Sets date format to use for internal component date display.

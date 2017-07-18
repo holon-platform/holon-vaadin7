@@ -21,10 +21,10 @@ import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.property.Property;
 import com.holonplatform.core.property.PropertyBox;
 import com.holonplatform.vaadin.components.SingleSelect;
+import com.holonplatform.vaadin.components.builders.BaseSelectFieldBuilder.RenderingMode;
 import com.holonplatform.vaadin.components.builders.SelectFieldBuilder;
 import com.holonplatform.vaadin.components.builders.SinglePropertySelectFieldBuilder;
 import com.holonplatform.vaadin.components.builders.SingleSelectFieldBuilder;
-import com.holonplatform.vaadin.components.builders.BaseSelectFieldBuilder.RenderingMode;
 import com.holonplatform.vaadin.data.ItemDataProvider;
 import com.holonplatform.vaadin.data.ItemIdentifierProvider;
 import com.holonplatform.vaadin.data.container.ItemAdapter;
@@ -263,8 +263,11 @@ public class SingleSelectField<T, ITEM> extends AbstractSelectField<T, T, ITEM> 
 			return builder();
 		}
 
-		/* (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.builders.SelectItemDataSourceBuilder#dataSource(com.holonplatform.vaadin.data.ItemDataProvider)
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * com.holonplatform.vaadin.components.builders.SelectItemDataSourceBuilder#dataSource(com.holonplatform.vaadin.
+		 * data.ItemDataProvider)
 		 */
 		@SuppressWarnings("unchecked")
 		@Override
@@ -276,8 +279,11 @@ public class SingleSelectField<T, ITEM> extends AbstractSelectField<T, T, ITEM> 
 			return builder();
 		}
 
-		/* (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.builders.SelectItemDataSourceBuilder#itemAdapter(com.holonplatform.vaadin.data.container.ItemAdapter)
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * com.holonplatform.vaadin.components.builders.SelectItemDataSourceBuilder#itemAdapter(com.holonplatform.vaadin
+		 * .data.container.ItemAdapter)
 		 */
 		@SuppressWarnings("unchecked")
 		@Override
@@ -286,16 +292,39 @@ public class SingleSelectField<T, ITEM> extends AbstractSelectField<T, T, ITEM> 
 			return builder();
 		}
 
-		/* (non-Javadoc)
-		 * @see com.holonplatform.vaadin.internal.components.builders.AbstractSelectFieldBuilder#buildSelect(com.holonplatform.vaadin.internal.components.AbstractSelectField)
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * com.holonplatform.vaadin.internal.components.builders.AbstractSelectFieldBuilder#configureDataSource(com.
+		 * holonplatform.vaadin.internal.components.AbstractSelectField)
 		 */
 		@SuppressWarnings("unchecked")
 		@Override
-		protected SingleSelect<T> buildSelect(SingleSelectField<T, T> instance) {
+		protected void configureDataSource(SingleSelectField<T, T> instance) {
+			super.configureDataSource(instance);
 			if (!instance.getItemDataExtractor().isPresent()) {
 				// default extractor
 				instance.setItemDataExtractor((c, id, i) -> (T) id);
 			}
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see com.holonplatform.vaadin.internal.components.builders.AbstractSelectFieldBuilder#buildSelect(com.
+		 * holonplatform.vaadin.internal.components.AbstractSelectField)
+		 */
+		@Override
+		protected SingleSelect<T> buildSelect(SingleSelectField<T, T> instance) {
+			return instance;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see com.holonplatform.vaadin.internal.components.builders.AbstractSelectFieldBuilder#buildSelectAsField(com.
+		 * holonplatform.vaadin.internal.components.AbstractSelectField)
+		 */
+		@Override
+		protected Field<T> buildSelectAsField(SingleSelectField<T, T> instance) {
 			return instance;
 		}
 
@@ -366,15 +395,36 @@ public class SingleSelectField<T, ITEM> extends AbstractSelectField<T, T, ITEM> 
 
 		/*
 		 * (non-Javadoc)
+		 * @see
+		 * com.holonplatform.vaadin.internal.components.builders.AbstractSelectFieldBuilder#configureDataSource(com.
+		 * holonplatform.vaadin.internal.components.AbstractSelectField)
+		 */
+		@Override
+		protected void configureDataSource(SingleSelectField<T, PropertyBox> instance) {
+			super.configureDataSource(instance);
+			if (!instance.getItemDataExtractor().isPresent()) {
+				// default extractor
+				instance.setItemDataExtractor((c, id, i) -> ((PropertyBoxItem) i).getPropertyBox());
+			}
+		}
+
+		/*
+		 * (non-Javadoc)
 		 * @see com.holonplatform.vaadin.internal.components.builders.AbstractSelectFieldBuilder#buildSelect(com.
 		 * holonframework.vaadin.internal.components.AbstractSelectField)
 		 */
 		@Override
 		protected SingleSelect<T> buildSelect(SingleSelectField<T, PropertyBox> instance) {
-			if (!instance.getItemDataExtractor().isPresent()) {
-				// default extractor
-				instance.setItemDataExtractor((c, id, i) -> ((PropertyBoxItem) i).getPropertyBox());
-			}
+			return instance;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see com.holonplatform.vaadin.internal.components.builders.AbstractSelectFieldBuilder#buildSelectAsField(com.
+		 * holonplatform.vaadin.internal.components.AbstractSelectField)
+		 */
+		@Override
+		protected Field<T> buildSelectAsField(SingleSelectField<T, PropertyBox> instance) {
 			return instance;
 		}
 

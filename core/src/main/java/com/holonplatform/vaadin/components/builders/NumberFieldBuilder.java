@@ -17,6 +17,7 @@ package com.holonplatform.vaadin.components.builders;
 
 import java.text.NumberFormat;
 
+import com.holonplatform.vaadin.components.Input;
 import com.vaadin.ui.Field;
 
 /**
@@ -26,7 +27,7 @@ import com.vaadin.ui.Field;
  * 
  * @since 5.0.0
  */
-public interface NumberFieldBuilder<T extends Number> extends TextInputFieldBuilder<T, Field<T>, NumberFieldBuilder<T>> {
+public interface NumberFieldBuilder<T extends Number> extends TextInputFieldBuilder<T, Input<T>, NumberFieldBuilder<T>> {
 
 	/**
 	 * Sets the {@link NumberFormat} to use to represent number values in UI

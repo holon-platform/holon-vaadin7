@@ -19,6 +19,7 @@ import com.holonplatform.core.Validator;
 import com.holonplatform.core.Validator.ValidationException;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.vaadin.components.Input;
+import com.holonplatform.vaadin.components.Registration;
 import com.holonplatform.vaadin.components.builders.BooleanFieldBuilder;
 import com.holonplatform.vaadin.components.builders.InvalidFieldNotificationMode;
 import com.holonplatform.vaadin.internal.components.builders.AbstractValidatableFieldBuilder;
@@ -275,13 +276,24 @@ public class BooleanField extends CheckBox implements Input<Boolean>, Validatabl
 		return value;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.Input#addValueChangeListener(com.holonplatform.vaadin.components.Input.
+	 * ValueChangeListener)
+	 */
+	@Override
+	public Registration addValueChangeListener(
+			com.holonplatform.vaadin.components.Input.ValueChangeListener<Boolean> listener) {
+		return ValueChangeNotifierRegistration.adapt(this, this, listener);
+	}
+
 	// Builder
 
 	/**
 	 * Builder to create {@link BooleanField} instances
 	 */
 	public static class Builder
-			extends AbstractValidatableFieldBuilder<Boolean, Field<Boolean>, BooleanField, BooleanFieldBuilder>
+			extends AbstractValidatableFieldBuilder<Boolean, Input<Boolean>, BooleanField, BooleanFieldBuilder>
 			implements BooleanFieldBuilder {
 
 		/**
@@ -334,11 +346,21 @@ public class BooleanField extends CheckBox implements Input<Boolean>, Validatabl
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.internal.components.builders.AbstractComponentBuilder#build(com.vaadin.ui.
-		 * AbstractComponent)
+		 * @see
+		 * com.holonplatform.vaadin.internal.components.builders.AbstractFieldBuilder#build(com.vaadin.ui.AbstractField)
 		 */
 		@Override
-		protected Field<Boolean> build(BooleanField instance) {
+		protected Input<Boolean> build(BooleanField instance) {
+			return instance;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see com.holonplatform.vaadin.internal.components.builders.AbstractFieldBuilder#buildAsField(com.vaadin.ui.
+		 * AbstractField)
+		 */
+		@Override
+		protected Field<Boolean> buildAsField(BooleanField instance) {
 			return instance;
 		}
 

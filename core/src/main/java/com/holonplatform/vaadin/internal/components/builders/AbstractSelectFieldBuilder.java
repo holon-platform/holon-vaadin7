@@ -22,8 +22,9 @@ import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.query.QueryConfigurationProvider;
 import com.holonplatform.core.query.QueryFilter;
 import com.holonplatform.core.query.QuerySort;
-import com.holonplatform.vaadin.components.ItemSetComponent.ItemCaptionGenerator;
-import com.holonplatform.vaadin.components.ItemSetComponent.ItemIconGenerator;
+import com.holonplatform.vaadin.components.Input;
+import com.holonplatform.vaadin.components.ItemSet.ItemCaptionGenerator;
+import com.holonplatform.vaadin.components.ItemSet.ItemIconGenerator;
 import com.holonplatform.vaadin.components.builders.BaseSelectFieldBuilder;
 import com.holonplatform.vaadin.components.builders.SelectFieldBuilder;
 import com.holonplatform.vaadin.data.container.ItemDataSourceContainer;
@@ -45,7 +46,7 @@ import com.vaadin.ui.Field;
  * 
  * @since 5.0.0
  */
-public abstract class AbstractSelectFieldBuilder<T, C extends Field<T>, S, ITEM, I extends AbstractSelectField<T, S, ITEM>, B extends BaseSelectFieldBuilder<T, C, S, ITEM, B>>
+public abstract class AbstractSelectFieldBuilder<T, C extends Input<T>, S, ITEM, I extends AbstractSelectField<T, S, ITEM>, B extends BaseSelectFieldBuilder<T, C, S, ITEM, B>>
 		extends AbstractValidatableFieldBuilder<T, C, I, B> implements BaseSelectFieldBuilder<T, C, S, ITEM, B> {
 
 	/**
@@ -106,8 +107,7 @@ public abstract class AbstractSelectFieldBuilder<T, C extends Field<T>, S, ITEM,
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.components.builders.SelectFieldBuilder#itemIconGenerator(com.holonplatform.vaadin.
+	 * @see com.holonplatform.vaadin.components.builders.SelectFieldBuilder#itemIconGenerator(com.holonplatform.vaadin.
 	 * components.ItemSetComponent.ItemIconGenerator)
 	 */
 	@Override
@@ -204,8 +204,7 @@ public abstract class AbstractSelectFieldBuilder<T, C extends Field<T>, S, ITEM,
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.components.builders.BaseItemDataSourceComponentBuilder#fixedSort(com.holonplatform.
+	 * @see com.holonplatform.vaadin.components.builders.BaseItemDataSourceComponentBuilder#fixedSort(com.holonplatform.
 	 * core.query.QuerySort)
 	 */
 	@Override
@@ -238,13 +237,11 @@ public abstract class AbstractSelectFieldBuilder<T, C extends Field<T>, S, ITEM,
 		return builder();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.internal.components.builders.AbstractComponentBuilder#build(com.vaadin.ui.
-	 * AbstractComponent)
+	/**
+	 * Configure items data source
+	 * @param instance Building instance
 	 */
-	@Override
-	protected C build(I instance) {
+	protected void configureDataSource(I instance) {
 		if (!items.isEmpty()) {
 			items.forEach(i -> instance.addItem(i));
 		} else {
@@ -253,9 +250,32 @@ public abstract class AbstractSelectFieldBuilder<T, C extends Field<T>, S, ITEM,
 				instance.setContainerDataSource(dataSourceBuilder.build());
 			}
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.internal.components.builders.AbstractComponentBuilder#build(com.vaadin.ui.
+	 * AbstractComponent)
+	 */
+	@Override
+	protected C build(I instance) {
+		configureDataSource(instance);
 		return buildSelect(instance);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.internal.components.builders.AbstractFieldBuilder#buildAsField(com.vaadin.ui.
+	 * AbstractField)
+	 */
+	@Override
+	protected Field<T> buildAsField(I instance) {
+		configureDataSource(instance);
+		return buildSelectAsField(instance);
+	}
+
 	protected abstract C buildSelect(I instance);
+
+	protected abstract Field<T> buildSelectAsField(I instance);
 
 }

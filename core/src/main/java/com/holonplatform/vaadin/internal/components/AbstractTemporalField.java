@@ -22,6 +22,7 @@ import java.util.TimeZone;
 
 import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.i18n.LocalizationContext;
+import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.builders.TemporalFieldBuilder;
 import com.holonplatform.vaadin.internal.components.builders.AbstractValidatableFieldBuilder;
 import com.holonplatform.vaadin.internal.converters.TimeZonedConverter;
@@ -29,7 +30,6 @@ import com.vaadin.data.util.converter.Converter;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.ui.DateField;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.InlineDateField;
 
 /**
@@ -274,7 +274,7 @@ public abstract class AbstractTemporalField<T extends Temporal> extends Abstract
 	 * Base builder
 	 */
 	public abstract static class AbstractTemporalFieldBuilder<T extends Temporal, C extends AbstractTemporalField<T>, B extends TemporalFieldBuilder<T, B>>
-			extends AbstractValidatableFieldBuilder<T, Field<T>, C, B> implements TemporalFieldBuilder<T, B> {
+			extends AbstractValidatableFieldBuilder<T, Input<T>, C, B> implements TemporalFieldBuilder<T, B> {
 
 		protected Localizable parseErrorMessage;
 		protected Localizable outOfRangeMessage;

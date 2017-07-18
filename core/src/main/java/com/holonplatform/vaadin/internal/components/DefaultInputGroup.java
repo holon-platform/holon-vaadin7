@@ -116,6 +116,15 @@ public class DefaultInputGroup implements InputGroup {
 
 	/*
 	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.InputGroup#setEnabled(boolean)
+	 */
+	@Override
+	public void setEnabled(boolean enabled) {
+		inputs.forEach(input -> input.getComponent().setEnabled(enabled));
+	}
+
+	/*
+	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.FieldsValidator#validate()
 	 */
 	@Override

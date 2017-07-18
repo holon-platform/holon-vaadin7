@@ -20,7 +20,7 @@ import java.util.Locale;
 import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.i18n.LocalizationContext;
 import com.holonplatform.core.internal.utils.ObjectUtils;
-import com.holonplatform.vaadin.components.Components;
+import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.builders.FieldBuilder;
 import com.holonplatform.vaadin.internal.components.ValidationUtils;
 import com.vaadin.data.Property;
@@ -40,8 +40,14 @@ import com.vaadin.ui.Field;
  * 
  * @since 5.0.0
  */
-public abstract class AbstractFieldBuilder<T, C extends Field<T>, I extends AbstractField<T>, B extends FieldBuilder<T, C, B>>
-		extends AbstractComponentBuilder<C, I, B> implements FieldBuilder<T, C, B> {
+public abstract class AbstractFieldBuilder<T, C extends Input<T>, I extends AbstractField<T>, B extends FieldBuilder<T, C, B>>
+		extends AbstractLocalizableComponentConfigurator<I, B> implements FieldBuilder<T, C, B> {
+
+	/**
+	 * Default validation error message for required fields.
+	 */
+	static final Localizable DEFAULT_REQUIRED_ERROR = Localizable.builder().message("Value is required")
+			.messageCode(com.holonplatform.core.Validator.DEFAULT_MESSAGE_CODE_PREFIX + "required").build();
 
 	protected Localizable requiredError;
 	protected Localizable conversionError;
@@ -49,6 +55,20 @@ public abstract class AbstractFieldBuilder<T, C extends Field<T>, I extends Abst
 	public AbstractFieldBuilder(I instance) {
 		super(instance);
 	}
+
+	/**
+	 * Build concrete instance in expected type
+	 * @param instance Building instance
+	 * @return Instance in expected type
+	 */
+	protected abstract C build(I instance);
+
+	/**
+	 * Build the concrete instance as a {@link Field}
+	 * @param instance Building instance
+	 * @return {@link Field} instance
+	 */
+	protected abstract Field<T> buildAsField(I instance);
 
 	/*
 	 * (non-Javadoc)
@@ -68,7 +88,7 @@ public abstract class AbstractFieldBuilder<T, C extends Field<T>, I extends Abst
 
 		// Set default required error if none setted
 		if (instance.getRequiredError() == null || instance.getRequiredError().trim().equals("")) {
-			instance.setRequiredError(LocalizationContext.translate(Components.DEFAULT_REQUIRED_ERROR, true));
+			instance.setRequiredError(LocalizationContext.translate(DEFAULT_REQUIRED_ERROR, true));
 		}
 	}
 
@@ -257,6 +277,34 @@ public abstract class AbstractFieldBuilder<T, C extends Field<T>, I extends Abst
 	public B locale(Locale locale) {
 		getInstance().setLocale(locale);
 		return builder();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.builders.ComponentBuilder#deferLocalization()
+	 */
+	@Override
+	public B deferLocalization() {
+		this.deferLocalization = true;
+		return builder();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.builders.ComponentBuilder#build()
+	 */
+	@Override
+	public C build() {
+		return build(setupLocalization(instance));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.builders.FieldBuilder#asField()
+	 */
+	@Override
+	public Field<T> asField() {
+		return buildAsField(setupLocalization(instance));
 	}
 
 }

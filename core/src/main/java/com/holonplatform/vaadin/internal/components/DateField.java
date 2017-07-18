@@ -21,6 +21,7 @@ import com.holonplatform.core.Validator;
 import com.holonplatform.core.Validator.ValidationException;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.vaadin.components.Input;
+import com.holonplatform.vaadin.components.Registration;
 import com.holonplatform.vaadin.components.builders.DateFieldBuilder;
 import com.holonplatform.vaadin.components.builders.InvalidFieldNotificationMode;
 import com.holonplatform.vaadin.internal.components.builders.AbstractDateFieldBuilder;
@@ -244,6 +245,17 @@ public class DateField extends com.vaadin.ui.DateField implements Input<Date>, V
 		super.setValue(newValue);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.Input#addValueChangeListener(com.holonplatform.vaadin.components.Input.
+	 * ValueChangeListener)
+	 */
+	@Override
+	public Registration addValueChangeListener(
+			com.holonplatform.vaadin.components.Input.ValueChangeListener<Date> listener) {
+		return ValueChangeNotifierRegistration.adapt(this, this, listener);
+	}
+
 	// Builder
 
 	/**
@@ -266,11 +278,21 @@ public class DateField extends com.vaadin.ui.DateField implements Input<Date>, V
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.internal.components.builders.AbstractComponentBuilder#build(com.vaadin.ui.
-		 * AbstractComponent)
+		 * @see
+		 * com.holonplatform.vaadin.internal.components.builders.AbstractFieldBuilder#build(com.vaadin.ui.AbstractField)
 		 */
 		@Override
-		protected Field<Date> build(DateField instance) {
+		protected Input<Date> build(DateField instance) {
+			return instance;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see com.holonplatform.vaadin.internal.components.builders.AbstractFieldBuilder#buildAsField(com.vaadin.ui.
+		 * AbstractField)
+		 */
+		@Override
+		protected Field<Date> buildAsField(DateField instance) {
 			return instance;
 		}
 

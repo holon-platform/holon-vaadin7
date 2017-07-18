@@ -15,47 +15,51 @@
  */
 package com.holonplatform.vaadin.internal.components;
 
-import com.holonplatform.vaadin.components.PropertyFieldContainer;
+import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.PropertyForm.Composer;
+import com.holonplatform.vaadin.components.PropertyInputContainer;
 import com.vaadin.ui.ComponentContainer;
 
 /**
- * Default {@link Composer} using a {@link ComponentContainer} as composition layout and adding the fields to layout in
- * the order they are returned from the {@link PropertyFieldContainer}.
+ * Default {@link Composer} using a {@link ComponentContainer} as composition layout and adding the {@link Input}
+ * componens to the layout in the order they are returned from the {@link PropertyInputContainer}.
  * <p>
- * Provides a construction parameter to automatically set all fields to full width.
+ * Provides a construction parameter to automatically set all inputs to full width.
  * </p>
  * 
  * @since 5.0.0
  */
 public class ComponentContainerComposer implements Composer<ComponentContainer> {
 
-	private final boolean fullWidthFields;
+	private final boolean fullWidthInputs;
 
 	/**
 	 * Constructor
-	 * @param fullWidthFields <code>true</code> to set full width for all composed fields
+	 * @param fullWidthInputs <code>true</code> to set the width for all composed {@link Input}s as <code>100%</code>.
 	 */
-	public ComponentContainerComposer(boolean fullWidthFields) {
+	public ComponentContainerComposer(boolean fullWidthInputs) {
 		super();
-		this.fullWidthFields = fullWidthFields;
+		this.fullWidthInputs = fullWidthInputs;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.PropertyForm.Composer#compose(com.vaadin.ui.Component,
-	 * com.holonplatform.vaadin.components.PropertyFieldContainer)
+	/**
+	 * Gets whether to set the width for all composed {@link Input}s as <code>100%</code>.
+	 * @return the fullWidthInputs <code>true</code> if the {@link Input}'s width must be setted to <code>100%</code>
 	 */
+	protected boolean isFullWidthInputs() {
+		return fullWidthInputs;
+	}
+
 	@Override
-	public void compose(ComponentContainer content, PropertyFieldContainer propertyFields) {
+	public void compose(ComponentContainer content, PropertyInputContainer propertyInputs) {
 		// remove all components
 		content.removeAllComponents();
 		// add components
-		propertyFields.getFields().forEach(f -> {
-			if (fullWidthFields) {
-				f.setWidth("100%");
+		propertyInputs.getInputs().forEach(input -> {
+			if (isFullWidthInputs()) {
+				input.getComponent().setWidth("100%");
 			}
-			content.addComponent(f);
+			content.addComponent(input.getComponent());
 		});
 	}
 

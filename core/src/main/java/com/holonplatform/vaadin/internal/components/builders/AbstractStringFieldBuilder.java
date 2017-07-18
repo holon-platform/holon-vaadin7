@@ -17,6 +17,7 @@ package com.holonplatform.vaadin.internal.components.builders;
 
 import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.i18n.LocalizationContext;
+import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.builders.StringFieldBuilder;
 import com.holonplatform.vaadin.internal.components.ValidatableField;
 import com.vaadin.event.FieldEvents.BlurListener;
@@ -34,8 +35,8 @@ import com.vaadin.ui.TextArea;
  * 
  * @since 5.0.0
  */
-public abstract class AbstractStringFieldBuilder<I extends AbstractTextField & ValidatableField<String>>
-		extends AbstractValidatableFieldBuilder<String, Field<String>, I, StringFieldBuilder> implements StringFieldBuilder {
+public abstract class AbstractStringFieldBuilder<I extends AbstractTextField & ValidatableField<String>> extends
+		AbstractValidatableFieldBuilder<String, Input<String>, I, StringFieldBuilder> implements StringFieldBuilder {
 
 	protected Localizable inputPrompt;
 
@@ -87,8 +88,7 @@ public abstract class AbstractStringFieldBuilder<I extends AbstractTextField & V
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.components.builders.TextInputFieldBuilder#inputPrompt(com.holonplatform.core.i18n.
+	 * @see com.holonplatform.vaadin.components.builders.TextInputFieldBuilder#inputPrompt(com.holonplatform.core.i18n.
 	 * Localizable)
 	 */
 	@Override

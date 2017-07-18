@@ -22,6 +22,7 @@ import java.util.Locale;
 import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.i18n.LocalizationContext;
 import com.holonplatform.core.internal.utils.TypeUtils;
+import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.builders.NumberFieldBuilder;
 import com.holonplatform.vaadin.internal.components.builders.AbstractValidatableFieldBuilder;
 import com.holonplatform.vaadin.internal.converters.StringToNumberConverter;
@@ -423,8 +424,9 @@ public class NumberField<T extends Number> extends AbstractCustomField<T, Numeri
 
 	// Builder
 
-	public static class Builder<T extends Number> extends
-			AbstractValidatableFieldBuilder<T, Field<T>, NumberField<T>, NumberFieldBuilder<T>> implements NumberFieldBuilder<T> {
+	public static class Builder<T extends Number>
+			extends AbstractValidatableFieldBuilder<T, Input<T>, NumberField<T>, NumberFieldBuilder<T>>
+			implements NumberFieldBuilder<T> {
 
 		protected Localizable inputPrompt;
 
@@ -596,11 +598,21 @@ public class NumberField<T extends Number> extends AbstractCustomField<T, Numeri
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.internal.components.builders.AbstractComponentBuilder#build(com.vaadin.ui.
-		 * AbstractComponent)
+		 * @see
+		 * com.holonplatform.vaadin.internal.components.builders.AbstractFieldBuilder#build(com.vaadin.ui.AbstractField)
 		 */
 		@Override
-		protected Field<T> build(NumberField<T> instance) {
+		protected Input<T> build(NumberField<T> instance) {
+			return instance;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see com.holonplatform.vaadin.internal.components.builders.AbstractFieldBuilder#buildAsField(com.vaadin.ui.
+		 * AbstractField)
+		 */
+		@Override
+		protected Field<T> buildAsField(NumberField<T> instance) {
 			return instance;
 		}
 

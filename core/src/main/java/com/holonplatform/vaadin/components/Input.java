@@ -21,6 +21,8 @@ import java.util.Optional;
 
 import com.holonplatform.core.Validator;
 import com.holonplatform.core.Validator.ValidatorSupport;
+import com.holonplatform.core.property.Property;
+import com.holonplatform.core.property.PropertyRenderer;
 import com.holonplatform.vaadin.internal.components.InputFieldWrapper;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
@@ -106,9 +108,32 @@ public interface Input<V> extends Serializable, ValidatorSupport<V>, Validatable
 	boolean isReadOnly();
 
 	/**
+	 * Gets whether the field is <em>required</em>.
+	 * @return <code>true</code> if the field as required, <code>false</code> otherwise
+	 */
+	public boolean isRequired();
+
+	/**
+	 * Sets the field as <em>required</em>.
+	 * <p>
+	 * Required fields should show a <em>required indicator</em> symbol in UI and the default non-empty validator is
+	 * setted up.
+	 * </p>
+	 * @param required <code>true</code> to set the field as required, <code>false</code> otherwise
+	 */
+	void setRequired(boolean required);
+
+	/**
 	 * Sets the focus for this input component, if supported by concrete component implementation.
 	 */
 	void focus();
+
+	/**
+	 * Adds a value change listener, called when the {@link Input} value changes.
+	 * @param listener the value change listener to add (not null)
+	 * @return a registration for the listener, which provides the <em>remove</em> operation
+	 */
+	public Registration addValueChangeListener(ValueChangeListener<V> listener);
 
 	/**
 	 * Get the UI {@link Component} which represents this input component.
@@ -123,6 +148,86 @@ public interface Input<V> extends Serializable, ValidatorSupport<V>, Validatable
 	 */
 	static <T> Input<T> from(Field<T> field) {
 		return new InputFieldWrapper<>(field);
+	}
+
+	/**
+	 * A convenience interface with a fixed {@link Input} rendering type to use a {@link Input} {@link PropertyRenderer}
+	 * as a functional interface.
+	 * @param <T> Property type
+	 */
+	@FunctionalInterface
+	public interface InputPropertyRenderer<T> extends PropertyRenderer<Input<T>, T> {
+
+		/*
+		 * (non-Javadoc)
+		 * @see com.holonplatform.core.property.PropertyRenderer#getRenderType()
+		 */
+		@SuppressWarnings("unchecked")
+		@Override
+		default Class<? extends Input<T>> getRenderType() {
+			return (Class<? extends Input<T>>) (Class<?>) Input.class;
+		}
+
+	}
+
+	/**
+	 * A convenience interface to render a {@link Property} as a {@link Input} using a {@link Field}.
+	 * @param <T> Property type
+	 */
+	public interface InputFieldPropertyRenderer<T> extends InputPropertyRenderer<T> {
+
+		/**
+		 * Render given <code>property</code> as consistent value type {@link Field} to handle the property value.
+		 * @param property Property to render
+		 * @return property {@link Field}
+		 */
+		Field<T> renderField(Property<T> property);
+
+		/*
+		 * (non-Javadoc)
+		 * @see com.holonplatform.core.property.PropertyRenderer#render(com.holonplatform.core.property.Property)
+		 */
+		@Override
+		default Input<T> render(Property<T> property) {
+			return Input.from(renderField(property));
+		}
+
+	}
+
+	/**
+	 * A listener for {@link Input} value change events.
+	 * @param <V> Value type
+	 */
+	@FunctionalInterface
+	public interface ValueChangeListener<V> extends Serializable {
+
+		/**
+		 * Invoked when this listener receives a value change event from an {@link Input} source to which it has been
+		 * added.
+		 * @param event the value change event
+		 */
+		void valueChange(ValueChangeEvent<V> event);
+
+	}
+
+	/**
+	 * A {@link ValueChangeListener} event.
+	 * @param <V> Value type
+	 */
+	public interface ValueChangeEvent<V> extends Serializable {
+
+		/**
+		 * Get the source of this value change event.
+		 * @return the {@link Input} source
+		 */
+		Input<V> getSource();
+
+		/**
+		 * Returns the new value that triggered this value change event.
+		 * @return the new value
+		 */
+		V getValue();
+
 	}
 
 }

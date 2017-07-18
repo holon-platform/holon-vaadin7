@@ -15,6 +15,7 @@
  */
 package com.holonplatform.vaadin.components.builders;
 
+import com.holonplatform.vaadin.components.Input;
 import com.vaadin.ui.Field;
 
 /**
@@ -26,7 +27,26 @@ import com.vaadin.ui.Field;
  * 
  * @since 5.0.0
  */
-public interface FieldBuilder<T, C extends Field<T>, B extends FieldBuilder<T, C, B>>
-		extends FieldConfigurator<T, B>, ComponentBuilder<C, B> {
+public interface FieldBuilder<T, C extends Input<T>, B extends FieldBuilder<T, C, B>> extends FieldConfigurator<T, B> {
+
+	/**
+	 * Instructs the builder to resolve any message localization (for example component caption and description) only
+	 * after the component is attached to parent layout. By default, localization is performed immediately during
+	 * component building.
+	 * @return this
+	 */
+	B deferLocalization();
+
+	/**
+	 * Build and returns the {@link Input} instance.
+	 * @return the {@link Input} instance
+	 */
+	C build();
+
+	/**
+	 * Build the input component as a {@link Field}.
+	 * @return the input {@link Field} instance
+	 */
+	Field<T> asField();
 
 }

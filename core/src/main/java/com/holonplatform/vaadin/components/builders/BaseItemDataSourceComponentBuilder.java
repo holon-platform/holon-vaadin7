@@ -20,7 +20,6 @@ import com.holonplatform.core.query.QueryFilter;
 import com.holonplatform.core.query.QuerySort;
 import com.holonplatform.vaadin.data.ItemDataProvider;
 import com.holonplatform.vaadin.data.ItemDataSource;
-import com.vaadin.ui.Component;
 
 /**
  * Base builder for components with {@link ItemDataSource} support.
@@ -30,15 +29,15 @@ import com.vaadin.ui.Component;
  *
  * @since 5.0.0
  */
-public interface BaseItemDataSourceComponentBuilder<C extends Component, B extends BaseItemDataSourceComponentBuilder<C, B>>
-		extends ComponentBuilder<C, B> {
+public interface BaseItemDataSourceComponentBuilder<B extends BaseItemDataSourceComponentBuilder<B>>
+		extends ComponentConfigurator<B> {
 
 	/**
 	 * Set if auto-refresh is enabled for this container, i.e. items are loaded when one of the Container method which
 	 * involve operations on item set is called.
 	 * <p>
-	 * If auto-refresh is not enabled, {@link ItemDataSource#refresh()} method must be called to load items before using this
-	 * Container.
+	 * If auto-refresh is not enabled, {@link ItemDataSource#refresh()} method must be called to load items before using
+	 * this Container.
 	 * </p>
 	 * @param autoRefresh <code>true</code> to enable auto-refresh
 	 * @return this

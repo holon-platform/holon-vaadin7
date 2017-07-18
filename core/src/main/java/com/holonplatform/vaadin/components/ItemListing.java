@@ -38,7 +38,7 @@ import com.vaadin.ui.Table;
  * 
  * @since 5.0.0
  */
-public interface ItemListing<T, P> extends ItemSetComponent, Selectable<T> {
+public interface ItemListing<T, P> extends ItemSet, Selectable<T>, Component {
 
 	/**
 	 * Sets the item properties to display as columns of the listing, in given order.

@@ -17,14 +17,15 @@ package com.holonplatform.vaadin.internal.components;
 
 import com.holonplatform.core.Validator;
 import com.holonplatform.core.property.Property;
-import com.holonplatform.vaadin.components.PropertyFieldGroup;
+import com.holonplatform.core.property.PropertyRenderer;
+import com.holonplatform.vaadin.components.Input;
+import com.holonplatform.vaadin.components.PropertyInputGroup;
 import com.holonplatform.vaadin.components.ValidationErrorHandler;
-import com.vaadin.ui.Field;
 
 /**
- * Configurator interface to seup and build a {@link PropertyFieldGroup}
+ * Configurator interface to setup and build a {@link PropertyInputGroup}.
  */
-public interface PropertyFieldGroupConfigurator extends PropertyFieldGroup {
+public interface PropertyInputGroupConfigurator extends PropertyInputGroup {
 
 	/**
 	 * Add a property to the property set
@@ -63,18 +64,18 @@ public interface PropertyFieldGroupConfigurator extends PropertyFieldGroup {
 	<T> void addPropertyValidator(Property<T> property, Validator<T> validator);
 
 	/**
-	 * Set the {@link FieldPropertyRenderer} to use with given property
+	 * Set the {@link PropertyRenderer} to use with given property to obtain the property {@link Input} component.
 	 * @param <T> Property type
-	 * @param property Property
-	 * @param renderer Renderer
+	 * @param property Property (not null)
+	 * @param renderer Renderer 
 	 */
-	<T> void setPropertyRenderer(Property<T> property, FieldPropertyRenderer<T> renderer);
+	<T, F extends T> void setPropertyRenderer(Property<T> property, PropertyRenderer<Input<F>, T> renderer);
 
 	/**
-	 * Set whether to stop field validation at first validation failure.
-	 * @param stopFieldValidationAtFirstFailure <code>true</code> to stop field validation at first validation failure
+	 * Set whether to stop validation at first validation failure.
+	 * @param stopValidationAtFirstFailure <code>true</code> to stop validation at first validation failure
 	 */
-	void setStopFieldValidationAtFirstFailure(boolean stopFieldValidationAtFirstFailure);
+	void setStopValidationAtFirstFailure(boolean stopValidationAtFirstFailure);
 
 	/**
 	 * Set whether to stop overall validation at first validation failure.
@@ -96,19 +97,19 @@ public interface PropertyFieldGroupConfigurator extends PropertyFieldGroup {
 	void setDefaultValidationErrorHandler(ValidationErrorHandler defaultValidationErrorHandler);
 
 	/**
-	 * Set whether to ignore missing property fields
-	 * @param ignoreMissingField <code>true</code> to ignore missing property fields
+	 * Set whether to ignore missing property inputs
+	 * @param ignoreMissingInputs <code>true</code> to ignore missing property inputs
 	 */
-	void setIgnoreMissingField(boolean ignoreMissingField);
+	void setIgnoreMissingInputs(boolean ignoreMissingInputs);
 
 	/**
-	 * Add a FieldConfigurator
-	 * @param fieldConfigurator the FieldConfigurator to add
+	 * Add a {@link InputPostProcessor}.
+	 * @param postProcessor the InputPostProcessor to add
 	 */
-	void addFieldConfigurator(FieldConfigurator fieldConfigurator);
+	void addInputPostProcessor(InputPostProcessor postProcessor);
 
 	/**
-	 * Build and bind {@link Field}s to the properties of the property set.
+	 * Build and bind {@link Input}s to the properties of the property set.
 	 */
 	void build();
 

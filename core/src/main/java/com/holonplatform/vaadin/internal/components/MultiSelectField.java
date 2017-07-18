@@ -23,9 +23,9 @@ import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.property.Property;
 import com.holonplatform.core.property.PropertyBox;
 import com.holonplatform.vaadin.components.MultiSelect;
+import com.holonplatform.vaadin.components.builders.BaseSelectFieldBuilder.RenderingMode;
 import com.holonplatform.vaadin.components.builders.MultiPropertySelectFieldBuilder;
 import com.holonplatform.vaadin.components.builders.MultiSelectFieldBuilder;
-import com.holonplatform.vaadin.components.builders.BaseSelectFieldBuilder.RenderingMode;
 import com.holonplatform.vaadin.data.ItemDataProvider;
 import com.holonplatform.vaadin.data.ItemIdentifierProvider;
 import com.holonplatform.vaadin.data.container.ItemAdapter;
@@ -195,16 +195,37 @@ public class MultiSelectField<T, ITEM> extends AbstractSelectField<Set<T>, T, IT
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.internal.components.builders.AbstractSelectFieldBuilder#buildSelect(com.
-		 * holonframework.vaadin.internal.components.AbstractSelectField)
+		 * @see
+		 * com.holonplatform.vaadin.internal.components.builders.AbstractSelectFieldBuilder#configureDataSource(com.
+		 * holonplatform.vaadin.internal.components.AbstractSelectField)
 		 */
 		@SuppressWarnings("unchecked")
 		@Override
-		protected MultiSelect<T> buildSelect(MultiSelectField<T, T> instance) {
+		protected void configureDataSource(MultiSelectField<T, T> instance) {
+			super.configureDataSource(instance);
 			if (!instance.getItemDataExtractor().isPresent()) {
 				// default extractor
 				instance.setItemDataExtractor((c, id, i) -> (T) id);
 			}
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see com.holonplatform.vaadin.internal.components.builders.AbstractSelectFieldBuilder#buildSelect(com.
+		 * holonframework.vaadin.internal.components.AbstractSelectField)
+		 */
+		@Override
+		protected MultiSelect<T> buildSelect(MultiSelectField<T, T> instance) {
+			return instance;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see com.holonplatform.vaadin.internal.components.builders.AbstractSelectFieldBuilder#buildSelectAsField(com.
+		 * holonplatform.vaadin.internal.components.AbstractSelectField)
+		 */
+		@Override
+		protected Field<Set<T>> buildSelectAsField(MultiSelectField<T, T> instance) {
 			return instance;
 		}
 
@@ -276,15 +297,36 @@ public class MultiSelectField<T, ITEM> extends AbstractSelectField<Set<T>, T, IT
 
 		/*
 		 * (non-Javadoc)
+		 * @see
+		 * com.holonplatform.vaadin.internal.components.builders.AbstractSelectFieldBuilder#configureDataSource(com.
+		 * holonplatform.vaadin.internal.components.AbstractSelectField)
+		 */
+		@Override
+		protected void configureDataSource(MultiSelectField<T, PropertyBox> instance) {
+			super.configureDataSource(instance);
+			if (!instance.getItemDataExtractor().isPresent()) {
+				// default extractor
+				instance.setItemDataExtractor((c, id, i) -> ((PropertyBoxItem) i).getPropertyBox());
+			}
+		}
+
+		/*
+		 * (non-Javadoc)
 		 * @see com.holonplatform.vaadin.internal.components.builders.AbstractSelectFieldBuilder#buildSelect(com.
 		 * holonframework.vaadin.internal.components.AbstractSelectField)
 		 */
 		@Override
 		protected MultiSelect<T> buildSelect(MultiSelectField<T, PropertyBox> instance) {
-			if (!instance.getItemDataExtractor().isPresent()) {
-				// default extractor
-				instance.setItemDataExtractor((c, id, i) -> ((PropertyBoxItem) i).getPropertyBox());
-			}
+			return instance;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see com.holonplatform.vaadin.internal.components.builders.AbstractSelectFieldBuilder#buildSelectAsField(com.
+		 * holonplatform.vaadin.internal.components.AbstractSelectField)
+		 */
+		@Override
+		protected Field<Set<T>> buildSelectAsField(MultiSelectField<T, PropertyBox> instance) {
 			return instance;
 		}
 

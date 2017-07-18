@@ -15,7 +15,6 @@
  */
 package com.holonplatform.vaadin.internal.components;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,6 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.holonplatform.core.Validator;
@@ -33,17 +33,18 @@ import com.holonplatform.core.property.PropertyBox;
 import com.holonplatform.core.property.PropertyRenderer;
 import com.holonplatform.core.property.PropertyRendererRegistry.NoSuitableRendererAvailableException;
 import com.holonplatform.core.property.VirtualProperty;
-import com.holonplatform.vaadin.components.PropertyFieldGroup;
+import com.holonplatform.vaadin.components.Input;
+import com.holonplatform.vaadin.components.PropertyInputGroup;
 import com.holonplatform.vaadin.components.ValidationErrorHandler;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.ui.Field;
 
 /**
- * Default {@link PropertyFieldGroup} implementation.
+ * Default {@link PropertyInputGroup} implementation.
  *
  * @since 5.0.0
  */
-public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator {
+public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator {
 
 	private static final long serialVersionUID = -5441417959315472240L;
 
@@ -54,16 +55,16 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 	private final List<Property> properties = new LinkedList<>();
 
 	/**
-	 * Bound fields
+	 * Inputs bindings
 	 */
 	@SuppressWarnings("rawtypes")
-	private final Map<Property, Field> propertyFields = new HashMap<>();
+	private final Map<Property, Input> propertyInputs = new HashMap<>();
 
 	/**
-	 * Custom FieldPropertyRenderers
+	 * Custom PropertyRenderers
 	 */
 	@SuppressWarnings("rawtypes")
-	private final Map<Property, FieldPropertyRenderer> propertyRenderers = new HashMap<>(8);
+	private final Map<Property, PropertyRenderer> propertyRenderers = new HashMap<>(8);
 
 	/**
 	 * Read-only properties
@@ -101,9 +102,9 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 	private final Map<Property, DefaultValueProvider> defaultValues = new HashMap<>(4);
 
 	/**
-	 * Field configurators
+	 * Input post-processors
 	 */
-	private final List<FieldConfigurator> fieldConfigurators = new LinkedList<>();
+	private final List<InputPostProcessor> postProcessors = new LinkedList<>();
 
 	/**
 	 * Default {@link ValidationErrorHandler}
@@ -111,9 +112,9 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 	private ValidationErrorHandler defaultValidationErrorHandler;
 
 	/**
-	 * Field validation behaviour
+	 * Validation behaviour
 	 */
-	private boolean stopFieldValidationAtFirstFailure = false;
+	private boolean stopValidationAtFirstFailure = false;
 
 	/**
 	 * Overall validation behaviour
@@ -126,23 +127,14 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 	private boolean ignoreValidation = false;
 
 	/**
-	 * Ignore missing fields
+	 * Whether to ignore missing inputs
 	 */
-	private boolean ignoreMissingField = false;
-
-	/**
-	 * Enabled status
-	 */
-	private boolean enabled = true;
-	/**
-	 * Read-only status
-	 */
-	private boolean readOnly = false;
+	private boolean ignoreMissingInputs = false;
 
 	/**
 	 * Constructor
 	 */
-	public DefaultPropertyFieldGroup() {
+	public DefaultPropertyInputGroup() {
 		super();
 	}
 
@@ -189,7 +181,7 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.PropertyFieldGroup#getProperties()
+	 * @see com.holonplatform.vaadin.components.PropertyInputContainer#getProperties()
 	 */
 	@SuppressWarnings("rawtypes")
 	@Override
@@ -199,67 +191,50 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.PropertyFieldGroup#getFields()
+	 * @see com.holonplatform.vaadin.components.PropertyInputContainer#getInputs()
 	 */
 	@Override
-	public Iterable<Field<?>> getFields() {
-		final List<Field<?>> fs = new ArrayList<>(propertyFields.size());
-		properties.forEach(p -> propertyField(p).ifPresent(f -> fs.add(f)));
-		return fs;
+	public Iterable<Input<?>> getInputs() {
+		return properties.stream().filter(p -> propertyInputs.containsKey(p)).map(p -> propertyInputs.get(p))
+				.collect(Collectors.toList());
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.PropertyFieldGroup#getField(com.holonplatform.core.property.Property)
+	 * @see
+	 * com.holonplatform.vaadin.components.PropertyInputContainer#getInput(com.holonplatform.core.property.Property)
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> Optional<Field<T>> getField(Property<T> property) {
+	public <T> Optional<Input<T>> getInput(Property<T> property) {
 		ObjectUtils.argumentNotNull(property, "Property must be not null");
-		return Optional.ofNullable(propertyFields.get(property));
+		return Optional.ofNullable(propertyInputs.get(property));
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.PropertyFieldGroup#stream()
+	 * @see com.holonplatform.vaadin.components.PropertyInputContainer#stream()
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> Stream<Binding<T>> stream() {
-		return propertyFields.entrySet().stream().map(e -> new PropertyFieldBinding<>(e.getKey(), e.getValue()));
+		return propertyInputs.entrySet().stream().map(e -> new PropertyInputBinding<>(e.getKey(), e.getValue()));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.components.PropertyFieldGroup#addValidator(com.holonplatform.core.property.Property,
-	 * com.holonplatform.core.Validator)
-	 */
 	@Override
 	public <T> void addValidator(Property<T> property, Validator<T> validator) {
 		ObjectUtils.argumentNotNull(property, "Property must be not null");
 		ObjectUtils.argumentNotNull(validator, "Validator must be not null");
-		getField(property).ifPresent(f -> f.addValidator(ValidationUtils.asVaadinValidator(validator)));
+		getInput(property).ifPresent(i -> i.addValidator(validator));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.PropertyFieldGroup#removeValidator(com.holonplatform.core.property.
-	 * Property, com.holonplatform.core.Validator)
-	 */
 	@Override
 	public <T> void removeValidator(Property<T> property, Validator<T> validator) {
 		ObjectUtils.argumentNotNull(property, "Property must be not null");
 		ObjectUtils.argumentNotNull(validator, "Validator must be not null");
-		getField(property).ifPresent(f -> ValidationUtils.removeValidator(f, validator));
+		getInput(property).ifPresent(i -> i.removeValidator(validator));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.components.PropertyFieldGroup#setDefaultValueProvider(com.holonplatform.core.property.
-	 * Property, com.holonplatform.vaadin.components.PropertyFieldGroup.DefaultValueProvider)
-	 */
 	@Override
 	public <T> void setDefaultValueProvider(Property<T> property, DefaultValueProvider<T> defaultValueProvider) {
 		ObjectUtils.argumentNotNull(property, "Property must be not null");
@@ -267,11 +242,6 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 		defaultValues.put(property, defaultValueProvider);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.PropertyFieldGroup#removeDefaultValueProvider(com.holonplatform.core.
-	 * property.Property)
-	 */
 	@Override
 	public <T> void removeDefaultValueProvider(Property<T> property) {
 		ObjectUtils.argumentNotNull(property, "Property must be not null");
@@ -280,18 +250,18 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.PropertyFieldGroup#clear()
+	 * @see com.holonplatform.vaadin.components.InputGroup#clear()
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void clear() {
 		try {
 			properties.forEach(p -> {
-				propertyField(p).ifPresent(f -> {
-					f.clear();
+				_input(p).ifPresent(i -> {
+					i.clear();
 					// check default value
 					if (!p.isReadOnly() && defaultValues.containsKey(p)) {
-						f.setValue(defaultValues.get(p).getDefaultValue(p));
+						i.setValue(defaultValues.get(p).getDefaultValue(p));
 					}
 				});
 			});
@@ -302,39 +272,14 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.PropertyFieldGroup#validate()
+	 * @see com.holonplatform.vaadin.components.ValidatableValue#validateValue()
 	 */
 	@Override
-	public void validate() throws ValidationException {
-		// validate fields
-		validateFields();
+	public void validateValue() throws ValidationException {
+		// validate inputs
+		validateInputs();
 		// validate value
 		validate(getValue(false));
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.PropertyFieldGroup#validate(com.holonplatform.core.Validator.
-	 * ValidationErrorHandler)
-	 */
-	@Override
-	public boolean validate(ValidationErrorHandler handler) {
-		ObjectUtils.argumentNotNull(handler, "ValidationErrorHandler must be not null");
-		// validate fields
-		try {
-			validate(getValidatableFields());
-		} catch (ValidationException e) {
-			handler.handleValidationError(e);
-			return false;
-		}
-		// validate value
-		try {
-			validateValue(getValue(false));
-		} catch (ValidationException e) {
-			handler.handleValidationError(e);
-			return false;
-		}
-		return true;
 	}
 
 	/*
@@ -343,61 +288,7 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 	 */
 	@Override
 	public void validate(PropertyBox value) throws ValidationException {
-		try {
-			validateValue(value);
-		} catch (ValidationException e) {
-			if (!getDefaultValidationErrorHandler().isPresent()) {
-				throw e;
-			}
-			getDefaultValidationErrorHandler().ifPresent(h -> h.handleValidationError(e));
-		}
-	}
-
-	/**
-	 * Validate given fields.
-	 * @throws ValidationException If at least one field is not valid
-	 */
-	@SuppressWarnings("rawtypes")
-	private void validate(Iterable<Field> fields) throws ValidationException {
-		LinkedList<ValidationException> validationExceptions = new LinkedList<>();
-		fields.forEach(f -> {
-			ValidationException ve = validateField(f);
-			if (ve != null) {
-				if (isStopFieldValidationAtFirstFailure()) {
-					throw ve;
-				}
-				validationExceptions.add(ve);
-			}
-		});
-		if (!validationExceptions.isEmpty()) {
-			if (validationExceptions.size() == 1) {
-				throw validationExceptions.getFirst();
-			} else {
-				throw new ValidationException(validationExceptions.toArray(new ValidationException[0]));
-			}
-		}
-	}
-
-	private void validateFields() throws ValidationException {
-		if (getDefaultValidationErrorHandler().isPresent()) {
-			validate(getDefaultValidationErrorHandler().get());
-		} else {
-			validate(getValidatableFields());
-		}
-	}
-
-	/**
-	 * Validate given Field and return a translated {@link ValidationException} if validation fails.
-	 * @param field Field to validate
-	 * @return Validation exception
-	 */
-	protected ValidationException validateField(@SuppressWarnings("rawtypes") Field field) {
-		try {
-			field.validate();
-		} catch (InvalidValueException e) {
-			return ValidationUtils.translateValidationException(e);
-		}
-		return null;
+		validateValue(value);
 	}
 
 	/*
@@ -423,15 +314,15 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 
 		if (validate) {
 			// Fields validation
-			validateFields();
+			validateInputs();
 		}
 
 		properties.forEach(p -> {
 			if (isPropertyHidden(p)) {
 				propertyBox.setValue(p, hiddenProperties.get(p));
 			} else {
-				propertyField(p).ifPresent(f -> {
-					propertyBox.setValue(p, f.getValue());
+				_input(p).ifPresent(i -> {
+					propertyBox.setValue(p, i.getValue());
 				});
 			}
 		});
@@ -458,35 +349,26 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 				if (isPropertyHidden(p)) {
 					hiddenProperties.put(p, getPropertyValue(propertyBox, p));
 				} else {
-					propertyField(p).ifPresent(f -> {
+					_input(p).ifPresent(i -> {
 						Object value = getPropertyValue(propertyBox, p);
 						if (value != null) {
 							// ignore read-only
-							boolean ro = f.isReadOnly();
+							boolean ro = i.isReadOnly();
 							if (ro)
-								f.setReadOnly(false);
-							f.setValue(value);
+								i.setReadOnly(false);
+							i.setValue(value);
 							if (ro)
-								f.setReadOnly(true);
+								i.setReadOnly(true);
 						} else {
-							f.clear();
+							i.clear();
 						}
 					});
 				}
 			});
 		}
 		if (validate) {
-			validate();
+			validateValue();
 		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.PropertyFieldGroup#isEnabled()
-	 */
-	@Override
-	public boolean isEnabled() {
-		return enabled;
 	}
 
 	/*
@@ -495,17 +377,7 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 	 */
 	@Override
 	public void setEnabled(boolean enabled) {
-		getFields().forEach(f -> f.setEnabled(enabled));
-		this.enabled = enabled;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.PropertyFieldGroup#isReadOnly()
-	 */
-	@Override
-	public boolean isReadOnly() {
-		return readOnly;
+		getInputs().forEach(i -> i.getComponent().setEnabled(enabled));
 	}
 
 	/*
@@ -515,17 +387,15 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 	@Override
 	public void setReadOnly(boolean readOnly) {
 		properties.forEach(p -> {
-			propertyField(p).ifPresent(f -> {
+			_input(p).ifPresent(f -> {
 				if (!p.isReadOnly() && !readOnlyProperties.contains(p)
-						&& (f.getPropertyDataSource() == null || !f.getPropertyDataSource().isReadOnly())) {
+				/* && (f.getPropertyDataSource() == null || !f.getPropertyDataSource().isReadOnly()) */) {
 					f.setReadOnly(readOnly);
 				} else {
 					f.setReadOnly(true);
 				}
 			});
 		});
-
-		this.readOnly = readOnly;
 	}
 
 	/**
@@ -535,7 +405,7 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 	 */
 	@SuppressWarnings("rawtypes")
 	protected boolean isPropertyReadOnly(Property property) {
-		return property != null && readOnlyProperties.contains(property);
+		return property != null && (property.isReadOnly() || readOnlyProperties.contains(property));
 	}
 
 	/**
@@ -609,20 +479,21 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 	}
 
 	/**
-	 * Get whether to stop field validation at first validation failure.
-	 * @return whether to stop field validation at first validation failure
+	 * Get whether to stop validation at first validation failure.
+	 * @return whether to stop validation at first validation failure
 	 */
-	protected boolean isStopFieldValidationAtFirstFailure() {
-		return stopFieldValidationAtFirstFailure;
+	protected boolean isStopValidationAtFirstFailure() {
+		return stopValidationAtFirstFailure;
 	}
 
-	/**
-	 * Set whether to stop field validation at first validation failure.
-	 * @param stopFieldValidationAtFirstFailure <code>true</code> to stop field validation at first validation failure
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.internal.components.PropertyInputGroupConfigurator#setStopValidationAtFirstFailure(
+	 * boolean)
 	 */
 	@Override
-	public void setStopFieldValidationAtFirstFailure(boolean stopFieldValidationAtFirstFailure) {
-		this.stopFieldValidationAtFirstFailure = stopFieldValidationAtFirstFailure;
+	public void setStopValidationAtFirstFailure(boolean stopValidationAtFirstFailure) {
+		this.stopValidationAtFirstFailure = stopValidationAtFirstFailure;
 	}
 
 	/**
@@ -661,32 +532,31 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 	}
 
 	/**
-	 * Whether to ignore missing property fields
-	 * @return <code>true</code> if missing property fields must be ignored
+	 * Whether to ignore missing property {@link Input}s.
+	 * @return <code>true</code> if missing property inputs must be ignored
 	 */
-	protected boolean isIgnoreMissingField() {
-		return ignoreMissingField;
-	}
-
-	/**
-	 * Set whether to ignore missing property fields
-	 * @param ignoreMissingField <code>true</code> to ignore missing property fields
-	 */
-	@Override
-	public void setIgnoreMissingField(boolean ignoreMissingField) {
-		this.ignoreMissingField = ignoreMissingField;
+	protected boolean isIgnoreMissingInputs() {
+		return ignoreMissingInputs;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.internal.components.PropertyFieldGroupConfigurator#addFieldConfigurator(com.
-	 * holonframework.vaadin.components.PropertyFieldGroup.FieldConfigurator)
+	 * @see com.holonplatform.vaadin.internal.components.PropertyInputGroupConfigurator#setIgnoreMissingInputs(boolean)
 	 */
 	@Override
-	public void addFieldConfigurator(FieldConfigurator fieldConfigurator) {
-		if (fieldConfigurator != null) {
-			fieldConfigurators.add(fieldConfigurator);
-		}
+	public void setIgnoreMissingInputs(boolean ignoreMissingInputs) {
+		this.ignoreMissingInputs = ignoreMissingInputs;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.internal.components.PropertyInputGroupConfigurator#addInputPostProcessor(com.
+	 * holonplatform.vaadin.components.PropertyInputGroup.InputPostProcessor)
+	 */
+	@Override
+	public void addInputPostProcessor(InputPostProcessor postProcessor) {
+		ObjectUtils.argumentNotNull(postProcessor, "InputPostProcessor must be not null");
+		postProcessors.add(postProcessor);
 	}
 
 	/**
@@ -708,16 +578,19 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 		vs.add(validator);
 	}
 
-	/**
-	 * Set the {@link FieldPropertyRenderer} to use with given property
-	 * @param <T> Property type
-	 * @param property Property
-	 * @param renderer Renderer
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.holonplatform.vaadin.internal.components.PropertyInputGroupConfigurator#setPropertyRenderer(com.holonplatform
+	 * .core.property.Property, com.holonplatform.core.property.PropertyRenderer)
 	 */
 	@Override
-	public <T> void setPropertyRenderer(Property<T> property, FieldPropertyRenderer<T> renderer) {
-		if (property != null && renderer != null) {
+	public <T, F extends T> void setPropertyRenderer(Property<T> property, PropertyRenderer<Input<F>, T> renderer) {
+		ObjectUtils.argumentNotNull(property, "Property must be not null");
+		if (renderer != null) {
 			propertyRenderers.put(property, renderer);
+		} else {
+			propertyRenderers.remove(property);
 		}
 	}
 
@@ -727,49 +600,27 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 	@Override
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void build() {
-		propertyFields.clear();
+		propertyInputs.clear();
 		// render and bind fields
 		properties.forEach(p -> {
 			if (!isPropertyHidden(p)) {
-				final Optional<Field> field = render(p);
-				if (!field.isPresent() && !isIgnoreMissingField()) {
+				final Optional<Input> input = render(p);
+				if (!input.isPresent() && !isIgnoreMissingInputs()) {
 					throw new NoSuitableRendererAvailableException(
-							"No Field render available to render the property [" + p.toString() + "] as a Field");
+							"No Input renderer available to render the property [" + p.toString() + "]");
 				}
-				field.ifPresent(f -> {
+				input.ifPresent(f -> {
 					if (isIgnoreValidation()) {
-						f.removeAllValidators();
+						// TODO
+						// f.removeAllValidators();
 					}
 					// configure
-					configureField(p, f);
+					configureInput(p, f);
 					// bind
-					propertyFields.put(p, f);
+					propertyInputs.put(p, f);
 				});
 			}
 		});
-	}
-
-	/**
-	 * Get the value of given <code>property</code> using given <code>propertyBox</code>.
-	 * @param propertyBox PropertyBox
-	 * @param property Property
-	 * @return Property value
-	 */
-	@SuppressWarnings("unchecked")
-	private <T> T getPropertyValue(PropertyBox propertyBox, Property<T> property) {
-		if (VirtualProperty.class.isAssignableFrom(property.getClass())) {
-			if (((VirtualProperty<T>) property).getValueProvider() != null) {
-				return ((VirtualProperty<T>) property).getValueProvider().getPropertyValue(propertyBox);
-			}
-			return null;
-		}
-		if (propertyBox.containsValue(property)) {
-			return propertyBox.getValue(property);
-		}
-		if (defaultValues.containsKey(property)) {
-			return (T) defaultValues.get(property).getDefaultValue(property);
-		}
-		return null;
 	}
 
 	/**
@@ -780,74 +631,49 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 	 * @return Rendered field
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected <T> Optional<Field> render(Property<T> property) {
+	protected <T> Optional<Input> render(Property<T> property) {
 		// check custom renderer
 		if (propertyRenderers.containsKey(property)) {
-			final FieldPropertyRenderer<T> r = propertyRenderers.get(property);
-			return Optional.ofNullable(r.render(property));
+			final PropertyRenderer r = propertyRenderers.get(property);
+			// check render type
+			if (!Input.class.isAssignableFrom(r.getRenderType())) {
+				throw new IllegalStateException(
+						"Renderer for property [" + property + "] is not of Input type: [" + r.getRenderType() + "]");
+			}
+			return Optional.ofNullable((Input) r.render(property));
 		}
 		// use registry
-		return property.renderIfAvailable(Field.class);
+		return property.renderIfAvailable(Input.class);
 	}
 
 	/**
-	 * Configure Field before binding
+	 * Configure {@link Input} component before binding it to a {@link Property}.
 	 * @param property Property
-	 * @param field Field to configure
+	 * @param input {@link Input} component to configure
 	 */
 	@SuppressWarnings("unchecked")
-	protected void configureField(final Property<?> property, @SuppressWarnings("rawtypes") final Field field) {
-		// Property validators
+	protected void configureInput(final Property<?> property, @SuppressWarnings("rawtypes") final Input input) {
+		// Validators
 		if (!isIgnoreValidation()) {
-			property.getValidators().forEach(v -> {
-				ValidationUtils.removeValidator(field, v);
-				field.addValidator(ValidationUtils.asVaadinValidator(v));
-			});
-			@SuppressWarnings("rawtypes")
-			List<Validator> pvs = propertyValidators.get(property);
-			if (pvs != null) {
-				pvs.forEach(v -> field.addValidator(ValidationUtils.asVaadinValidator(v)));
-			}
+			// property validators
+			property.getValidators().forEach(v -> input.addValidator(v));
+			// group property validators
+			propertyValidators.getOrDefault(property, Collections.emptyList()).forEach(v -> input.addValidator(v));
 		}
 		// Read-only
 		if (property.isReadOnly() || readOnlyProperties.contains(property)) {
-			field.setReadOnly(true);
+			input.setReadOnly(true);
 		}
 		// Required
 		if (requiredProperties.contains(property)) {
-			field.setRequired(true);
+			input.setRequired(true);
 		}
-		// FieldConfigurators
-		fieldConfigurators.forEach(fc -> fc.configureField(property, field));
+		// post processors
+		postProcessors.forEach(fc -> fc.process(property, input));
 		// check default value
 		if (!property.isReadOnly() && defaultValues.containsKey(property)) {
-			field.setValue(defaultValues.get(property).getDefaultValue(property));
+			input.setValue(defaultValues.get(property).getDefaultValue(property));
 		}
-	}
-
-	/**
-	 * Get the {@link Field} bound to given property, if present
-	 * @param property Property
-	 * @return Property field
-	 */
-	@SuppressWarnings("rawtypes")
-	private Optional<Field> propertyField(Property property) {
-		return Optional.ofNullable(propertyFields.get(property));
-	}
-
-	/**
-	 * Get all validatable fields
-	 * @return Validatable fields, an empty list if none
-	 */
-	@SuppressWarnings("rawtypes")
-	private List<Field> getValidatableFields() {
-		final List<Field> fields = new LinkedList<>();
-		properties.forEach(p -> {
-			if (!p.isReadOnly() && !isPropertyReadOnly(p)) {
-				propertyField(p).ifPresent(f -> fields.add(f));
-			}
-		});
-		return fields;
 	}
 
 	/**
@@ -886,17 +712,82 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 		}
 	}
 
+	/**
+	 * Validate all the {@link Input}s.
+	 * @throws ValidationException If one or more input is not valid
+	 */
+	private void validateInputs() throws ValidationException {
+		final LinkedList<ValidationException> validationExceptions = new LinkedList<>();
+
+		propertyInputs.entrySet().forEach(e -> {
+			// exclude read-only properties
+			if (!isPropertyReadOnly(e.getKey())) {
+				try {
+					// validate input
+					e.getValue().validateValue();
+				} catch (ValidationException ve) {
+					if (isStopValidationAtFirstFailure()) {
+						throw ve;
+					}
+					validationExceptions.add(ve);
+				}
+			}
+		});
+
+		// collect validation exceptions, if any
+		if (!validationExceptions.isEmpty()) {
+			if (validationExceptions.size() == 1) {
+				throw validationExceptions.getFirst();
+			} else {
+				throw new ValidationException(validationExceptions.toArray(new ValidationException[0]));
+			}
+		}
+	}
+
+	/**
+	 * Get the {@link Input} bound to given property, if present
+	 * @param property Property
+	 * @return Property {@link Input}
+	 */
+	@SuppressWarnings("rawtypes")
+	private Optional<Input> _input(Property property) {
+		return Optional.ofNullable(propertyInputs.get(property));
+	}
+
+	/**
+	 * Get the value of given <code>property</code> using given <code>propertyBox</code>.
+	 * @param propertyBox PropertyBox
+	 * @param property Property
+	 * @return Property value
+	 */
+	@SuppressWarnings("unchecked")
+	private <T> T getPropertyValue(PropertyBox propertyBox, Property<T> property) {
+		if (VirtualProperty.class.isAssignableFrom(property.getClass())) {
+			if (((VirtualProperty<T>) property).getValueProvider() != null) {
+				return ((VirtualProperty<T>) property).getValueProvider().getPropertyValue(propertyBox);
+			}
+			return null;
+		}
+		if (propertyBox.containsValue(property)) {
+			return propertyBox.getValue(property);
+		}
+		if (defaultValues.containsKey(property)) {
+			return (T) defaultValues.get(property).getDefaultValue(property);
+		}
+		return null;
+	}
+
 	// Builder
 
 	/**
-	 * Default {@link PropertyFieldGroupBuilder} implementation.
+	 * Default {@link PropertyInputGroupBuilder} implementation.
 	 */
 	public static class DefaultBuilder
-			extends AbstractBuilder<PropertyFieldGroupConfigurator, PropertyFieldGroup, PropertyFieldGroupBuilder>
-			implements PropertyFieldGroupBuilder {
+			extends AbstractBuilder<PropertyInputGroupConfigurator, PropertyInputGroup, PropertyInputGroupBuilder>
+			implements PropertyInputGroupBuilder {
 
 		public DefaultBuilder() {
-			super(new DefaultPropertyFieldGroup());
+			super(new DefaultPropertyInputGroup());
 		}
 
 		/*
@@ -904,7 +795,7 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 		 * @see com.holonplatform.vaadin.internal.components.DefaultPropertyFieldGroup.AbstractBuilder#builder()
 		 */
 		@Override
-		protected PropertyFieldGroupBuilder builder() {
+		protected PropertyInputGroupBuilder builder() {
 			return this;
 		}
 
@@ -913,7 +804,7 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 		 * @see com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#build()
 		 */
 		@Override
-		public PropertyFieldGroup build() {
+		public PropertyInputGroup build() {
 			instance.build();
 			return instance;
 		}
@@ -922,10 +813,10 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 
 	/**
 	 * Abstract {@link Builder} implementation.
-	 * @param <G> Actual {@link PropertyFieldGroup} type
+	 * @param <G> Actual {@link PropertyInputGroup} type
 	 * @param <B> Concrete builder type
 	 */
-	public abstract static class AbstractBuilder<C extends PropertyFieldGroupConfigurator, G extends PropertyFieldGroup, B extends Builder<G, B>>
+	public abstract static class AbstractBuilder<C extends PropertyInputGroupConfigurator, G extends PropertyInputGroup, B extends Builder<G, B>>
 			implements Builder<G, B> {
 
 		/**
@@ -1051,31 +942,21 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#bind(com.holonplatform.core.property.
-		 * Property, com.holonplatform.core.property.PropertyRenderer)
+		 * @see
+		 * com.holonplatform.vaadin.components.PropertyInputGroup.Builder#bind(com.holonplatform.core.property.Property,
+		 * com.holonplatform.core.property.PropertyRenderer)
 		 */
 		@Override
-		public <T, F extends T> B bind(Property<T> property, PropertyRenderer<Field<F>, T> renderer) {
-			ObjectUtils.argumentNotNull(renderer, "PropertyRenderer must be not null");
-			return bind(property, p -> renderer.render(p));
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#bind(com.holonplatform.core.property.
-		 * Property, com.holonplatform.vaadin.components.FieldPropertyRenderer)
-		 */
-		@Override
-		public <T> B bind(Property<T> property, FieldPropertyRenderer<T> renderer) {
+		public <T, F extends T> B bind(Property<T> property, PropertyRenderer<Input<F>, T> renderer) {
 			ObjectUtils.argumentNotNull(property, "Property must be not null");
-			ObjectUtils.argumentNotNull(renderer, "PropertyRenderer must be not null");
+			ObjectUtils.argumentNotNull(renderer, "Renderer must be not null");
 			instance.setPropertyRenderer(property, renderer);
 			return builder();
 		}
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#defaultValidationErrorHandler(com.
+		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#defaultValidationErrorHandler(com.
 		 * holonframework.core.Validator.ValidationErrorHandler)
 		 */
 		@Override
@@ -1086,18 +967,17 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 
 		/*
 		 * (non-Javadoc)
-		 * @see
-		 * com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#stopFieldValidationAtFirstFailure(boolean)
+		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#stopValidationAtFirstFailure(boolean)
 		 */
 		@Override
-		public B stopFieldValidationAtFirstFailure(boolean stopFieldValidationAtFirstFailure) {
-			instance.setStopFieldValidationAtFirstFailure(stopFieldValidationAtFirstFailure);
+		public B stopValidationAtFirstFailure(boolean stopValidationAtFirstFailure) {
+			instance.setStopValidationAtFirstFailure(stopValidationAtFirstFailure);
 			return builder();
 		}
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#setStopOverallValidationAtFirstFailure(
+		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#setStopOverallValidationAtFirstFailure(
 		 * boolean)
 		 */
 		@Override
@@ -1108,7 +988,7 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#ignoreValidation(boolean)
+		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#ignoreValidation(boolean)
 		 */
 		@Override
 		public B ignoreValidation(boolean ignoreValidation) {
@@ -1118,23 +998,23 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#ignoreMissingFields(boolean)
+		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#ignoreMissingInputs(boolean)
 		 */
 		@Override
-		public B ignoreMissingFields(boolean ignoreMissingField) {
-			instance.setIgnoreMissingField(ignoreMissingField);
+		public B ignoreMissingInputs(boolean ignoreMissingInputs) {
+			instance.setIgnoreMissingInputs(ignoreMissingInputs);
 			return builder();
 		}
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#withFieldConfigurator(com.holonplatform.
-		 * vaadin.components.PropertyFieldGroup.FieldConfigurator)
+		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#withInputPostProcessor(com.holonplatform.
+		 * vaadin.components.PropertyInputGroup.InputPostProcessor)
 		 */
 		@Override
-		public B withFieldConfigurator(FieldConfigurator fieldConfigurator) {
-			ObjectUtils.argumentNotNull(fieldConfigurator, "FieldConfigurator must be not null");
-			instance.addFieldConfigurator(fieldConfigurator);
+		public B withInputPostProcessor(InputPostProcessor postProcessor) {
+			ObjectUtils.argumentNotNull(postProcessor, "InputPostProcessor must be not null");
+			instance.addInputPostProcessor(postProcessor);
 			return builder();
 		}
 
@@ -1144,20 +1024,20 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 	 * Default {@link Binding} implementation.
 	 * @param <T> Property type
 	 */
-	private static class PropertyFieldBinding<T> implements Binding<T> {
+	private static class PropertyInputBinding<T> implements Binding<T> {
 
 		private final Property<T> property;
-		private final Field<T> field;
+		private final Input<T> input;
 
-		public PropertyFieldBinding(Property<T> property, Field<T> field) {
+		public PropertyInputBinding(Property<T> property, Input<T> input) {
 			super();
 			this.property = property;
-			this.field = field;
+			this.input = input;
 		}
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyFieldGroup.Binding#getProperty()
+		 * @see com.holonplatform.vaadin.components.PropertyInputContainer.Binding#getProperty()
 		 */
 		@Override
 		public Property<T> getProperty() {
@@ -1166,11 +1046,11 @@ public class DefaultPropertyFieldGroup implements PropertyFieldGroupConfigurator
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyFieldGroup.Binding#getField()
+		 * @see com.holonplatform.vaadin.components.PropertyInputContainer.Binding#getInput()
 		 */
 		@Override
-		public Field<T> getField() {
-			return field;
+		public Input<T> getInput() {
+			return input;
 		}
 
 	}

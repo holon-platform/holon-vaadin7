@@ -18,6 +18,7 @@ package com.holonplatform.vaadin.components.builders;
 import com.holonplatform.core.Context;
 import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.i18n.LocalizationContext;
+import com.holonplatform.vaadin.components.Input;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
@@ -33,7 +34,7 @@ import com.vaadin.ui.Field;
  * 
  * @since 5.0.0
  */
-public interface TextInputFieldBuilder<T, C extends Field<T>, B extends TextInputFieldBuilder<T, C, B>> extends ValidatableFieldBuilder<T, C, B> {
+public interface TextInputFieldBuilder<T, C extends Input<T>, B extends TextInputFieldBuilder<T, C, B>> extends ValidatableFieldBuilder<T, C, B> {
 
 	/**
 	 * Set the maximum number of characters in the field

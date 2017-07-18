@@ -19,7 +19,8 @@ import java.util.Arrays;
 
 import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.internal.utils.ObjectUtils;
-import com.holonplatform.vaadin.components.ItemSetComponent.ItemCaptionGenerator;
+import com.holonplatform.vaadin.components.Input;
+import com.holonplatform.vaadin.components.ItemSet.ItemCaptionGenerator;
 import com.vaadin.ui.Field;
 
 /**
@@ -33,7 +34,7 @@ import com.vaadin.ui.Field;
  * 
  * @since 5.0.0
  */
-public interface SelectFieldBuilder<T, C extends Field<T>, S, ITEM, B extends SelectFieldBuilder<T, C, S, ITEM, B>>
+public interface SelectFieldBuilder<T, C extends Input<T>, S, ITEM, B extends SelectFieldBuilder<T, C, S, ITEM, B>>
 		extends BaseSelectFieldBuilder<T, C, S, ITEM, B> {
 
 	/**

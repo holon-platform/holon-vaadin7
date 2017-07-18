@@ -15,6 +15,7 @@
  */
 package com.holonplatform.vaadin.components.builders;
 
+import com.holonplatform.vaadin.components.Input;
 import com.vaadin.ui.Field;
 
 /**
@@ -23,7 +24,7 @@ import com.vaadin.ui.Field;
  * 
  * @since 5.0.0
  */
-public interface SecretFieldBuilder extends ValidatableFieldBuilder<String, Field<String>, SecretFieldBuilder> {
+public interface SecretFieldBuilder extends ValidatableFieldBuilder<String, Input<String>, SecretFieldBuilder> {
 
 	/**
 	 * Enable or disable treating empty String values as <code>null</code> values.

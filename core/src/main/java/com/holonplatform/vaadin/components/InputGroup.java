@@ -42,6 +42,12 @@ public interface InputGroup extends ValidatableValue, Serializable {
 	 */
 	void setReadOnly(boolean readOnly);
 
+	/**
+	 * Updates the enabled state of all the group inputs.
+	 * @param enabled <code>true</code> to enable all group inputs, <code>false</code> to disable them
+	 */
+	void setEnabled(boolean enabled);
+
 	// Builder
 
 	/**

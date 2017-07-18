@@ -19,6 +19,7 @@ import com.holonplatform.core.Validator;
 import com.holonplatform.core.Validator.ValidationException;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.vaadin.components.Input;
+import com.holonplatform.vaadin.components.Registration;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
@@ -105,6 +106,24 @@ public class InputFieldWrapper<V> implements Input<V> {
 
 	/*
 	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.Input#isRequired()
+	 */
+	@Override
+	public boolean isRequired() {
+		return field.isRequired();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.Input#setRequired(boolean)
+	 */
+	@Override
+	public void setRequired(boolean required) {
+		field.setRequired(required);
+	}
+
+	/*
+	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.Input#focus()
 	 */
 	@Override
@@ -150,6 +169,17 @@ public class InputFieldWrapper<V> implements Input<V> {
 		} catch (InvalidValueException e) {
 			throw ValidationUtils.translateValidationException(e);
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.Input#addValueChangeListener(com.holonplatform.vaadin.components.Input.
+	 * ValueChangeListener)
+	 */
+	@Override
+	public Registration addValueChangeListener(
+			com.holonplatform.vaadin.components.Input.ValueChangeListener<V> listener) {
+		return ValueChangeNotifierRegistration.adapt(this, field, listener);
 	}
 
 }

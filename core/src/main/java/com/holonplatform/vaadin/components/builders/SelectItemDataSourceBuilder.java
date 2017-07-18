@@ -15,10 +15,10 @@
  */
 package com.holonplatform.vaadin.components.builders;
 
+import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.data.ItemDataProvider;
 import com.holonplatform.vaadin.data.ItemDataSource;
 import com.holonplatform.vaadin.data.container.ItemAdapter;
-import com.vaadin.ui.Field;
 
 /**
  * Select component builder with {@link ItemDataSource} support.
@@ -31,7 +31,7 @@ import com.vaadin.ui.Field;
  *
  * @since 5.0.0
  */
-public interface SelectItemDataSourceBuilder<T, C extends Field<T>, S, ITEM, B extends SelectItemDataSourceBuilder<T, C, S, ITEM, B>>
+public interface SelectItemDataSourceBuilder<T, C extends Input<T>, S, ITEM, B extends SelectItemDataSourceBuilder<T, C, S, ITEM, B>>
 		extends SelectFieldBuilder<T, C, S, ITEM, B> {
 
 	/**

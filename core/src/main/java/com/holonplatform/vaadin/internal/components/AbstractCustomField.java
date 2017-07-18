@@ -20,6 +20,7 @@ import com.holonplatform.core.Validator.ValidationException;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.vaadin.components.Components;
 import com.holonplatform.vaadin.components.Input;
+import com.holonplatform.vaadin.components.Registration;
 import com.holonplatform.vaadin.components.builders.InvalidFieldNotificationMode;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.converter.Converter.ConversionException;
@@ -86,7 +87,7 @@ public abstract class AbstractCustomField<T, F extends Field> extends CustomFiel
 	/**
 	 * Value change listener for validation when internal field value changes
 	 */
-	private final ValueChangeListener onChangeValidation = (e) -> {
+	private final com.vaadin.data.Property.ValueChangeListener onChangeValidation = (e) -> {
 		if (composed) {
 			try {
 				setSuspendValidationNotification(false);
@@ -397,6 +398,17 @@ public abstract class AbstractCustomField<T, F extends Field> extends CustomFiel
 		ValidationUtils.preValueSet(this);
 		getInternalField().removeStyleName(DEFAULT_INVALID_FIELD_STYLE_CLASS);
 		super.setValue(newFieldValue);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.Input#addValueChangeListener(com.holonplatform.vaadin.components.Input.
+	 * ValueChangeListener)
+	 */
+	@Override
+	public Registration addValueChangeListener(
+			com.holonplatform.vaadin.components.Input.ValueChangeListener<T> listener) {
+		return ValueChangeNotifierRegistration.adapt(this, this, listener);
 	}
 
 }

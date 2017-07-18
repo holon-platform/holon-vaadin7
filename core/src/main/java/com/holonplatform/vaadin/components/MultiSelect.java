@@ -24,11 +24,10 @@ import java.util.stream.Stream;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.property.Property;
 import com.holonplatform.core.property.PropertyBox;
+import com.holonplatform.vaadin.components.builders.BaseSelectFieldBuilder.RenderingMode;
 import com.holonplatform.vaadin.components.builders.MultiPropertySelectFieldBuilder;
 import com.holonplatform.vaadin.components.builders.MultiSelectFieldBuilder;
-import com.holonplatform.vaadin.components.builders.BaseSelectFieldBuilder.RenderingMode;
 import com.holonplatform.vaadin.internal.components.MultiSelectField;
-import com.vaadin.ui.Field;
 
 /**
  * A {@link Selectable} component in which multiple items can be selected at the same time. Selecting an item adds it to
@@ -38,7 +37,7 @@ import com.vaadin.ui.Field;
  * 
  * @since 5.0.0
  */
-public interface MultiSelect<T> extends Selectable<T>, Field<Set<T>>, ItemSetComponent {
+public interface MultiSelect<T> extends Selectable<T>, Input<Set<T>>, ItemSet {
 
 	/**
 	 * Adds the given item to the set of currently selected items.

@@ -20,12 +20,12 @@ import java.util.TimeZone;
 
 import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.i18n.LocalizationContext;
+import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.builders.CalendarFieldBuilder;
 import com.holonplatform.vaadin.components.builders.DateFieldBuilder;
 import com.holonplatform.vaadin.internal.components.ValidatableField;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.DateField;
-import com.vaadin.ui.Field;
 
 /**
  * Base {@link CalendarFieldBuilder} implementation.
@@ -35,7 +35,7 @@ import com.vaadin.ui.Field;
  * @since 5.0.0
  */
 public abstract class AbstractDateFieldBuilder<I extends DateField & ValidatableField<Date>>
-		extends AbstractValidatableFieldBuilder<Date, Field<Date>, I, DateFieldBuilder> implements DateFieldBuilder {
+		extends AbstractValidatableFieldBuilder<Date, Input<Date>, I, DateFieldBuilder> implements DateFieldBuilder {
 
 	protected Localizable parseErrorMessage;
 	protected Localizable outOfRangeMessage;

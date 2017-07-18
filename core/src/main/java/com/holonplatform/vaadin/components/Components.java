@@ -22,13 +22,11 @@ import java.util.Date;
 
 import org.mockito.internal.util.reflection.Fields;
 
-import com.holonplatform.core.Validator;
-import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.vaadin.components.Dialog.DialogBuilder;
 import com.holonplatform.vaadin.components.Dialog.QuestionDialogBuilder;
-import com.holonplatform.vaadin.components.PropertyFieldGroup.PropertyFieldGroupBuilder;
 import com.holonplatform.vaadin.components.PropertyForm.Composer;
 import com.holonplatform.vaadin.components.PropertyForm.PropertyFormBuilder;
+import com.holonplatform.vaadin.components.PropertyInputGroup.PropertyInputGroupBuilder;
 import com.holonplatform.vaadin.components.builders.BaseSelectFieldBuilder.RenderingMode;
 import com.holonplatform.vaadin.components.builders.BooleanFieldBuilder;
 import com.holonplatform.vaadin.components.builders.ButtonBuilder;
@@ -40,7 +38,6 @@ import com.holonplatform.vaadin.components.builders.ComponentConfigurator;
 import com.holonplatform.vaadin.components.builders.ComponentConfigurator.BaseComponentConfigurator;
 import com.holonplatform.vaadin.components.builders.CssLayoutBuilder;
 import com.holonplatform.vaadin.components.builders.DateFieldBuilder;
-import com.holonplatform.vaadin.components.builders.FieldBuilder;
 import com.holonplatform.vaadin.components.builders.FieldConfigurator;
 import com.holonplatform.vaadin.components.builders.FieldConfigurator.BaseFieldConfigurator;
 import com.holonplatform.vaadin.components.builders.FormLayoutBuilder;
@@ -121,15 +118,6 @@ import com.vaadin.ui.VerticalLayout;
 public final class Components implements Serializable {
 
 	private static final long serialVersionUID = -2338969677506089465L;
-
-	/**
-	 * Default validation error message for required fields.
-	 * <p>
-	 * This message is used as the default required error from {@link FieldBuilder}.
-	 * </p>
-	 */
-	public static final Localizable DEFAULT_REQUIRED_ERROR = Localizable.builder().message("Value is required")
-			.messageCode(Validator.DEFAULT_MESSAGE_CODE_PREFIX + "required").build();
 
 	/*
 	 * Empty private constructor: this class is intended only to provide constants ad utility methods.
@@ -489,11 +477,11 @@ public final class Components implements Serializable {
 	}
 
 	/**
-	 * Gets a builder to create a {@link PropertyFieldGroup}.
-	 * @return {@link PropertyFieldGroup} builder
+	 * Gets a builder to create a {@link PropertyInputGroup}.
+	 * @return {@link PropertyInputGroup} builder
 	 */
-	public static PropertyFieldGroupBuilder propertyFieldGroup() {
-		return PropertyFieldGroup.builder();
+	public static PropertyInputGroupBuilder propertyFieldGroup() {
+		return PropertyInputGroup.builder();
 	}
 
 	/**

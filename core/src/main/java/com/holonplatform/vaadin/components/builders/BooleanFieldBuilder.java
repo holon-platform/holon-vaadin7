@@ -15,6 +15,7 @@
  */
 package com.holonplatform.vaadin.components.builders;
 
+import com.holonplatform.vaadin.components.Input;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.ui.Field;
@@ -24,7 +25,7 @@ import com.vaadin.ui.Field;
  * 
  * @since 5.0.0
  */
-public interface BooleanFieldBuilder extends ValidatableFieldBuilder<Boolean, Field<Boolean>, BooleanFieldBuilder> {
+public interface BooleanFieldBuilder extends ValidatableFieldBuilder<Boolean, Input<Boolean>, BooleanFieldBuilder> {
 
 	/**
 	 * Sets whether to treat <code>null</code> values as {@link Boolean#FALSE} values

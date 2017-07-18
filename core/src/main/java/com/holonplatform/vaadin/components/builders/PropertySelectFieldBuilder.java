@@ -22,6 +22,7 @@ import com.holonplatform.core.datastore.Datastore;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.property.Property;
 import com.holonplatform.core.property.PropertyBox;
+import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.data.ItemDataProvider;
 import com.holonplatform.vaadin.data.container.ItemAdapter;
 import com.holonplatform.vaadin.internal.data.DatastoreItemDataProvider;
@@ -37,7 +38,7 @@ import com.vaadin.ui.Field;
  * 
  * @since 5.0.0
  */
-public interface PropertySelectFieldBuilder<T, C extends Field<T>, S, B extends PropertySelectFieldBuilder<T, C, S, B>>
+public interface PropertySelectFieldBuilder<T, C extends Input<T>, S, B extends PropertySelectFieldBuilder<T, C, S, B>>
 		extends BaseSelectFieldBuilder<T, C, S, PropertyBox, B> {
 	
 	/**

@@ -22,11 +22,10 @@ import java.util.Set;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.property.Property;
 import com.holonplatform.core.property.PropertyBox;
+import com.holonplatform.vaadin.components.builders.BaseSelectFieldBuilder.RenderingMode;
 import com.holonplatform.vaadin.components.builders.SinglePropertySelectFieldBuilder;
 import com.holonplatform.vaadin.components.builders.SingleSelectFieldBuilder;
-import com.holonplatform.vaadin.components.builders.BaseSelectFieldBuilder.RenderingMode;
 import com.holonplatform.vaadin.internal.components.SingleSelectField;
-import com.vaadin.ui.Field;
 
 /**
  * A {@link Selectable} component in which at most one item can be selected at a time.
@@ -35,7 +34,7 @@ import com.vaadin.ui.Field;
  * 
  * @since 5.0.0
  */
-public interface SingleSelect<T> extends Selectable<T>, Field<T>, ItemSetComponent {
+public interface SingleSelect<T> extends Selectable<T>, Input<T>, ItemSet {
 
 	/**
 	 * Get the currently selected item.
