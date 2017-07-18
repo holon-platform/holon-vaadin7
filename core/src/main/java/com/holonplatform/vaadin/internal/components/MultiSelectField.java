@@ -23,9 +23,9 @@ import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.property.Property;
 import com.holonplatform.core.property.PropertyBox;
 import com.holonplatform.vaadin.components.MultiSelect;
-import com.holonplatform.vaadin.components.builders.BaseSelectFieldBuilder.RenderingMode;
-import com.holonplatform.vaadin.components.builders.MultiPropertySelectFieldBuilder;
-import com.holonplatform.vaadin.components.builders.MultiSelectFieldBuilder;
+import com.holonplatform.vaadin.components.builders.BaseSelectInputBuilder.RenderingMode;
+import com.holonplatform.vaadin.components.builders.MultiPropertySelectInputBuilder;
+import com.holonplatform.vaadin.components.builders.MultiSelectInputBuilder;
 import com.holonplatform.vaadin.data.ItemDataProvider;
 import com.holonplatform.vaadin.data.ItemIdentifierProvider;
 import com.holonplatform.vaadin.data.container.ItemAdapter;
@@ -120,8 +120,8 @@ public class MultiSelectField<T, ITEM> extends AbstractSelectField<Set<T>, T, IT
 	 * @param <T> Selection type
 	 */
 	public static class Builder<T> extends
-			AbstractSelectFieldBuilder<Set<T>, MultiSelect<T>, T, T, MultiSelectField<T, T>, MultiSelectFieldBuilder<T>>
-			implements MultiSelectFieldBuilder<T> {
+			AbstractSelectFieldBuilder<Set<T>, MultiSelect<T>, T, T, MultiSelectField<T, T>, MultiSelectInputBuilder<T>>
+			implements MultiSelectInputBuilder<T> {
 
 		/**
 		 * Constructor
@@ -149,7 +149,7 @@ public class MultiSelectField<T, ITEM> extends AbstractSelectField<Set<T>, T, IT
 		 */
 		@SuppressWarnings("unchecked")
 		@Override
-		public MultiSelectFieldBuilder<T> dataSource(ItemDataProvider<T> dataProvider) {
+		public MultiSelectInputBuilder<T> dataSource(ItemDataProvider<T> dataProvider) {
 			ObjectUtils.argumentNotNull(dataProvider, "Item data provider must be not null");
 			dataSourceBuilder.dataSource(dataProvider);
 			dataSourceBuilder.itemIdentifier(ItemIdentifierProvider.identity());
@@ -165,7 +165,7 @@ public class MultiSelectField<T, ITEM> extends AbstractSelectField<Set<T>, T, IT
 		 */
 		@SuppressWarnings("unchecked")
 		@Override
-		public MultiSelectFieldBuilder<T> itemAdapter(ItemAdapter<T> itemAdapter) {
+		public MultiSelectInputBuilder<T> itemAdapter(ItemAdapter<T> itemAdapter) {
 			dataSourceBuilder.itemAdapter(itemAdapter);
 			return builder();
 		}
@@ -175,7 +175,7 @@ public class MultiSelectField<T, ITEM> extends AbstractSelectField<Set<T>, T, IT
 		 * @see com.holonplatform.vaadin.components.builders.SelectFieldBuilder#items(java.lang.Iterable)
 		 */
 		@Override
-		public MultiSelectFieldBuilder<T> items(Iterable<T> items) {
+		public MultiSelectInputBuilder<T> items(Iterable<T> items) {
 			ObjectUtils.argumentNotNull(items, "Items must be not null");
 			this.items.clear();
 			items.forEach(i -> this.items.add(i));
@@ -187,7 +187,7 @@ public class MultiSelectField<T, ITEM> extends AbstractSelectField<Set<T>, T, IT
 		 * @see com.holonplatform.vaadin.components.builders.SelectFieldBuilder#addItem(java.lang.Object)
 		 */
 		@Override
-		public MultiSelectFieldBuilder<T> addItem(T item) {
+		public MultiSelectInputBuilder<T> addItem(T item) {
 			ObjectUtils.argumentNotNull(item, "Item must be not null");
 			this.items.add(item);
 			return builder();
@@ -236,8 +236,8 @@ public class MultiSelectField<T, ITEM> extends AbstractSelectField<Set<T>, T, IT
 	 * @param <T> Selection type
 	 */
 	public static class PropertyBuilder<T> extends
-			AbstractSelectFieldBuilder<Set<T>, MultiSelect<T>, T, PropertyBox, MultiSelectField<T, PropertyBox>, MultiPropertySelectFieldBuilder<T>>
-			implements MultiPropertySelectFieldBuilder<T> {
+			AbstractSelectFieldBuilder<Set<T>, MultiSelect<T>, T, PropertyBox, MultiSelectField<T, PropertyBox>, MultiPropertySelectInputBuilder<T>>
+			implements MultiPropertySelectInputBuilder<T> {
 
 		/**
 		 * Constructor
@@ -259,7 +259,7 @@ public class MultiSelectField<T, ITEM> extends AbstractSelectField<Set<T>, T, IT
 		 */
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		@Override
-		public <P extends Property> MultiPropertySelectFieldBuilder<T> withProperties(Iterable<P> properties) {
+		public <P extends Property> MultiPropertySelectInputBuilder<T> withProperties(Iterable<P> properties) {
 			ObjectUtils.argumentNotNull(properties, "Properties must be not null");
 			properties.forEach(p -> dataSourceBuilder.withProperty(p, p.getType()));
 			return builder();
@@ -273,7 +273,7 @@ public class MultiSelectField<T, ITEM> extends AbstractSelectField<Set<T>, T, IT
 		 */
 		@SuppressWarnings("unchecked")
 		@Override
-		public MultiPropertySelectFieldBuilder<T> dataSource(ItemDataProvider<PropertyBox> dataProvider) {
+		public MultiPropertySelectInputBuilder<T> dataSource(ItemDataProvider<PropertyBox> dataProvider) {
 			ObjectUtils.argumentNotNull(dataProvider, "ItemDataProvider must be not null");
 			dataSourceBuilder.dataSource(dataProvider);
 			dataProviderConfigured = true;
@@ -287,7 +287,7 @@ public class MultiSelectField<T, ITEM> extends AbstractSelectField<Set<T>, T, IT
 		 */
 		@SuppressWarnings("unchecked")
 		@Override
-		public MultiPropertySelectFieldBuilder<T> itemAdapter(ItemAdapter<PropertyBox> itemAdapter) {
+		public MultiPropertySelectInputBuilder<T> itemAdapter(ItemAdapter<PropertyBox> itemAdapter) {
 			ObjectUtils.argumentNotNull(itemAdapter, "ItemAdapter must be not null");
 			dataSourceBuilder.itemAdapter(itemAdapter);
 			// set extractor
@@ -335,7 +335,7 @@ public class MultiSelectField<T, ITEM> extends AbstractSelectField<Set<T>, T, IT
 		 * @see com.holonplatform.vaadin.internal.components.builders.AbstractComponentConfigurator#builder()
 		 */
 		@Override
-		protected MultiPropertySelectFieldBuilder<T> builder() {
+		protected MultiPropertySelectInputBuilder<T> builder() {
 			return this;
 		}
 

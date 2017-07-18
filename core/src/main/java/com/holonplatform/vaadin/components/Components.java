@@ -27,8 +27,8 @@ import com.holonplatform.vaadin.components.Dialog.QuestionDialogBuilder;
 import com.holonplatform.vaadin.components.PropertyForm.Composer;
 import com.holonplatform.vaadin.components.PropertyForm.PropertyFormBuilder;
 import com.holonplatform.vaadin.components.PropertyInputGroup.PropertyInputGroupBuilder;
-import com.holonplatform.vaadin.components.builders.BaseSelectFieldBuilder.RenderingMode;
-import com.holonplatform.vaadin.components.builders.BooleanFieldBuilder;
+import com.holonplatform.vaadin.components.builders.BaseSelectInputBuilder.RenderingMode;
+import com.holonplatform.vaadin.components.builders.BooleanInputBuilder;
 import com.holonplatform.vaadin.components.builders.ButtonBuilder;
 import com.holonplatform.vaadin.components.builders.ButtonConfigurator;
 import com.holonplatform.vaadin.components.builders.ButtonConfigurator.BaseButtonConfigurator;
@@ -37,9 +37,9 @@ import com.holonplatform.vaadin.components.builders.ClickableLayoutConfigurator.
 import com.holonplatform.vaadin.components.builders.ComponentConfigurator;
 import com.holonplatform.vaadin.components.builders.ComponentConfigurator.BaseComponentConfigurator;
 import com.holonplatform.vaadin.components.builders.CssLayoutBuilder;
-import com.holonplatform.vaadin.components.builders.DateFieldBuilder;
-import com.holonplatform.vaadin.components.builders.FieldConfigurator;
-import com.holonplatform.vaadin.components.builders.FieldConfigurator.BaseFieldConfigurator;
+import com.holonplatform.vaadin.components.builders.DateInputBuilder;
+import com.holonplatform.vaadin.components.builders.InputConfigurator;
+import com.holonplatform.vaadin.components.builders.InputConfigurator.BaseFieldConfigurator;
 import com.holonplatform.vaadin.components.builders.FormLayoutBuilder;
 import com.holonplatform.vaadin.components.builders.GridLayoutBuilder;
 import com.holonplatform.vaadin.components.builders.HorizontalLayoutBuilder;
@@ -48,18 +48,18 @@ import com.holonplatform.vaadin.components.builders.ItemListingBuilder.TableItem
 import com.holonplatform.vaadin.components.builders.LabelBuilder;
 import com.holonplatform.vaadin.components.builders.LayoutConfigurator;
 import com.holonplatform.vaadin.components.builders.LayoutConfigurator.BaseLayoutConfigurator;
-import com.holonplatform.vaadin.components.builders.MultiSelectFieldBuilder;
-import com.holonplatform.vaadin.components.builders.NumberFieldBuilder;
+import com.holonplatform.vaadin.components.builders.MultiSelectInputBuilder;
+import com.holonplatform.vaadin.components.builders.NumberInputBuilder;
 import com.holonplatform.vaadin.components.builders.OrderedLayoutConfigurator;
 import com.holonplatform.vaadin.components.builders.OrderedLayoutConfigurator.BaseOrderedLayoutConfigurator;
 import com.holonplatform.vaadin.components.builders.PanelBuilder;
 import com.holonplatform.vaadin.components.builders.PropertyListingBuilder.GridPropertyListingBuilder;
 import com.holonplatform.vaadin.components.builders.PropertyListingBuilder.TablePropertyListingBuilder;
-import com.holonplatform.vaadin.components.builders.SecretFieldBuilder;
-import com.holonplatform.vaadin.components.builders.SingleSelectFieldBuilder;
-import com.holonplatform.vaadin.components.builders.StringFieldBuilder;
-import com.holonplatform.vaadin.components.builders.TemporalFieldBuilder.TemporalWithTimeFieldBuilder;
-import com.holonplatform.vaadin.components.builders.TemporalFieldBuilder.TemporalWithoutTimeFieldBuilder;
+import com.holonplatform.vaadin.components.builders.SecretInputBuilder;
+import com.holonplatform.vaadin.components.builders.SingleSelectInputBuilder;
+import com.holonplatform.vaadin.components.builders.StringInputBuilder;
+import com.holonplatform.vaadin.components.builders.TemporalInputBuilder.TemporalWithTimeFieldBuilder;
+import com.holonplatform.vaadin.components.builders.TemporalInputBuilder.TemporalWithoutTimeFieldBuilder;
 import com.holonplatform.vaadin.components.builders.VerticalLayoutBuilder;
 import com.holonplatform.vaadin.internal.components.BooleanField;
 import com.holonplatform.vaadin.internal.components.DateField;
@@ -146,7 +146,7 @@ public final class Components implements Serializable {
 	}
 
 	/**
-	 * Get a {@link FieldConfigurator} to configure given field.
+	 * Get a {@link InputConfigurator} to configure given field.
 	 * @param <T> Field type
 	 * @param field Field to configure (not null)
 	 * @return BaseFieldConfigurator
@@ -308,7 +308,7 @@ public final class Components implements Serializable {
 	 * Gets a builder to create {@link String} type {@link Field}s.
 	 * @return Field builder
 	 */
-	public static StringFieldBuilder stringField() {
+	public static StringInputBuilder stringField() {
 		return new StringField.Builder();
 	}
 
@@ -316,7 +316,7 @@ public final class Components implements Serializable {
 	 * Gets a builder to create {@link String} type {@link Field}s rendered as a text area in UI.
 	 * @return Field builder
 	 */
-	public static StringFieldBuilder stringArea() {
+	public static StringInputBuilder stringArea() {
 		return new StringArea.Builder();
 	}
 
@@ -325,7 +325,7 @@ public final class Components implements Serializable {
 	 * secret text information like passwords.
 	 * @return Field builder
 	 */
-	public static SecretFieldBuilder secretField() {
+	public static SecretInputBuilder secretField() {
 		return new SecretField.Builder();
 	}
 
@@ -335,7 +335,7 @@ public final class Components implements Serializable {
 	 * @param numberClass Concrete number class
 	 * @return Field builder
 	 */
-	public static <T extends Number> NumberFieldBuilder<T> numberField(Class<T> numberClass) {
+	public static <T extends Number> NumberInputBuilder<T> numberField(Class<T> numberClass) {
 		return new NumberField.Builder<>(numberClass);
 	}
 
@@ -343,7 +343,7 @@ public final class Components implements Serializable {
 	 * Gets a builder to create {@link Boolean} type {@link Field}s.
 	 * @return Field builder
 	 */
-	public static BooleanFieldBuilder booleanField() {
+	public static BooleanInputBuilder booleanField() {
 		return new BooleanField.Builder();
 	}
 
@@ -352,7 +352,7 @@ public final class Components implements Serializable {
 	 * @param inline <code>true</code> to render field using an inline calendar
 	 * @return Field builder
 	 */
-	public static DateFieldBuilder dateField(boolean inline) {
+	public static DateInputBuilder dateField(boolean inline) {
 		return inline ? new InlineDateField.Builder() : new DateField.Builder();
 	}
 
@@ -360,7 +360,7 @@ public final class Components implements Serializable {
 	 * Gets a builder to create {@link Date} type {@link Field}s.
 	 * @return Field builder
 	 */
-	public static DateFieldBuilder dateField() {
+	public static DateInputBuilder dateField() {
 		return dateField(false);
 	}
 
@@ -405,7 +405,7 @@ public final class Components implements Serializable {
 	 * @param renderingMode Rendering mode
 	 * @return Field builder
 	 */
-	public static <T> SingleSelectFieldBuilder<T> singleSelect(Class<? extends T> type, RenderingMode renderingMode) {
+	public static <T> SingleSelectInputBuilder<T> singleSelect(Class<? extends T> type, RenderingMode renderingMode) {
 		return SingleSelect.builder(type, renderingMode);
 	}
 
@@ -415,7 +415,7 @@ public final class Components implements Serializable {
 	 * @param type Selection value type
 	 * @return Field builder
 	 */
-	public static <T> SingleSelectFieldBuilder<T> singleSelect(Class<? extends T> type) {
+	public static <T> SingleSelectInputBuilder<T> singleSelect(Class<? extends T> type) {
 		return SingleSelect.builder(type);
 	}
 
@@ -426,7 +426,7 @@ public final class Components implements Serializable {
 	 * @param renderingMode Rendering mode
 	 * @return Field builder
 	 */
-	public static <T> MultiSelectFieldBuilder<T> multiSelect(Class<? extends T> type, RenderingMode renderingMode) {
+	public static <T> MultiSelectInputBuilder<T> multiSelect(Class<? extends T> type, RenderingMode renderingMode) {
 		return MultiSelect.builder(type, renderingMode);
 	}
 
@@ -436,7 +436,7 @@ public final class Components implements Serializable {
 	 * @param type Selection value type
 	 * @return Field builder
 	 */
-	public static <T> MultiSelectFieldBuilder<T> multiSelect(Class<? extends T> type) {
+	public static <T> MultiSelectInputBuilder<T> multiSelect(Class<? extends T> type) {
 		return MultiSelect.builder(type);
 	}
 

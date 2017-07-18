@@ -18,36 +18,36 @@ package com.holonplatform.vaadin.components.builders;
 import java.text.NumberFormat;
 
 import com.holonplatform.vaadin.components.Input;
-import com.vaadin.ui.Field;
 
 /**
- * Builder to create {@link Field} instances to handle {@link Number} type values.
+ * Builder to create {@link Input} instances to handle {@link Number} type values.
  * 
  * @param <T> Number type
  * 
  * @since 5.0.0
  */
-public interface NumberFieldBuilder<T extends Number> extends TextInputFieldBuilder<T, Input<T>, NumberFieldBuilder<T>> {
+public interface NumberInputBuilder<T extends Number>
+		extends TextInputBuilder<T, Input<T>, NumberInputBuilder<T>> {
 
 	/**
 	 * Sets the {@link NumberFormat} to use to represent number values in UI
 	 * @param numberFormat the NumberFormat to set
 	 * @return this
 	 */
-	NumberFieldBuilder<T> numberFormat(NumberFormat numberFormat);
+	NumberInputBuilder<T> numberFormat(NumberFormat numberFormat);
 
 	/**
 	 * Sets whether to allow negative numbers input
 	 * @param allowNegative <code>true</code> to allow negative numbers input
 	 * @return this
 	 */
-	NumberFieldBuilder<T> allowNegative(boolean allowNegative);
+	NumberInputBuilder<T> allowNegative(boolean allowNegative);
 
 	/**
 	 * Sets whether to set html5 input type property as "number"
 	 * @param html5NumberInputType <code>true</code> to set html5 input type property as "number"
 	 * @return this
 	 */
-	NumberFieldBuilder<T> html5NumberInputType(boolean html5NumberInputType);
+	NumberInputBuilder<T> html5NumberInputType(boolean html5NumberInputType);
 
 }

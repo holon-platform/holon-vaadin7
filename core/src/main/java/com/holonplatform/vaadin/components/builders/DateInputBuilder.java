@@ -15,20 +15,26 @@
  */
 package com.holonplatform.vaadin.components.builders;
 
-import com.holonplatform.core.property.Property;
-import com.holonplatform.core.property.PropertyBox;
-import com.holonplatform.vaadin.components.SingleSelect;
-import com.vaadin.ui.Field;
+import java.util.Date;
+
+import com.holonplatform.vaadin.components.Input;
+import com.vaadin.shared.ui.datefield.Resolution;
 
 /**
- * Builder to create a single selection {@link Field} with {@link Property} data source support.
- * 
- * @param <T> Field type
+ * A {@link CalendarInputBuilder} for {@link Date} type {@link Input}s.
  * 
  * @since 5.0.0
  */
-public interface SinglePropertySelectFieldBuilder<T>
-		extends SelectFieldBuilder.SingleSelectConfigurator<T, PropertyBox, SinglePropertySelectFieldBuilder<T>>,
-		PropertySelectFieldBuilder<T, SingleSelect<T>, T, SinglePropertySelectFieldBuilder<T>> {
+public interface DateInputBuilder extends CalendarInputBuilder<Date, DateInputBuilder> {
+
+	/**
+	 * Sets the field resolution.
+	 * <p>
+	 * The default resolution is {@link Resolution#DAY}.
+	 * </p>
+	 * @param resolution The resolution to set
+	 * @return this
+	 */
+	DateInputBuilder resolution(Resolution resolution);
 
 }

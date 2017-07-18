@@ -20,8 +20,8 @@ import com.holonplatform.core.Validator.ValidationException;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.Registration;
-import com.holonplatform.vaadin.components.builders.InvalidFieldNotificationMode;
-import com.holonplatform.vaadin.components.builders.StringFieldBuilder;
+import com.holonplatform.vaadin.components.builders.InvalidInputNotificationMode;
+import com.holonplatform.vaadin.components.builders.StringInputBuilder;
 import com.holonplatform.vaadin.internal.components.builders.AbstractStringFieldBuilder;
 import com.vaadin.data.Property;
 import com.vaadin.data.Validator.InvalidValueException;
@@ -41,7 +41,7 @@ public class StringArea extends TextArea implements Input<String>, ValidatableFi
 	/**
 	 * Invalid field notification mode
 	 */
-	private InvalidFieldNotificationMode invalidFieldNotificationMode = InvalidFieldNotificationMode.defaultMode();
+	private InvalidInputNotificationMode invalidFieldNotificationMode = InvalidInputNotificationMode.defaultMode();
 
 	/**
 	 * Flag to temporary suspend validation
@@ -194,7 +194,7 @@ public class StringArea extends TextArea implements Input<String>, ValidatableFi
 	 * @see com.holonplatform.vaadin.components.ValidatableField#getInvalidFieldNotificationMode()
 	 */
 	@Override
-	public InvalidFieldNotificationMode getInvalidFieldNotificationMode() {
+	public InvalidInputNotificationMode getInvalidFieldNotificationMode() {
 		return invalidFieldNotificationMode;
 	}
 
@@ -205,7 +205,7 @@ public class StringArea extends TextArea implements Input<String>, ValidatableFi
 	 * components.ValidatableField.InvalidFieldNotificationMode)
 	 */
 	@Override
-	public void setInvalidFieldNotificationMode(InvalidFieldNotificationMode invalidFieldNotificationMode) {
+	public void setInvalidFieldNotificationMode(InvalidInputNotificationMode invalidFieldNotificationMode) {
 		ObjectUtils.argumentNotNull(invalidFieldNotificationMode, "InvalidFieldNotificationMode must be not null");
 		this.invalidFieldNotificationMode = invalidFieldNotificationMode;
 
@@ -247,9 +247,9 @@ public class StringArea extends TextArea implements Input<String>, ValidatableFi
 	public void setValidationVisible(boolean validateAutomatically) {
 		super.setValidationVisible(validateAutomatically);
 		if (!validateAutomatically) {
-			setInvalidFieldNotificationMode(InvalidFieldNotificationMode.NEVER);
+			setInvalidFieldNotificationMode(InvalidInputNotificationMode.NEVER);
 		} else {
-			setInvalidFieldNotificationMode(InvalidFieldNotificationMode.defaultMode());
+			setInvalidFieldNotificationMode(InvalidInputNotificationMode.defaultMode());
 		}
 	}
 
@@ -355,7 +355,7 @@ public class StringArea extends TextArea implements Input<String>, ValidatableFi
 		 * @see com.holonplatform.vaadin.internal.components.builders.AbstractComponentBuilder#builder()
 		 */
 		@Override
-		protected StringFieldBuilder builder() {
+		protected StringInputBuilder builder() {
 			return this;
 		}
 
@@ -364,7 +364,7 @@ public class StringArea extends TextArea implements Input<String>, ValidatableFi
 		 * @see com.holonplatform.vaadin.components.builders.StringFieldBuilder#emptyValuesAsNull(boolean)
 		 */
 		@Override
-		public StringFieldBuilder emptyValuesAsNull(boolean enable) {
+		public StringInputBuilder emptyValuesAsNull(boolean enable) {
 			getInstance().setEmptyValuesAsNull(enable);
 			return builder();
 		}
@@ -374,7 +374,7 @@ public class StringArea extends TextArea implements Input<String>, ValidatableFi
 		 * @see com.holonplatform.vaadin.components.builders.StringFieldBuilder#blankValuesAsNull(boolean)
 		 */
 		@Override
-		public StringFieldBuilder blankValuesAsNull(boolean enable) {
+		public StringInputBuilder blankValuesAsNull(boolean enable) {
 			getInstance().setBlankValuesAsNull(enable);
 			return builder();
 		}

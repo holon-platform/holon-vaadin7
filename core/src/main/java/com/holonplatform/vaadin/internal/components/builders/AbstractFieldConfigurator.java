@@ -19,7 +19,7 @@ import java.util.Locale;
 
 import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.internal.utils.ObjectUtils;
-import com.holonplatform.vaadin.components.builders.FieldConfigurator;
+import com.holonplatform.vaadin.components.builders.InputConfigurator;
 import com.holonplatform.vaadin.internal.components.ValidationUtils;
 import com.vaadin.data.Property;
 import com.vaadin.data.Validator;
@@ -29,7 +29,7 @@ import com.vaadin.data.util.converter.Converter;
 import com.vaadin.ui.AbstractField;
 
 /**
- * Base {@link FieldConfigurator} implementation.
+ * Base {@link InputConfigurator} implementation.
  * 
  * @param <T> Field type
  * @param <C> Internal field type
@@ -37,8 +37,8 @@ import com.vaadin.ui.AbstractField;
  * 
  * @since 5.0.0
  */
-public abstract class AbstractFieldConfigurator<T, C extends AbstractField<T>, B extends FieldConfigurator<T, B>>
-		extends AbstractComponentConfigurator<C, B> implements FieldConfigurator<T, B> {
+public abstract class AbstractFieldConfigurator<T, C extends AbstractField<T>, B extends InputConfigurator<T, B>>
+		extends AbstractComponentConfigurator<C, B> implements InputConfigurator<T, B> {
 
 	/**
 	 * Constructor

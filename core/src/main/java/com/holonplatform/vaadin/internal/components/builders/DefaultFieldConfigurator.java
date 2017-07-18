@@ -15,12 +15,12 @@
  */
 package com.holonplatform.vaadin.internal.components.builders;
 
-import com.holonplatform.vaadin.components.builders.FieldConfigurator;
-import com.holonplatform.vaadin.components.builders.FieldConfigurator.BaseFieldConfigurator;
+import com.holonplatform.vaadin.components.builders.InputConfigurator;
+import com.holonplatform.vaadin.components.builders.InputConfigurator.BaseFieldConfigurator;
 import com.vaadin.ui.AbstractField;
 
 /**
- * Default {@link FieldConfigurator} implementation.
+ * Default {@link InputConfigurator} implementation.
  * 
  * @param <T> Field type
  *
@@ -42,7 +42,7 @@ public class DefaultFieldConfigurator<T> extends
 	 * @see com.holonplatform.vaadin.internal.components.builders.AbstractComponentConfigurator#builder()
 	 */
 	@Override
-	protected com.holonplatform.vaadin.components.builders.FieldConfigurator.BaseFieldConfigurator<T> builder() {
+	protected com.holonplatform.vaadin.components.builders.InputConfigurator.BaseFieldConfigurator<T> builder() {
 		return this;
 	}
 

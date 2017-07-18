@@ -21,21 +21,21 @@ import java.util.TimeZone;
 import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.i18n.LocalizationContext;
 import com.holonplatform.vaadin.components.Input;
-import com.holonplatform.vaadin.components.builders.CalendarFieldBuilder;
-import com.holonplatform.vaadin.components.builders.DateFieldBuilder;
+import com.holonplatform.vaadin.components.builders.CalendarInputBuilder;
+import com.holonplatform.vaadin.components.builders.DateInputBuilder;
 import com.holonplatform.vaadin.internal.components.ValidatableField;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.DateField;
 
 /**
- * Base {@link CalendarFieldBuilder} implementation.
+ * Base {@link CalendarInputBuilder} implementation.
  * 
  * @param <I> Concrete date field type
  * 
  * @since 5.0.0
  */
 public abstract class AbstractDateFieldBuilder<I extends DateField & ValidatableField<Date>>
-		extends AbstractValidatableFieldBuilder<Date, Input<Date>, I, DateFieldBuilder> implements DateFieldBuilder {
+		extends AbstractValidatableFieldBuilder<Date, Input<Date>, I, DateInputBuilder> implements DateInputBuilder {
 
 	protected Localizable parseErrorMessage;
 	protected Localizable outOfRangeMessage;
@@ -66,7 +66,7 @@ public abstract class AbstractDateFieldBuilder<I extends DateField & Validatable
 	 * @see com.holonplatform.vaadin.components.builders.CalendarFieldBuilder#dateFormat(java.lang.String)
 	 */
 	@Override
-	public DateFieldBuilder dateFormat(String dateFormat) {
+	public DateInputBuilder dateFormat(String dateFormat) {
 		getInstance().setDateFormat(dateFormat);
 		return builder();
 	}
@@ -76,7 +76,7 @@ public abstract class AbstractDateFieldBuilder<I extends DateField & Validatable
 	 * @see com.holonplatform.vaadin.components.builders.CalendarFieldBuilder#parseErrorMessage(java.lang.String)
 	 */
 	@Override
-	public DateFieldBuilder parseErrorMessage(String parsingErrorMessage) {
+	public DateInputBuilder parseErrorMessage(String parsingErrorMessage) {
 		getInstance().setParseErrorMessage(parsingErrorMessage);
 		this.parseErrorMessage = null;
 		return builder();
@@ -88,7 +88,7 @@ public abstract class AbstractDateFieldBuilder<I extends DateField & Validatable
 	 * java.lang.String, java.lang.Object[])
 	 */
 	@Override
-	public DateFieldBuilder parseErrorMessage(String defaultParseErrorMessage, String messageCode,
+	public DateInputBuilder parseErrorMessage(String defaultParseErrorMessage, String messageCode,
 			Object... arguments) {
 		this.parseErrorMessage = Localizable.builder().message(defaultParseErrorMessage).messageCode(messageCode)
 				.messageArguments(arguments).build();
@@ -102,7 +102,7 @@ public abstract class AbstractDateFieldBuilder<I extends DateField & Validatable
 	 * .Localizable)
 	 */
 	@Override
-	public DateFieldBuilder parseErrorMessage(Localizable parseErrorMessage) {
+	public DateInputBuilder parseErrorMessage(Localizable parseErrorMessage) {
 		this.parseErrorMessage = parseErrorMessage;
 		return builder();
 	}
@@ -112,7 +112,7 @@ public abstract class AbstractDateFieldBuilder<I extends DateField & Validatable
 	 * @see com.holonplatform.vaadin.components.builders.CalendarFieldBuilder#lenient(boolean)
 	 */
 	@Override
-	public DateFieldBuilder lenient(boolean lenient) {
+	public DateInputBuilder lenient(boolean lenient) {
 		getInstance().setLenient(lenient);
 		return builder();
 	}
@@ -122,7 +122,7 @@ public abstract class AbstractDateFieldBuilder<I extends DateField & Validatable
 	 * @see com.holonplatform.vaadin.components.builders.CalendarFieldBuilder#showISOWeekNumbers(boolean)
 	 */
 	@Override
-	public DateFieldBuilder showISOWeekNumbers(boolean showWeekNumbers) {
+	public DateInputBuilder showISOWeekNumbers(boolean showWeekNumbers) {
 		getInstance().setShowISOWeekNumbers(showWeekNumbers);
 		return builder();
 	}
@@ -132,7 +132,7 @@ public abstract class AbstractDateFieldBuilder<I extends DateField & Validatable
 	 * @see com.holonplatform.vaadin.components.builders.CalendarFieldBuilder#timeZone(java.util.TimeZone)
 	 */
 	@Override
-	public DateFieldBuilder timeZone(TimeZone timeZone) {
+	public DateInputBuilder timeZone(TimeZone timeZone) {
 		getInstance().setTimeZone(timeZone);
 		return builder();
 	}
@@ -142,7 +142,7 @@ public abstract class AbstractDateFieldBuilder<I extends DateField & Validatable
 	 * @see com.holonplatform.vaadin.components.builders.CalendarFieldBuilder#rangeStart(java.lang.Object)
 	 */
 	@Override
-	public DateFieldBuilder rangeStart(Date start) {
+	public DateInputBuilder rangeStart(Date start) {
 		getInstance().setRangeStart(start);
 		return builder();
 	}
@@ -152,7 +152,7 @@ public abstract class AbstractDateFieldBuilder<I extends DateField & Validatable
 	 * @see com.holonplatform.vaadin.components.builders.CalendarFieldBuilder#rangeEnd(java.lang.Object)
 	 */
 	@Override
-	public DateFieldBuilder rangeEnd(Date end) {
+	public DateInputBuilder rangeEnd(Date end) {
 		getInstance().setRangeEnd(end);
 		return builder();
 	}
@@ -162,7 +162,7 @@ public abstract class AbstractDateFieldBuilder<I extends DateField & Validatable
 	 * @see com.holonplatform.vaadin.components.builders.CalendarFieldBuilder#dateOutOfRangeMessage(java.lang.String)
 	 */
 	@Override
-	public DateFieldBuilder dateOutOfRangeMessage(String dateOutOfRangeMessage) {
+	public DateInputBuilder dateOutOfRangeMessage(String dateOutOfRangeMessage) {
 		getInstance().setDateOutOfRangeMessage(dateOutOfRangeMessage);
 		this.outOfRangeMessage = null;
 		return builder();
@@ -174,7 +174,7 @@ public abstract class AbstractDateFieldBuilder<I extends DateField & Validatable
 	 * java.lang.String, java.lang.Object[])
 	 */
 	@Override
-	public DateFieldBuilder dateOutOfRangeMessage(String defaultDateOutOfRangeMessage, String messageCode,
+	public DateInputBuilder dateOutOfRangeMessage(String defaultDateOutOfRangeMessage, String messageCode,
 			Object... arguments) {
 		this.outOfRangeMessage = Localizable.builder().message(defaultDateOutOfRangeMessage).messageCode(messageCode)
 				.messageArguments(arguments).build();
@@ -188,7 +188,7 @@ public abstract class AbstractDateFieldBuilder<I extends DateField & Validatable
 	 * i18n.Localizable)
 	 */
 	@Override
-	public DateFieldBuilder dateOutOfRangeMessage(Localizable dateOutOfRangeMessage) {
+	public DateInputBuilder dateOutOfRangeMessage(Localizable dateOutOfRangeMessage) {
 		this.outOfRangeMessage = dateOutOfRangeMessage;
 		return builder();
 	}
@@ -199,7 +199,7 @@ public abstract class AbstractDateFieldBuilder<I extends DateField & Validatable
 	 * Resolution)
 	 */
 	@Override
-	public DateFieldBuilder resolution(Resolution resolution) {
+	public DateInputBuilder resolution(Resolution resolution) {
 		getInstance().setResolution(resolution);
 		return builder();
 	}

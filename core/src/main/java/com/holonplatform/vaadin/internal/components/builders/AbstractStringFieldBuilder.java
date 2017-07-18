@@ -18,7 +18,7 @@ package com.holonplatform.vaadin.internal.components.builders;
 import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.i18n.LocalizationContext;
 import com.holonplatform.vaadin.components.Input;
-import com.holonplatform.vaadin.components.builders.StringFieldBuilder;
+import com.holonplatform.vaadin.components.builders.StringInputBuilder;
 import com.holonplatform.vaadin.internal.components.ValidatableField;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusListener;
@@ -36,7 +36,7 @@ import com.vaadin.ui.TextArea;
  * @since 5.0.0
  */
 public abstract class AbstractStringFieldBuilder<I extends AbstractTextField & ValidatableField<String>> extends
-		AbstractValidatableFieldBuilder<String, Input<String>, I, StringFieldBuilder> implements StringFieldBuilder {
+		AbstractValidatableFieldBuilder<String, Input<String>, I, StringInputBuilder> implements StringInputBuilder {
 
 	protected Localizable inputPrompt;
 
@@ -49,7 +49,7 @@ public abstract class AbstractStringFieldBuilder<I extends AbstractTextField & V
 	 * @see com.holonplatform.vaadin.components.builders.TextInputFieldBuilder#maxLength(int)
 	 */
 	@Override
-	public StringFieldBuilder maxLength(int maxLength) {
+	public StringInputBuilder maxLength(int maxLength) {
 		getInstance().setMaxLength(maxLength);
 		return builder();
 	}
@@ -59,7 +59,7 @@ public abstract class AbstractStringFieldBuilder<I extends AbstractTextField & V
 	 * @see com.holonplatform.vaadin.components.builders.TextInputFieldBuilder#columns(int)
 	 */
 	@Override
-	public StringFieldBuilder columns(int columns) {
+	public StringInputBuilder columns(int columns) {
 		getInstance().setColumns(columns);
 		return builder();
 	}
@@ -69,7 +69,7 @@ public abstract class AbstractStringFieldBuilder<I extends AbstractTextField & V
 	 * @see com.holonplatform.vaadin.components.builders.TextInputFieldBuilder#inputPrompt(java.lang.String)
 	 */
 	@Override
-	public StringFieldBuilder inputPrompt(String inputPrompt) {
+	public StringInputBuilder inputPrompt(String inputPrompt) {
 		getInstance().setInputPrompt(inputPrompt);
 		return builder();
 	}
@@ -80,7 +80,7 @@ public abstract class AbstractStringFieldBuilder<I extends AbstractTextField & V
 	 * java.lang.String, java.lang.Object[])
 	 */
 	@Override
-	public StringFieldBuilder inputPrompt(String defaultInputPrompt, String messageCode, Object... arguments) {
+	public StringInputBuilder inputPrompt(String defaultInputPrompt, String messageCode, Object... arguments) {
 		this.inputPrompt = Localizable.builder().message(defaultInputPrompt).messageCode(messageCode)
 				.messageArguments(arguments).build();
 		return builder();
@@ -92,7 +92,7 @@ public abstract class AbstractStringFieldBuilder<I extends AbstractTextField & V
 	 * Localizable)
 	 */
 	@Override
-	public StringFieldBuilder inputPrompt(Localizable inputPrompt) {
+	public StringInputBuilder inputPrompt(Localizable inputPrompt) {
 		this.inputPrompt = inputPrompt;
 		return builder();
 	}
@@ -103,7 +103,7 @@ public abstract class AbstractStringFieldBuilder<I extends AbstractTextField & V
 	 * AbstractTextField.TextChangeEventMode)
 	 */
 	@Override
-	public StringFieldBuilder textChangeEventMode(TextChangeEventMode inputEventMode) {
+	public StringInputBuilder textChangeEventMode(TextChangeEventMode inputEventMode) {
 		getInstance().setTextChangeEventMode(inputEventMode);
 		return builder();
 	}
@@ -113,7 +113,7 @@ public abstract class AbstractStringFieldBuilder<I extends AbstractTextField & V
 	 * @see com.holonplatform.vaadin.components.builders.TextInputFieldBuilder#textChangeTimeout(int)
 	 */
 	@Override
-	public StringFieldBuilder textChangeTimeout(int timeout) {
+	public StringInputBuilder textChangeTimeout(int timeout) {
 		getInstance().setTextChangeTimeout(timeout);
 		return builder();
 	}
@@ -124,7 +124,7 @@ public abstract class AbstractStringFieldBuilder<I extends AbstractTextField & V
 	 * FieldEvents.TextChangeListener)
 	 */
 	@Override
-	public StringFieldBuilder withTextChangeListener(TextChangeListener listener) {
+	public StringInputBuilder withTextChangeListener(TextChangeListener listener) {
 		getInstance().addTextChangeListener(listener);
 		return builder();
 	}
@@ -135,7 +135,7 @@ public abstract class AbstractStringFieldBuilder<I extends AbstractTextField & V
 	 * FieldEvents.FocusListener)
 	 */
 	@Override
-	public StringFieldBuilder withFocusListener(FocusListener listener) {
+	public StringInputBuilder withFocusListener(FocusListener listener) {
 		getInstance().addFocusListener(listener);
 		return builder();
 	}
@@ -147,7 +147,7 @@ public abstract class AbstractStringFieldBuilder<I extends AbstractTextField & V
 	 * .BlurListener)
 	 */
 	@Override
-	public StringFieldBuilder withBlurListener(BlurListener listener) {
+	public StringInputBuilder withBlurListener(BlurListener listener) {
 		getInstance().addBlurListener(listener);
 		return builder();
 	}
@@ -157,7 +157,7 @@ public abstract class AbstractStringFieldBuilder<I extends AbstractTextField & V
 	 * @see com.holonplatform.vaadin.components.builders.TextFieldBuilder#rows(int)
 	 */
 	@Override
-	public StringFieldBuilder rows(int rows) {
+	public StringInputBuilder rows(int rows) {
 		if (getInstance() instanceof TextArea) {
 			((TextArea) getInstance()).setRows(rows);
 		}
@@ -169,7 +169,7 @@ public abstract class AbstractStringFieldBuilder<I extends AbstractTextField & V
 	 * @see com.holonplatform.vaadin.components.builders.TextFieldBuilder#nullRepresentation(java.lang.String)
 	 */
 	@Override
-	public StringFieldBuilder nullRepresentation(String nullRepresentation) {
+	public StringInputBuilder nullRepresentation(String nullRepresentation) {
 		getInstance().setNullRepresentation(nullRepresentation);
 		return builder();
 	}
@@ -179,7 +179,7 @@ public abstract class AbstractStringFieldBuilder<I extends AbstractTextField & V
 	 * @see com.holonplatform.vaadin.components.builders.TextFieldBuilder#nullSettingAllowed(boolean)
 	 */
 	@Override
-	public StringFieldBuilder nullSettingAllowed(boolean nullSettingAllowed) {
+	public StringInputBuilder nullSettingAllowed(boolean nullSettingAllowed) {
 		getInstance().setNullSettingAllowed(nullSettingAllowed);
 		return builder();
 	}

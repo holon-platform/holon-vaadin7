@@ -15,14 +15,14 @@
  */
 package com.holonplatform.vaadin.components.builders;
 
-import com.vaadin.ui.Field;
+import com.holonplatform.vaadin.components.ValueHolder;
 
 /**
  * Enumeration for input validation error notification behaviours.
  * 
  * @since 5.0.0
  */
-public enum InvalidFieldNotificationMode {
+public enum InvalidInputNotificationMode {
 
 	/**
 	 * Never notify validation errors
@@ -30,19 +30,18 @@ public enum InvalidFieldNotificationMode {
 	NEVER,
 
 	/**
-	 * Always notify validation errors (any value change, including {@link Field#setValue(Object)}, value changes
-	 * originated from user input, and explict {@link Field#validate()} actions).
+	 * Always notify validation errors (any value change, including {@link ValueHolder#setValue(Object)}, value changes
+	 * originated from user input, and explict validation actions).
 	 */
 	ALWAYS,
 
 	/**
-	 * Notify validation errors for value changes originated from user input and explict {@link Field#validate()}
-	 * actions.
+	 * Notify validation errors for value changes originated from user input and explict validation actions.
 	 */
 	USER_INPUT_AND_EXPLICIT_VALIDATION,
 
 	/**
-	 * Notify validation errors only for and explict {@link Field#validate()} actions.
+	 * Notify validation errors only for and explict validation actions.
 	 */
 	ONLY_EXPLICIT_VALIDATION;
 
@@ -50,7 +49,7 @@ public enum InvalidFieldNotificationMode {
 	 * Gets the default validation error notification mode
 	 * @return Default validation error notification mode
 	 */
-	public static InvalidFieldNotificationMode defaultMode() {
+	public static InvalidInputNotificationMode defaultMode() {
 		return USER_INPUT_AND_EXPLICIT_VALIDATION;
 	}
 

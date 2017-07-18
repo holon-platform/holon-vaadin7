@@ -20,8 +20,8 @@ import com.holonplatform.core.Validator.ValidationException;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.Registration;
-import com.holonplatform.vaadin.components.builders.InvalidFieldNotificationMode;
-import com.holonplatform.vaadin.components.builders.SecretFieldBuilder;
+import com.holonplatform.vaadin.components.builders.InvalidInputNotificationMode;
+import com.holonplatform.vaadin.components.builders.SecretInputBuilder;
 import com.holonplatform.vaadin.internal.components.builders.AbstractValidatableFieldBuilder;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.ui.Component;
@@ -41,7 +41,7 @@ public class SecretField extends PasswordField implements Input<String>, Validat
 	/**
 	 * Invalid field notification mode
 	 */
-	private InvalidFieldNotificationMode invalidFieldNotificationMode = InvalidFieldNotificationMode.defaultMode();
+	private InvalidInputNotificationMode invalidFieldNotificationMode = InvalidInputNotificationMode.defaultMode();
 
 	/**
 	 * Flag to temporary suspend validation
@@ -143,7 +143,7 @@ public class SecretField extends PasswordField implements Input<String>, Validat
 	 * @see com.holonplatform.vaadin.components.ValidatableField#getInvalidFieldNotificationMode()
 	 */
 	@Override
-	public InvalidFieldNotificationMode getInvalidFieldNotificationMode() {
+	public InvalidInputNotificationMode getInvalidFieldNotificationMode() {
 		return invalidFieldNotificationMode;
 	}
 
@@ -154,7 +154,7 @@ public class SecretField extends PasswordField implements Input<String>, Validat
 	 * components.ValidatableField.InvalidFieldNotificationMode)
 	 */
 	@Override
-	public void setInvalidFieldNotificationMode(InvalidFieldNotificationMode invalidFieldNotificationMode) {
+	public void setInvalidFieldNotificationMode(InvalidInputNotificationMode invalidFieldNotificationMode) {
 		ObjectUtils.argumentNotNull(invalidFieldNotificationMode, "InvalidFieldNotificationMode must be not null");
 		this.invalidFieldNotificationMode = invalidFieldNotificationMode;
 
@@ -196,9 +196,9 @@ public class SecretField extends PasswordField implements Input<String>, Validat
 	public void setValidationVisible(boolean validateAutomatically) {
 		super.setValidationVisible(validateAutomatically);
 		if (!validateAutomatically) {
-			setInvalidFieldNotificationMode(InvalidFieldNotificationMode.NEVER);
+			setInvalidFieldNotificationMode(InvalidInputNotificationMode.NEVER);
 		} else {
-			setInvalidFieldNotificationMode(InvalidFieldNotificationMode.defaultMode());
+			setInvalidFieldNotificationMode(InvalidInputNotificationMode.defaultMode());
 		}
 	}
 
@@ -284,13 +284,13 @@ public class SecretField extends PasswordField implements Input<String>, Validat
 	// Builder
 
 	/**
-	 * Default {@link SecretFieldBuilder} implementation.
+	 * Default {@link SecretInputBuilder} implementation.
 	 *
 	 * @since 5.0.0
 	 */
 	public static class Builder
-			extends AbstractValidatableFieldBuilder<String, Input<String>, SecretField, SecretFieldBuilder>
-			implements SecretFieldBuilder {
+			extends AbstractValidatableFieldBuilder<String, Input<String>, SecretField, SecretInputBuilder>
+			implements SecretInputBuilder {
 
 		/**
 		 * Constructor
@@ -307,7 +307,7 @@ public class SecretField extends PasswordField implements Input<String>, Validat
 		 * @see com.holonplatform.vaadin.components.builders.SecretFieldBuilder#emptyValuesAsNull(boolean)
 		 */
 		@Override
-		public SecretFieldBuilder emptyValuesAsNull(boolean enable) {
+		public SecretInputBuilder emptyValuesAsNull(boolean enable) {
 			getInstance().setEmptyValuesAsNull(enable);
 			return this;
 		}
@@ -317,7 +317,7 @@ public class SecretField extends PasswordField implements Input<String>, Validat
 		 * @see com.holonplatform.vaadin.components.builders.SecretFieldBuilder#blankValuesAsNull(boolean)
 		 */
 		@Override
-		public SecretFieldBuilder blankValuesAsNull(boolean enable) {
+		public SecretInputBuilder blankValuesAsNull(boolean enable) {
 			getInstance().setBlankValuesAsNull(enable);
 			return this;
 		}
@@ -327,7 +327,7 @@ public class SecretField extends PasswordField implements Input<String>, Validat
 		 * @see com.holonplatform.vaadin.internal.components.builders.AbstractComponentBuilder#builder()
 		 */
 		@Override
-		protected SecretFieldBuilder builder() {
+		protected SecretInputBuilder builder() {
 			return this;
 		}
 

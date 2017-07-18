@@ -25,7 +25,7 @@ import com.holonplatform.core.Validator.Validatable;
 import com.holonplatform.core.Validator.ValidationException;
 import com.holonplatform.core.i18n.LocalizationContext;
 import com.holonplatform.core.internal.utils.ObjectUtils;
-import com.holonplatform.vaadin.components.builders.InvalidFieldNotificationMode;
+import com.holonplatform.vaadin.components.builders.InvalidInputNotificationMode;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.server.ClientConnector;
 
@@ -166,11 +166,11 @@ public final class ValidationUtils implements Serializable {
 	}
 
 	/**
-	 * Setup ValidatableField when {@link InvalidFieldNotificationMode} changes
+	 * Setup ValidatableField when {@link InvalidInputNotificationMode} changes
 	 * @param field Field
 	 */
 	public static void setupInvalidFieldNotificationMode(final ValidatableField<?> field) {
-		if (InvalidFieldNotificationMode.ALWAYS != field.getInvalidFieldNotificationMode()) {
+		if (InvalidInputNotificationMode.ALWAYS != field.getInvalidFieldNotificationMode()) {
 			field.changeValidationVisibility(false);
 		} else {
 			field.changeValidationVisibility(true);
@@ -183,7 +183,7 @@ public final class ValidationUtils implements Serializable {
 	 */
 	public static void preValidate(final ValidatableField<?> field) {
 		if (!field.isSuspendValidationNotification()
-				&& InvalidFieldNotificationMode.NEVER != field.getInvalidFieldNotificationMode()) {
+				&& InvalidInputNotificationMode.NEVER != field.getInvalidFieldNotificationMode()) {
 			field.changeValidationVisibility(true);
 		}
 	}
@@ -193,7 +193,7 @@ public final class ValidationUtils implements Serializable {
 	 * @param field Field
 	 */
 	public static void preValueSet(final ValidatableField<?> field) {
-		if (field.getInvalidFieldNotificationMode() != InvalidFieldNotificationMode.ALWAYS) {
+		if (field.getInvalidFieldNotificationMode() != InvalidInputNotificationMode.ALWAYS) {
 			field.changeValidationVisibility(false);
 			field.setSuspendValidationNotification(true);
 		}
@@ -208,8 +208,8 @@ public final class ValidationUtils implements Serializable {
 	public static void beforeClientResponse(final ValidatableField<?> field, final boolean initial,
 			ClientSynchAction action) {
 		boolean resynch = false;
-		if (!initial && (InvalidFieldNotificationMode.ALWAYS == field.getInvalidFieldNotificationMode()
-				|| InvalidFieldNotificationMode.USER_INPUT_AND_EXPLICIT_VALIDATION == field
+		if (!initial && (InvalidInputNotificationMode.ALWAYS == field.getInvalidFieldNotificationMode()
+				|| InvalidInputNotificationMode.USER_INPUT_AND_EXPLICIT_VALIDATION == field
 						.getInvalidFieldNotificationMode())
 				&& !field.isSuspendValidationNotification()) {
 			field.changeValidationVisibility(true);

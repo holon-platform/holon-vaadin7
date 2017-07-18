@@ -18,16 +18,18 @@ package com.holonplatform.vaadin.components.builders;
 import java.time.ZoneId;
 import java.time.temporal.Temporal;
 
+import com.holonplatform.vaadin.components.Input;
+
 /**
- * Builder to create {@link Temporal} type Fields backed by a calendar widget.
+ * Builder to create {@link Temporal} type {@link Input}s backed by a calendar widget.
  * 
  * @param <T> Temporal type
  * @param <B> Concrete builder type
  * 
  * @since 5.0.0
  */
-public interface TemporalFieldBuilder<T extends Temporal, B extends TemporalFieldBuilder<T, B>>
-		extends CalendarFieldBuilder<T, B> {
+public interface TemporalInputBuilder<T extends Temporal, B extends TemporalInputBuilder<T, B>>
+		extends CalendarInputBuilder<T, B> {
 
 	/**
 	 * Sets the field time zone using a {@link ZoneId}
@@ -37,22 +39,22 @@ public interface TemporalFieldBuilder<T extends Temporal, B extends TemporalFiel
 	B timeZone(ZoneId zoneId);
 
 	/**
-	 * A {@link TemporalFieldBuilder} for Fields not supporting time.
+	 * A {@link TemporalInputBuilder} for Fields not supporting time.
 	 * 
 	 * @since 5.0.0
 	 */
 	public interface TemporalWithoutTimeFieldBuilder<T extends Temporal>
-			extends TemporalFieldBuilder<T, TemporalWithoutTimeFieldBuilder<T>> {
+			extends TemporalInputBuilder<T, TemporalWithoutTimeFieldBuilder<T>> {
 
 	}
 
 	/**
-	 * A {@link TemporalFieldBuilder} for Fields supporting time.
+	 * A {@link TemporalInputBuilder} for Fields supporting time.
 	 * 
 	 * @since 5.0.0
 	 */
 	public interface TemporalWithTimeFieldBuilder<T extends Temporal>
-			extends TemporalFieldBuilder<T, TemporalWithTimeFieldBuilder<T>> {
+			extends TemporalInputBuilder<T, TemporalWithTimeFieldBuilder<T>> {
 
 		/**
 		 * Sets to show and handle time seconds

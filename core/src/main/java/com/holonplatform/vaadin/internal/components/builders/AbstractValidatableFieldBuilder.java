@@ -17,21 +17,21 @@ package com.holonplatform.vaadin.internal.components.builders;
 
 import com.holonplatform.core.Validator;
 import com.holonplatform.vaadin.components.Input;
-import com.holonplatform.vaadin.components.builders.InvalidFieldNotificationMode;
-import com.holonplatform.vaadin.components.builders.ValidatableFieldBuilder;
+import com.holonplatform.vaadin.components.builders.InvalidInputNotificationMode;
+import com.holonplatform.vaadin.components.builders.ValidatableInputBuilder;
 import com.holonplatform.vaadin.internal.components.ValidatableField;
 import com.vaadin.ui.AbstractField;
 
 /**
- * Base {@link ValidatableFieldBuilder} class.
+ * Base {@link ValidatableInputBuilder} class.
  * 
  * @param <T> Field type
  * @param <C> Internal field type
  * 
  * @since 5.0.0
  */
-public abstract class AbstractValidatableFieldBuilder<T, C extends Input<T>, I extends AbstractField<T> & ValidatableField<T>, B extends ValidatableFieldBuilder<T, C, B>>
-		extends AbstractFieldBuilder<T, C, I, B> implements ValidatableFieldBuilder<T, C, B> {
+public abstract class AbstractValidatableFieldBuilder<T, C extends Input<T>, I extends AbstractField<T> & ValidatableField<T>, B extends ValidatableInputBuilder<T, C, B>>
+		extends AbstractFieldBuilder<T, C, I, B> implements ValidatableInputBuilder<T, C, B> {
 
 	/**
 	 * Constructor
@@ -58,7 +58,7 @@ public abstract class AbstractValidatableFieldBuilder<T, C extends Input<T>, I e
 	 * holonframework.vaadin.components.ValidatableField.InvalidFieldNotificationMode)
 	 */
 	@Override
-	public B invalidFieldNotificationMode(InvalidFieldNotificationMode invalidFieldNotificationMode) {
+	public B invalidFieldNotificationMode(InvalidInputNotificationMode invalidFieldNotificationMode) {
 		getInstance().setInvalidFieldNotificationMode(invalidFieldNotificationMode);
 		return builder();
 	}

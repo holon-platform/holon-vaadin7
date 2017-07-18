@@ -22,17 +22,16 @@ import com.holonplatform.core.Context;
 import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.i18n.LocalizationContext;
 import com.holonplatform.vaadin.components.Input;
-import com.vaadin.ui.Field;
 
 /**
- * An builder to create {@link Field}s rendered as a calendar (inline or in a popup activated by a button) in UI.
+ * An builder to create {@link Input}s rendered as a calendar (inline or in a popup activated by a button) in UI.
  * 
- * @param <T> Field type
+ * @param <T> Value type
  * @param <B> Concrete builder type
  * 
  * @since 5.0.0
  */
-public interface CalendarFieldBuilder<T, B extends CalendarFieldBuilder<T, B>> extends ValidatableFieldBuilder<T, Input<T>, B> {
+public interface CalendarInputBuilder<T, B extends CalendarInputBuilder<T, B>> extends ValidatableInputBuilder<T, Input<T>, B> {
 
 	/**
 	 * Sets date format to use for internal component date display.

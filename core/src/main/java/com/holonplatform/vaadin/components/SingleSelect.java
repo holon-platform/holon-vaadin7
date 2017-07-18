@@ -22,9 +22,9 @@ import java.util.Set;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.property.Property;
 import com.holonplatform.core.property.PropertyBox;
-import com.holonplatform.vaadin.components.builders.BaseSelectFieldBuilder.RenderingMode;
-import com.holonplatform.vaadin.components.builders.SinglePropertySelectFieldBuilder;
-import com.holonplatform.vaadin.components.builders.SingleSelectFieldBuilder;
+import com.holonplatform.vaadin.components.builders.BaseSelectInputBuilder.RenderingMode;
+import com.holonplatform.vaadin.components.builders.SinglePropertySelectInputBuilder;
+import com.holonplatform.vaadin.components.builders.SingleSelectInputBuilder;
 import com.holonplatform.vaadin.internal.components.SingleSelectField;
 
 /**
@@ -87,7 +87,7 @@ public interface SingleSelect<T> extends Selectable<T>, Input<T>, ItemSet {
 	 * @param renderingMode Rendering mode
 	 * @return {@link SingleSelect} builder
 	 */
-	static <T> SingleSelectFieldBuilder<T> builder(Class<? extends T> type, RenderingMode renderingMode) {
+	static <T> SingleSelectInputBuilder<T> builder(Class<? extends T> type, RenderingMode renderingMode) {
 		return new SingleSelectField.Builder<>(type, renderingMode);
 	}
 
@@ -97,7 +97,7 @@ public interface SingleSelect<T> extends Selectable<T>, Input<T>, ItemSet {
 	 * @param type Selection value type
 	 * @return {@link SingleSelect} builder
 	 */
-	static <T> SingleSelectFieldBuilder<T> builder(Class<? extends T> type) {
+	static <T> SingleSelectInputBuilder<T> builder(Class<? extends T> type) {
 		return new SingleSelectField.Builder<>(type, RenderingMode.SELECT);
 	}
 
@@ -109,7 +109,7 @@ public interface SingleSelect<T> extends Selectable<T>, Input<T>, ItemSet {
 	 * @param renderingMode Rendering mode
 	 * @return {@link SingleSelect} builder
 	 */
-	static <T> SinglePropertySelectFieldBuilder<T> property(Property<T> selectProperty, RenderingMode renderingMode) {
+	static <T> SinglePropertySelectInputBuilder<T> property(Property<T> selectProperty, RenderingMode renderingMode) {
 		ObjectUtils.argumentNotNull(selectProperty, "Selection property must be not null");
 		return new SingleSelectField.PropertyBuilder<>(selectProperty, renderingMode);
 	}
@@ -121,7 +121,7 @@ public interface SingleSelect<T> extends Selectable<T>, Input<T>, ItemSet {
 	 * @param selectProperty Property to select (not null)
 	 * @return {@link SingleSelect} builder
 	 */
-	static <T> SinglePropertySelectFieldBuilder<T> property(Property<T> selectProperty) {
+	static <T> SinglePropertySelectInputBuilder<T> property(Property<T> selectProperty) {
 		ObjectUtils.argumentNotNull(selectProperty, "Selection property must be not null");
 		return new SingleSelectField.PropertyBuilder<>(selectProperty, RenderingMode.SELECT);
 	}

@@ -20,8 +20,8 @@ import com.holonplatform.core.Validator.ValidationException;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.Registration;
-import com.holonplatform.vaadin.components.builders.BooleanFieldBuilder;
-import com.holonplatform.vaadin.components.builders.InvalidFieldNotificationMode;
+import com.holonplatform.vaadin.components.builders.BooleanInputBuilder;
+import com.holonplatform.vaadin.components.builders.InvalidInputNotificationMode;
 import com.holonplatform.vaadin.internal.components.builders.AbstractValidatableFieldBuilder;
 import com.vaadin.data.Property;
 import com.vaadin.data.Validator.InvalidValueException;
@@ -44,7 +44,7 @@ public class BooleanField extends CheckBox implements Input<Boolean>, Validatabl
 	/**
 	 * Invalid field notification mode
 	 */
-	private InvalidFieldNotificationMode invalidFieldNotificationMode = InvalidFieldNotificationMode.defaultMode();
+	private InvalidInputNotificationMode invalidFieldNotificationMode = InvalidInputNotificationMode.defaultMode();
 
 	/**
 	 * Flag to temporary suspend validation
@@ -145,7 +145,7 @@ public class BooleanField extends CheckBox implements Input<Boolean>, Validatabl
 	 * @see com.holonplatform.vaadin.components.ValidatableField#getInvalidFieldNotificationMode()
 	 */
 	@Override
-	public InvalidFieldNotificationMode getInvalidFieldNotificationMode() {
+	public InvalidInputNotificationMode getInvalidFieldNotificationMode() {
 		return invalidFieldNotificationMode;
 	}
 
@@ -156,7 +156,7 @@ public class BooleanField extends CheckBox implements Input<Boolean>, Validatabl
 	 * components.ValidatableField.InvalidFieldNotificationMode)
 	 */
 	@Override
-	public void setInvalidFieldNotificationMode(InvalidFieldNotificationMode invalidFieldNotificationMode) {
+	public void setInvalidFieldNotificationMode(InvalidInputNotificationMode invalidFieldNotificationMode) {
 		ObjectUtils.argumentNotNull(invalidFieldNotificationMode, "InvalidFieldNotificationMode must be not null");
 		this.invalidFieldNotificationMode = invalidFieldNotificationMode;
 
@@ -207,9 +207,9 @@ public class BooleanField extends CheckBox implements Input<Boolean>, Validatabl
 	public void setValidationVisible(boolean validateAutomatically) {
 		super.setValidationVisible(validateAutomatically);
 		if (!validateAutomatically) {
-			setInvalidFieldNotificationMode(InvalidFieldNotificationMode.NEVER);
+			setInvalidFieldNotificationMode(InvalidInputNotificationMode.NEVER);
 		} else {
-			setInvalidFieldNotificationMode(InvalidFieldNotificationMode.defaultMode());
+			setInvalidFieldNotificationMode(InvalidInputNotificationMode.defaultMode());
 		}
 	}
 
@@ -293,8 +293,8 @@ public class BooleanField extends CheckBox implements Input<Boolean>, Validatabl
 	 * Builder to create {@link BooleanField} instances
 	 */
 	public static class Builder
-			extends AbstractValidatableFieldBuilder<Boolean, Input<Boolean>, BooleanField, BooleanFieldBuilder>
-			implements BooleanFieldBuilder {
+			extends AbstractValidatableFieldBuilder<Boolean, Input<Boolean>, BooleanField, BooleanInputBuilder>
+			implements BooleanInputBuilder {
 
 		/**
 		 * Constructor
@@ -308,7 +308,7 @@ public class BooleanField extends CheckBox implements Input<Boolean>, Validatabl
 		 * @see com.holonplatform.vaadin.components.builders.BooleanFieldBuilder#nullValueAsFalse(boolean)
 		 */
 		@Override
-		public BooleanFieldBuilder nullValueAsFalse(boolean nullValueAsFalse) {
+		public BooleanInputBuilder nullValueAsFalse(boolean nullValueAsFalse) {
 			getInstance().setNullValueAsFalse(nullValueAsFalse);
 			return builder();
 		}
@@ -319,7 +319,7 @@ public class BooleanField extends CheckBox implements Input<Boolean>, Validatabl
 		 * FieldEvents.FocusListener)
 		 */
 		@Override
-		public BooleanFieldBuilder withFocusListener(FocusListener listener) {
+		public BooleanInputBuilder withFocusListener(FocusListener listener) {
 			getInstance().addFocusListener(listener);
 			return builder();
 		}
@@ -330,7 +330,7 @@ public class BooleanField extends CheckBox implements Input<Boolean>, Validatabl
 		 * FieldEvents.BlurListener)
 		 */
 		@Override
-		public BooleanFieldBuilder withBlurListener(BlurListener listener) {
+		public BooleanInputBuilder withBlurListener(BlurListener listener) {
 			getInstance().addBlurListener(listener);
 			return builder();
 		}
@@ -340,7 +340,7 @@ public class BooleanField extends CheckBox implements Input<Boolean>, Validatabl
 		 * @see com.holonplatform.vaadin.internal.components.builders.AbstractComponentBuilder#builder()
 		 */
 		@Override
-		protected BooleanFieldBuilder builder() {
+		protected BooleanInputBuilder builder() {
 			return this;
 		}
 

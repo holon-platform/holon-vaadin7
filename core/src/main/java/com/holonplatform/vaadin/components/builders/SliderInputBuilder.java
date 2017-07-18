@@ -19,13 +19,13 @@ import com.holonplatform.vaadin.components.Input;
 import com.vaadin.shared.ui.slider.SliderOrientation;
 
 /**
- * Builder to create Slider field.
+ * Builder to create Slider {@link Input}s.
  * 
  * @param <T> Number type
  * 
  * @since 5.0.0
  */
-public interface SliderFieldBuilder<T extends Number> extends FieldBuilder<T, Input<T>, SliderFieldBuilder<T>> {
+public interface SliderInputBuilder<T extends Number> extends InputBuilder<T, Input<T>, SliderInputBuilder<T>> {
 
 	/**
 	 * Set the maximum value. If the current value of the field is larger than this, the value is set to the new
@@ -33,7 +33,7 @@ public interface SliderFieldBuilder<T extends Number> extends FieldBuilder<T, In
 	 * @param max The new maximum field value
 	 * @return this
 	 */
-	SliderFieldBuilder<T> max(T max);
+	SliderInputBuilder<T> max(T max);
 
 	/**
 	 * Set the minimum field value. If the current value of the field is smaller than this, the value is set to the new
@@ -41,7 +41,7 @@ public interface SliderFieldBuilder<T extends Number> extends FieldBuilder<T, In
 	 * @param min The new minimum field value
 	 * @return this
 	 */
-	SliderFieldBuilder<T> min(T min);
+	SliderInputBuilder<T> min(T min);
 
 	/**
 	 * Set the orientation of the slider.
@@ -49,7 +49,7 @@ public interface SliderFieldBuilder<T extends Number> extends FieldBuilder<T, In
 	 *        {@link SliderOrientation#VERTICAL}
 	 * @return this
 	 */
-	SliderFieldBuilder<T> orientation(SliderOrientation orientation);
+	SliderInputBuilder<T> orientation(SliderOrientation orientation);
 
 	/**
 	 * Set a new resolution for the slider. The resolution is the number of digits after the decimal point.
@@ -59,6 +59,6 @@ public interface SliderFieldBuilder<T extends Number> extends FieldBuilder<T, In
 	 * @param resolution The resolution to set
 	 * @return this
 	 */
-	SliderFieldBuilder<T> resolution(int resolution);
+	SliderInputBuilder<T> resolution(int resolution);
 
 }

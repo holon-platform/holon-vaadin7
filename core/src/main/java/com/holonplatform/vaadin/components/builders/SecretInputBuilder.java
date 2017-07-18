@@ -16,15 +16,14 @@
 package com.holonplatform.vaadin.components.builders;
 
 import com.holonplatform.vaadin.components.Input;
-import com.vaadin.ui.Field;
 
 /**
- * Builder to create {@link String} type {@link Field} instances with hidden input, used to enter secret text
+ * Builder to create {@link String} type {@link Input} instances with hidden input, used to enter secret text
  * information like passwords.
  * 
  * @since 5.0.0
  */
-public interface SecretFieldBuilder extends ValidatableFieldBuilder<String, Input<String>, SecretFieldBuilder> {
+public interface SecretInputBuilder extends ValidatableInputBuilder<String, Input<String>, SecretInputBuilder> {
 
 	/**
 	 * Enable or disable treating empty String values as <code>null</code> values.
@@ -34,7 +33,7 @@ public interface SecretFieldBuilder extends ValidatableFieldBuilder<String, Inpu
 	 * @param enable True to treat empty String values as <code>null</code> values
 	 * @return this
 	 */
-	SecretFieldBuilder emptyValuesAsNull(boolean enable);
+	SecretInputBuilder emptyValuesAsNull(boolean enable);
 
 	/**
 	 * Enable or disable treating blank String values (with 0 length or whitespaces only Strings) as <code>null</code>
@@ -46,6 +45,6 @@ public interface SecretFieldBuilder extends ValidatableFieldBuilder<String, Inpu
 	 *        values
 	 * @return this
 	 */
-	SecretFieldBuilder blankValuesAsNull(boolean enable);
+	SecretInputBuilder blankValuesAsNull(boolean enable);
 
 }

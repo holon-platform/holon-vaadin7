@@ -21,7 +21,7 @@ import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.vaadin.components.Components;
 import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.Registration;
-import com.holonplatform.vaadin.components.builders.InvalidFieldNotificationMode;
+import com.holonplatform.vaadin.components.builders.InvalidInputNotificationMode;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.util.converter.Converter.ConversionException;
 import com.vaadin.ui.AbstractComponent;
@@ -72,7 +72,7 @@ public abstract class AbstractCustomField<T, F extends Field> extends CustomFiel
 	/**
 	 * Invalid notification mode
 	 */
-	private InvalidFieldNotificationMode invalidFieldNotificationMode = InvalidFieldNotificationMode.defaultMode();
+	private InvalidInputNotificationMode invalidFieldNotificationMode = InvalidInputNotificationMode.defaultMode();
 
 	/**
 	 * Flag to temporary suspend validation
@@ -155,7 +155,7 @@ public abstract class AbstractCustomField<T, F extends Field> extends CustomFiel
 		// setup invalid notification mode
 		ValidationUtils.setupInvalidFieldNotificationMode(this);
 
-		if (getInvalidFieldNotificationMode() == InvalidFieldNotificationMode.USER_INPUT_AND_EXPLICIT_VALIDATION) {
+		if (getInvalidFieldNotificationMode() == InvalidInputNotificationMode.USER_INPUT_AND_EXPLICIT_VALIDATION) {
 			this.internalField.addValueChangeListener(onChangeValidation);
 		}
 	}
@@ -313,7 +313,7 @@ public abstract class AbstractCustomField<T, F extends Field> extends CustomFiel
 	 * @see com.holonplatform.vaadin.components.ValidatableField#getInvalidFieldNotificationMode()
 	 */
 	@Override
-	public InvalidFieldNotificationMode getInvalidFieldNotificationMode() {
+	public InvalidInputNotificationMode getInvalidFieldNotificationMode() {
 		return invalidFieldNotificationMode;
 	}
 
@@ -324,17 +324,17 @@ public abstract class AbstractCustomField<T, F extends Field> extends CustomFiel
 	 * components.ValidatableField.InvalidFieldNotificationMode)
 	 */
 	@Override
-	public void setInvalidFieldNotificationMode(InvalidFieldNotificationMode invalidFieldNotificationMode) {
+	public void setInvalidFieldNotificationMode(InvalidInputNotificationMode invalidFieldNotificationMode) {
 		ObjectUtils.argumentNotNull(invalidFieldNotificationMode, "InvalidFieldNotificationMode must be not null");
 		this.invalidFieldNotificationMode = invalidFieldNotificationMode;
 
-		if (invalidFieldNotificationMode != InvalidFieldNotificationMode.ALWAYS) {
+		if (invalidFieldNotificationMode != InvalidInputNotificationMode.ALWAYS) {
 			getInternalField().removeStyleName(DEFAULT_INVALID_FIELD_STYLE_CLASS);
 		}
 		ValidationUtils.setupInvalidFieldNotificationMode(this);
 
 		this.internalField.removeValueChangeListener(onChangeValidation);
-		if (getInvalidFieldNotificationMode() == InvalidFieldNotificationMode.USER_INPUT_AND_EXPLICIT_VALIDATION) {
+		if (getInvalidFieldNotificationMode() == InvalidInputNotificationMode.USER_INPUT_AND_EXPLICIT_VALIDATION) {
 			this.internalField.addValueChangeListener(onChangeValidation);
 		}
 	}
@@ -374,9 +374,9 @@ public abstract class AbstractCustomField<T, F extends Field> extends CustomFiel
 	public void setValidationVisible(boolean validateAutomatically) {
 		super.setValidationVisible(validateAutomatically);
 		if (!validateAutomatically) {
-			setInvalidFieldNotificationMode(InvalidFieldNotificationMode.NEVER);
+			setInvalidFieldNotificationMode(InvalidInputNotificationMode.NEVER);
 		} else {
-			setInvalidFieldNotificationMode(InvalidFieldNotificationMode.defaultMode());
+			setInvalidFieldNotificationMode(InvalidInputNotificationMode.defaultMode());
 		}
 	}
 

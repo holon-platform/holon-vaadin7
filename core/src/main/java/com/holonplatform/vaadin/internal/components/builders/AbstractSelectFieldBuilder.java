@@ -25,8 +25,8 @@ import com.holonplatform.core.query.QuerySort;
 import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.ItemSet.ItemCaptionGenerator;
 import com.holonplatform.vaadin.components.ItemSet.ItemIconGenerator;
-import com.holonplatform.vaadin.components.builders.BaseSelectFieldBuilder;
-import com.holonplatform.vaadin.components.builders.SelectFieldBuilder;
+import com.holonplatform.vaadin.components.builders.BaseSelectInputBuilder;
+import com.holonplatform.vaadin.components.builders.SelectInputBuilder;
 import com.holonplatform.vaadin.data.container.ItemDataSourceContainer;
 import com.holonplatform.vaadin.data.container.ItemDataSourceContainerBuilder.BaseItemDataSourceContainerBuilder;
 import com.holonplatform.vaadin.internal.components.AbstractSelectField;
@@ -35,7 +35,7 @@ import com.vaadin.server.Resource;
 import com.vaadin.ui.Field;
 
 /**
- * Base {@link SelectFieldBuilder} implementation.
+ * Base {@link SelectInputBuilder} implementation.
  * 
  * @param <T> Field type
  * @param <S> Selection type
@@ -46,8 +46,8 @@ import com.vaadin.ui.Field;
  * 
  * @since 5.0.0
  */
-public abstract class AbstractSelectFieldBuilder<T, C extends Input<T>, S, ITEM, I extends AbstractSelectField<T, S, ITEM>, B extends BaseSelectFieldBuilder<T, C, S, ITEM, B>>
-		extends AbstractValidatableFieldBuilder<T, C, I, B> implements BaseSelectFieldBuilder<T, C, S, ITEM, B> {
+public abstract class AbstractSelectFieldBuilder<T, C extends Input<T>, S, ITEM, I extends AbstractSelectField<T, S, ITEM>, B extends BaseSelectInputBuilder<T, C, S, ITEM, B>>
+		extends AbstractValidatableFieldBuilder<T, C, I, B> implements BaseSelectInputBuilder<T, C, S, ITEM, B> {
 
 	/**
 	 * Explicitly added selection items

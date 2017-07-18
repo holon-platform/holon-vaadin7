@@ -15,18 +15,20 @@
  */
 package com.holonplatform.vaadin.components.builders;
 
-import com.holonplatform.vaadin.components.SingleSelect;
-import com.vaadin.ui.Field;
+import java.util.Set;
+
+import com.holonplatform.vaadin.components.Input;
+import com.holonplatform.vaadin.components.MultiSelect;
 
 /**
- * Builder to create a single selection {@link Field}.
+ * Builder to create a multi selection {@link Input}s.
  * 
- * @param <T> Field type
+ * @param <T> Selection type
  * 
  * @since 5.0.0
  */
-public interface SingleSelectFieldBuilder<T>
-		extends SelectFieldBuilder.SingleSelectConfigurator<T, T, SingleSelectFieldBuilder<T>>,
-		SelectItemDataSourceBuilder<T, SingleSelect<T>, T, T, SingleSelectFieldBuilder<T>> {
+public interface MultiSelectInputBuilder<T>
+		extends SelectInputBuilder.MultiSelectConfigurator<T, T, MultiSelectInputBuilder<T>>,
+		SelectItemDataSourceBuilder<Set<T>, MultiSelect<T>, T, T, MultiSelectInputBuilder<T>> {
 
 }

@@ -26,20 +26,19 @@ import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.data.ItemDataProvider;
 import com.holonplatform.vaadin.data.container.ItemAdapter;
 import com.holonplatform.vaadin.internal.data.DatastoreItemDataProvider;
-import com.vaadin.ui.Field;
 
 /**
- * Builder to create selection {@link Field}s with {@link Property} data source support.
+ * Builder to create selection {@link Input}s with {@link Property} data source support.
  * 
- * @param <T> Field type
+ * @param <T> Value type
  * @param <C> Component type
  * @param <S> Selection type
  * @param <B> Concrete builder type
  * 
  * @since 5.0.0
  */
-public interface PropertySelectFieldBuilder<T, C extends Input<T>, S, B extends PropertySelectFieldBuilder<T, C, S, B>>
-		extends BaseSelectFieldBuilder<T, C, S, PropertyBox, B> {
+public interface PropertySelectInputBuilder<T, C extends Input<T>, S, B extends PropertySelectInputBuilder<T, C, S, B>>
+		extends BaseSelectInputBuilder<T, C, S, PropertyBox, B> {
 	
 	/**
 	 * Add properties to include in {@link PropertyBox} selection items.

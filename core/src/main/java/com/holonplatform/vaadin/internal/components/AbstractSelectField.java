@@ -29,7 +29,7 @@ import com.holonplatform.core.internal.utils.AnnotationUtils;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.vaadin.components.ItemSet;
 import com.holonplatform.vaadin.components.Selectable;
-import com.holonplatform.vaadin.components.builders.BaseSelectFieldBuilder.RenderingMode;
+import com.holonplatform.vaadin.components.builders.BaseSelectInputBuilder.RenderingMode;
 import com.holonplatform.vaadin.data.ItemDataSource;
 import com.holonplatform.vaadin.data.ItemDataSource.Configuration;
 import com.vaadin.data.Container;

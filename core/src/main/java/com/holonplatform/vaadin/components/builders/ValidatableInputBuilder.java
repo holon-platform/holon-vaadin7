@@ -15,25 +15,25 @@
  */
 package com.holonplatform.vaadin.components.builders;
 
-import java.util.Date;
-
-import com.vaadin.shared.ui.datefield.Resolution;
+import com.holonplatform.vaadin.components.Input;
 
 /**
- * A {@link CalendarFieldBuilder} for {@link Date} type Fields.
+ * Builder for input components whith {@link InvalidInputNotificationMode} support.
+ *
+ * @param <T> Value type
+ * @param <C> Input type
+ * @param <B> Concrete builder type
  * 
  * @since 5.0.0
  */
-public interface DateFieldBuilder extends CalendarFieldBuilder<Date, DateFieldBuilder> {
+public interface ValidatableInputBuilder<T, C extends Input<T>, B extends ValidatableInputBuilder<T, C, B>>
+		extends InputBuilder<T, C, B> {
 
 	/**
-	 * Sets the field resolution.
-	 * <p>
-	 * The default resolution is {@link Resolution#DAY}.
-	 * </p>
-	 * @param resolution The resolution to set
+	 * Sets the invalid Field error notification mode
+	 * @param invalidFieldNotificationMode the InvalidFieldNotificationMode to set
 	 * @return this
 	 */
-	DateFieldBuilder resolution(Resolution resolution);
+	B invalidFieldNotificationMode(InvalidInputNotificationMode invalidFieldNotificationMode);
 
 }

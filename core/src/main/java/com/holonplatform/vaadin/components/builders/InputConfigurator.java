@@ -20,23 +20,23 @@ import java.util.Locale;
 import com.holonplatform.core.Context;
 import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.i18n.LocalizationContext;
+import com.holonplatform.vaadin.components.Input;
 import com.vaadin.data.Buffered;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ReadOnlyStatusChangeListener;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.Validator;
 import com.vaadin.data.util.converter.Converter;
-import com.vaadin.ui.Field;
 
 /**
- * Interface to configure a {@link Field}.
+ * Interface to configure a {@link Input} component.
  * 
- * @param <T> Field type
+ * @param <T> Value type
  * @param <B> Concrete configurator type
  * 
  * @since 5.0.0
  */
-public interface FieldConfigurator<T, B extends FieldConfigurator<T, B>> extends ComponentConfigurator<B> {
+public interface InputConfigurator<T, B extends InputConfigurator<T, B>> extends ComponentConfigurator<B> {
 
 	/**
 	 * Sets the <i>tabulator index</i> of the component. The tab index property is used to specify the order in which
@@ -110,7 +110,7 @@ public interface FieldConfigurator<T, B extends FieldConfigurator<T, B>> extends
 	/**
 	 * Sets the value of the field using a value of the data source type. The value given is converted to the field type
 	 * and then assigned to the field. This will update the property data source in the same way as when
-	 * {@link Field#setValue(Object)} is called.
+	 * <code>setValue</code> is called.
 	 * @param value The value to set
 	 * @return this
 	 */
@@ -263,7 +263,7 @@ public interface FieldConfigurator<T, B extends FieldConfigurator<T, B>> extends
 	 * Base field configurator.
 	 * @param <T> Field value type
 	 */
-	public interface BaseFieldConfigurator<T> extends FieldConfigurator<T, BaseFieldConfigurator<T>> {
+	public interface BaseFieldConfigurator<T> extends InputConfigurator<T, BaseFieldConfigurator<T>> {
 
 	}
 

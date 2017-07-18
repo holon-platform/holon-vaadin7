@@ -25,21 +25,20 @@ import com.holonplatform.vaadin.components.MultiSelect;
 import com.holonplatform.vaadin.components.SingleSelect;
 import com.vaadin.server.Resource;
 import com.vaadin.shared.ui.combobox.FilteringMode;
-import com.vaadin.ui.Field;
 
 /**
- * Base builder to create selection {@link Field}s.
+ * Base builder to create selection {@link Input}s.
  * 
- * @param <T> Field type
- * @param <C> Field component type
+ * @param <T> Value type
+ * @param <C> Input type
  * @param <S> Selection type
  * @param <ITEM> Selection items type
  * @param <B> Concrete builder type
  * 
  * @since 5.0.0
  */
-public interface BaseSelectFieldBuilder<T, C extends Input<T>, S, ITEM, B extends BaseSelectFieldBuilder<T, C, S, ITEM, B>>
-		extends ValidatableFieldBuilder<T, C, B>, BaseItemDataSourceComponentBuilder<B> {
+public interface BaseSelectInputBuilder<T, C extends Input<T>, S, ITEM, B extends BaseSelectInputBuilder<T, C, S, ITEM, B>>
+		extends ValidatableInputBuilder<T, C, B>, BaseItemDataSourceComponentBuilder<B> {
 
 	/**
 	 * Select UI rendering mode
@@ -146,7 +145,7 @@ public interface BaseSelectFieldBuilder<T, C extends Input<T>, S, ITEM, B extend
 	 * @param <B> Concrete builder type
 	 */
 	public interface SingleSelectConfigurator<T, ITEM, B extends SingleSelectConfigurator<T, ITEM, B>>
-			extends BaseSelectFieldBuilder<T, SingleSelect<T>, T, ITEM, B> {
+			extends BaseSelectInputBuilder<T, SingleSelect<T>, T, ITEM, B> {
 
 		/**
 		 * Disables the possibility to input text into the field, so the field area of the component is just used to
@@ -195,7 +194,7 @@ public interface BaseSelectFieldBuilder<T, C extends Input<T>, S, ITEM, B extend
 	 * @param <B> Concrete builder type
 	 */
 	public interface MultiSelectConfigurator<T, ITEM, B extends MultiSelectConfigurator<T, ITEM, B>>
-			extends BaseSelectFieldBuilder<Set<T>, MultiSelect<T>, T, ITEM, B> {
+			extends BaseSelectInputBuilder<Set<T>, MultiSelect<T>, T, ITEM, B> {
 
 	}
 

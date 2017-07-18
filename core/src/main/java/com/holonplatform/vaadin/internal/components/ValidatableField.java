@@ -17,11 +17,11 @@ package com.holonplatform.vaadin.internal.components;
 
 import com.holonplatform.core.Validator;
 import com.holonplatform.core.Validator.ValidatorSupport;
-import com.holonplatform.vaadin.components.builders.InvalidFieldNotificationMode;
+import com.holonplatform.vaadin.components.builders.InvalidInputNotificationMode;
 import com.vaadin.ui.Field;
 
 /**
- * {@link Field} supporting direct holon {@link Validator}s registration and {@link InvalidFieldNotificationMode}
+ * {@link Field} supporting direct holon {@link Validator}s registration and {@link InvalidInputNotificationMode}
  * behaviour.
  * 
  * @param <T> Fiel value type
@@ -34,13 +34,13 @@ public interface ValidatableField<T> extends Field<T>, ValidatorSupport<T> {
 	 * Gets current invalid Field error notification mode
 	 * @return the invalid Field error notification mode
 	 */
-	InvalidFieldNotificationMode getInvalidFieldNotificationMode();
+	InvalidInputNotificationMode getInvalidFieldNotificationMode();
 
 	/**
 	 * Sets the invalid Field error notification mode
 	 * @param invalidFieldNotificationMode the InvalidFieldNotificationMode to set
 	 */
-	void setInvalidFieldNotificationMode(InvalidFieldNotificationMode invalidFieldNotificationMode);
+	void setInvalidFieldNotificationMode(InvalidInputNotificationMode invalidFieldNotificationMode);
 
 	/**
 	 * Change validation visibility state

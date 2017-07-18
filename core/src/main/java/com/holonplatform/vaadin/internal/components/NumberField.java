@@ -23,7 +23,7 @@ import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.i18n.LocalizationContext;
 import com.holonplatform.core.internal.utils.TypeUtils;
 import com.holonplatform.vaadin.components.Input;
-import com.holonplatform.vaadin.components.builders.NumberFieldBuilder;
+import com.holonplatform.vaadin.components.builders.NumberInputBuilder;
 import com.holonplatform.vaadin.internal.components.builders.AbstractValidatableFieldBuilder;
 import com.holonplatform.vaadin.internal.converters.StringToNumberConverter;
 import com.vaadin.event.FieldEvents.BlurListener;
@@ -425,8 +425,8 @@ public class NumberField<T extends Number> extends AbstractCustomField<T, Numeri
 	// Builder
 
 	public static class Builder<T extends Number>
-			extends AbstractValidatableFieldBuilder<T, Input<T>, NumberField<T>, NumberFieldBuilder<T>>
-			implements NumberFieldBuilder<T> {
+			extends AbstractValidatableFieldBuilder<T, Input<T>, NumberField<T>, NumberInputBuilder<T>>
+			implements NumberInputBuilder<T> {
 
 		protected Localizable inputPrompt;
 
@@ -439,7 +439,7 @@ public class NumberField<T extends Number> extends AbstractCustomField<T, Numeri
 		 * @see com.holonplatform.vaadin.components.builders.TextInputFieldBuilder#maxLength(int)
 		 */
 		@Override
-		public NumberFieldBuilder<T> maxLength(int maxLength) {
+		public NumberInputBuilder<T> maxLength(int maxLength) {
 			getInstance().setMaxLength(maxLength);
 			return builder();
 		}
@@ -449,7 +449,7 @@ public class NumberField<T extends Number> extends AbstractCustomField<T, Numeri
 		 * @see com.holonplatform.vaadin.components.builders.TextInputFieldBuilder#columns(int)
 		 */
 		@Override
-		public NumberFieldBuilder<T> columns(int columns) {
+		public NumberInputBuilder<T> columns(int columns) {
 			getInstance().setColumns(columns);
 			return builder();
 		}
@@ -459,7 +459,7 @@ public class NumberField<T extends Number> extends AbstractCustomField<T, Numeri
 		 * @see com.holonplatform.vaadin.components.builders.TextInputFieldBuilder#inputPrompt(java.lang.String)
 		 */
 		@Override
-		public NumberFieldBuilder<T> inputPrompt(String inputPrompt) {
+		public NumberInputBuilder<T> inputPrompt(String inputPrompt) {
 			getInstance().setInputPrompt(inputPrompt);
 			return builder();
 		}
@@ -470,7 +470,7 @@ public class NumberField<T extends Number> extends AbstractCustomField<T, Numeri
 		 * java.lang.String, java.lang.Object[])
 		 */
 		@Override
-		public NumberFieldBuilder<T> inputPrompt(String defaultInputPrompt, String messageCode, Object... arguments) {
+		public NumberInputBuilder<T> inputPrompt(String defaultInputPrompt, String messageCode, Object... arguments) {
 			this.inputPrompt = Localizable.builder().message(defaultInputPrompt).messageCode(messageCode)
 					.messageArguments(arguments).build();
 			return builder();
@@ -483,7 +483,7 @@ public class NumberField<T extends Number> extends AbstractCustomField<T, Numeri
 		 * Localizable)
 		 */
 		@Override
-		public NumberFieldBuilder<T> inputPrompt(Localizable inputPrompt) {
+		public NumberInputBuilder<T> inputPrompt(Localizable inputPrompt) {
 			this.inputPrompt = inputPrompt;
 			return builder();
 		}
@@ -494,7 +494,7 @@ public class NumberField<T extends Number> extends AbstractCustomField<T, Numeri
 		 * AbstractTextField.TextChangeEventMode)
 		 */
 		@Override
-		public NumberFieldBuilder<T> textChangeEventMode(TextChangeEventMode inputEventMode) {
+		public NumberInputBuilder<T> textChangeEventMode(TextChangeEventMode inputEventMode) {
 			getInstance().setTextChangeEventMode(inputEventMode);
 			return builder();
 		}
@@ -504,7 +504,7 @@ public class NumberField<T extends Number> extends AbstractCustomField<T, Numeri
 		 * @see com.holonplatform.vaadin.components.builders.TextInputFieldBuilder#textChangeTimeout(int)
 		 */
 		@Override
-		public NumberFieldBuilder<T> textChangeTimeout(int timeout) {
+		public NumberInputBuilder<T> textChangeTimeout(int timeout) {
 			getInstance().setTextChangeTimeout(timeout);
 			return builder();
 		}
@@ -514,7 +514,7 @@ public class NumberField<T extends Number> extends AbstractCustomField<T, Numeri
 		 * @see com.holonplatform.vaadin.components.builders.NumberFieldBuilder#numberFormat(java.text.NumberFormat)
 		 */
 		@Override
-		public NumberFieldBuilder<T> numberFormat(NumberFormat numberFormat) {
+		public NumberInputBuilder<T> numberFormat(NumberFormat numberFormat) {
 			getInstance().setNumberFormat(numberFormat);
 			return builder();
 		}
@@ -524,7 +524,7 @@ public class NumberField<T extends Number> extends AbstractCustomField<T, Numeri
 		 * @see com.holonplatform.vaadin.components.builders.NumberFieldBuilder#allowNegative(boolean)
 		 */
 		@Override
-		public NumberFieldBuilder<T> allowNegative(boolean allowNegative) {
+		public NumberInputBuilder<T> allowNegative(boolean allowNegative) {
 			getInstance().setAllowNegative(allowNegative);
 			return builder();
 		}
@@ -534,7 +534,7 @@ public class NumberField<T extends Number> extends AbstractCustomField<T, Numeri
 		 * @see com.holonplatform.vaadin.components.builders.NumberFieldBuilder#html5NumberInputType(boolean)
 		 */
 		@Override
-		public NumberFieldBuilder<T> html5NumberInputType(boolean html5NumberInputType) {
+		public NumberInputBuilder<T> html5NumberInputType(boolean html5NumberInputType) {
 			getInstance().setHtml5NumberInputType(html5NumberInputType);
 			return builder();
 		}
@@ -546,7 +546,7 @@ public class NumberField<T extends Number> extends AbstractCustomField<T, Numeri
 		 * FieldEvents.TextChangeListener)
 		 */
 		@Override
-		public NumberFieldBuilder<T> withTextChangeListener(TextChangeListener listener) {
+		public NumberInputBuilder<T> withTextChangeListener(TextChangeListener listener) {
 			getInstance().addTextChangeListener(listener);
 			return builder();
 		}
@@ -557,7 +557,7 @@ public class NumberField<T extends Number> extends AbstractCustomField<T, Numeri
 		 * FieldEvents.FocusListener)
 		 */
 		@Override
-		public NumberFieldBuilder<T> withFocusListener(FocusListener listener) {
+		public NumberInputBuilder<T> withFocusListener(FocusListener listener) {
 			getInstance().addFocusListener(listener);
 			return builder();
 		}
@@ -568,7 +568,7 @@ public class NumberField<T extends Number> extends AbstractCustomField<T, Numeri
 		 * FieldEvents.BlurListener)
 		 */
 		@Override
-		public NumberFieldBuilder<T> withBlurListener(BlurListener listener) {
+		public NumberInputBuilder<T> withBlurListener(BlurListener listener) {
 			getInstance().addBlurListener(listener);
 			return builder();
 		}
@@ -578,7 +578,7 @@ public class NumberField<T extends Number> extends AbstractCustomField<T, Numeri
 		 * @see com.holonplatform.vaadin.internal.components.builders.AbstractComponentBuilder#builder()
 		 */
 		@Override
-		protected NumberFieldBuilder<T> builder() {
+		protected NumberInputBuilder<T> builder() {
 			return this;
 		}
 

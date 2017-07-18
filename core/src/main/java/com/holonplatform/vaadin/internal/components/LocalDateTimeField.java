@@ -20,7 +20,7 @@ import java.time.ZoneId;
 import java.util.TimeZone;
 
 import com.holonplatform.vaadin.components.Input;
-import com.holonplatform.vaadin.components.builders.TemporalFieldBuilder.TemporalWithTimeFieldBuilder;
+import com.holonplatform.vaadin.components.builders.TemporalInputBuilder.TemporalWithTimeFieldBuilder;
 import com.holonplatform.vaadin.internal.converters.DateToLocalDateTimeConverter;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.DateField;

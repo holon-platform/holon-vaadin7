@@ -32,7 +32,7 @@ import com.holonplatform.vaadin.data.container.ItemAdapter;
  * @since 5.0.0
  */
 public interface SelectItemDataSourceBuilder<T, C extends Input<T>, S, ITEM, B extends SelectItemDataSourceBuilder<T, C, S, ITEM, B>>
-		extends SelectFieldBuilder<T, C, S, ITEM, B> {
+		extends SelectInputBuilder<T, C, S, ITEM, B> {
 
 	/**
 	 * Set the selection items data provider.

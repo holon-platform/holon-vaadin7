@@ -21,7 +21,7 @@ import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.i18n.LocalizationContext;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.vaadin.components.Input;
-import com.holonplatform.vaadin.components.builders.FieldBuilder;
+import com.holonplatform.vaadin.components.builders.InputBuilder;
 import com.holonplatform.vaadin.internal.components.ValidationUtils;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ReadOnlyStatusChangeListener;
@@ -32,7 +32,7 @@ import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Field;
 
 /**
- * Base {@link FieldBuilder} class
+ * Base {@link InputBuilder} class
  * 
  * @param <T> Field type
  * @param <C> Internal field type
@@ -40,8 +40,8 @@ import com.vaadin.ui.Field;
  * 
  * @since 5.0.0
  */
-public abstract class AbstractFieldBuilder<T, C extends Input<T>, I extends AbstractField<T>, B extends FieldBuilder<T, C, B>>
-		extends AbstractLocalizableComponentConfigurator<I, B> implements FieldBuilder<T, C, B> {
+public abstract class AbstractFieldBuilder<T, C extends Input<T>, I extends AbstractField<T>, B extends InputBuilder<T, C, B>>
+		extends AbstractLocalizableComponentConfigurator<I, B> implements InputBuilder<T, C, B> {
 
 	/**
 	 * Default validation error message for required fields.

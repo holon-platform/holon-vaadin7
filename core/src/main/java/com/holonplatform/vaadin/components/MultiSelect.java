@@ -24,9 +24,9 @@ import java.util.stream.Stream;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.property.Property;
 import com.holonplatform.core.property.PropertyBox;
-import com.holonplatform.vaadin.components.builders.BaseSelectFieldBuilder.RenderingMode;
-import com.holonplatform.vaadin.components.builders.MultiPropertySelectFieldBuilder;
-import com.holonplatform.vaadin.components.builders.MultiSelectFieldBuilder;
+import com.holonplatform.vaadin.components.builders.BaseSelectInputBuilder.RenderingMode;
+import com.holonplatform.vaadin.components.builders.MultiPropertySelectInputBuilder;
+import com.holonplatform.vaadin.components.builders.MultiSelectInputBuilder;
 import com.holonplatform.vaadin.internal.components.MultiSelectField;
 
 /**
@@ -135,7 +135,7 @@ public interface MultiSelect<T> extends Selectable<T>, Input<Set<T>>, ItemSet {
 	 * @param renderingMode Rendering mode
 	 * @return {@link MultiSelect} builder
 	 */
-	static <T> MultiSelectFieldBuilder<T> builder(Class<? extends T> type, RenderingMode renderingMode) {
+	static <T> MultiSelectInputBuilder<T> builder(Class<? extends T> type, RenderingMode renderingMode) {
 		return new MultiSelectField.Builder<>(type, renderingMode);
 	}
 
@@ -145,7 +145,7 @@ public interface MultiSelect<T> extends Selectable<T>, Input<Set<T>>, ItemSet {
 	 * @param type Selection value type
 	 * @return {@link MultiSelect} builder
 	 */
-	static <T> MultiSelectFieldBuilder<T> builder(Class<? extends T> type) {
+	static <T> MultiSelectInputBuilder<T> builder(Class<? extends T> type) {
 		return new MultiSelectField.Builder<>(type, RenderingMode.OPTIONS);
 	}
 
@@ -157,7 +157,7 @@ public interface MultiSelect<T> extends Selectable<T>, Input<Set<T>>, ItemSet {
 	 * @param renderingMode Rendering mode
 	 * @return {@link MultiSelect} builder
 	 */
-	static <T> MultiPropertySelectFieldBuilder<T> property(Property<T> selectProperty, RenderingMode renderingMode) {
+	static <T> MultiPropertySelectInputBuilder<T> property(Property<T> selectProperty, RenderingMode renderingMode) {
 		ObjectUtils.argumentNotNull(selectProperty, "Selection property must be not null");
 		return new MultiSelectField.PropertyBuilder<>(selectProperty, renderingMode);
 	}
@@ -169,7 +169,7 @@ public interface MultiSelect<T> extends Selectable<T>, Input<Set<T>>, ItemSet {
 	 * @param selectProperty Property to select (not null)
 	 * @return {@link MultiSelect} builder
 	 */
-	static <T> MultiPropertySelectFieldBuilder<T> property(Property<T> selectProperty) {
+	static <T> MultiPropertySelectInputBuilder<T> property(Property<T> selectProperty) {
 		ObjectUtils.argumentNotNull(selectProperty, "Selection property must be not null");
 		return new MultiSelectField.PropertyBuilder<>(selectProperty, RenderingMode.OPTIONS);
 	}

@@ -19,18 +19,18 @@ import java.util.Set;
 
 import com.holonplatform.core.property.Property;
 import com.holonplatform.core.property.PropertyBox;
+import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.MultiSelect;
-import com.vaadin.ui.Field;
 
 /**
- * Builder to create a multiple selection {@link Field} with {@link Property} data source support.
+ * Builder to create a multiple selection {@link Input} with {@link Property} data source support.
  * 
- * @param <T> Field type
+ * @param <T> Value type
  * 
  * @since 5.0.0
  */
-public interface MultiPropertySelectFieldBuilder<T>
-		extends SelectFieldBuilder.MultiSelectConfigurator<T, PropertyBox, MultiPropertySelectFieldBuilder<T>>,
-		PropertySelectFieldBuilder<Set<T>, MultiSelect<T>, T, MultiPropertySelectFieldBuilder<T>> {
+public interface MultiPropertySelectInputBuilder<T>
+		extends SelectInputBuilder.MultiSelectConfigurator<T, PropertyBox, MultiPropertySelectInputBuilder<T>>,
+		PropertySelectInputBuilder<Set<T>, MultiSelect<T>, T, MultiPropertySelectInputBuilder<T>> {
 
 }

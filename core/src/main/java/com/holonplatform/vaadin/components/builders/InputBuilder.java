@@ -16,24 +16,37 @@
 package com.holonplatform.vaadin.components.builders;
 
 import com.holonplatform.vaadin.components.Input;
+import com.vaadin.ui.Field;
 
 /**
- * Builder for input components whith {@link InvalidFieldNotificationMode} support.
- *
- * @param <T> Field type
- * @param <C> Field component type
+ * Builder to create {@link Input} instances.
+ * 
+ * @param <T> Value type
+ * @param <C> Input type
  * @param <B> Concrete builder type
  * 
  * @since 5.0.0
  */
-public interface ValidatableFieldBuilder<T, C extends Input<T>, B extends ValidatableFieldBuilder<T, C, B>>
-		extends FieldBuilder<T, C, B> {
+public interface InputBuilder<T, C extends Input<T>, B extends InputBuilder<T, C, B>> extends InputConfigurator<T, B> {
 
 	/**
-	 * Sets the invalid Field error notification mode
-	 * @param invalidFieldNotificationMode the InvalidFieldNotificationMode to set
+	 * Instructs the builder to resolve any message localization (for example component caption and description) only
+	 * after the component is attached to parent layout. By default, localization is performed immediately during
+	 * component building.
 	 * @return this
 	 */
-	B invalidFieldNotificationMode(InvalidFieldNotificationMode invalidFieldNotificationMode);
+	B deferLocalization();
+
+	/**
+	 * Build and returns the {@link Input} instance.
+	 * @return the {@link Input} instance
+	 */
+	C build();
+
+	/**
+	 * Build the input component as a {@link Field}.
+	 * @return the input {@link Field} instance
+	 */
+	Field<T> asField();
 
 }

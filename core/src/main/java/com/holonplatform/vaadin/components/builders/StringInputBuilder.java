@@ -16,21 +16,20 @@
 package com.holonplatform.vaadin.components.builders;
 
 import com.holonplatform.vaadin.components.Input;
-import com.vaadin.ui.Field;
 
 /**
- * Builder to create {@link String} type {@link Field} instances backed by a text input widget.
+ * Builder to create {@link String} type {@link Input} instances backed by a text input widget.
  * 
  * @since 5.0.0
  */
-public interface StringFieldBuilder extends TextInputFieldBuilder<String, Input<String>, StringFieldBuilder> {
+public interface StringInputBuilder extends TextInputBuilder<String, Input<String>, StringInputBuilder> {
 
 	/**
 	 * If field is rendered as a text area in UI, set the number of rows of the text area
 	 * @param rows the number of rows of the text area
 	 * @return this
 	 */
-	StringFieldBuilder rows(int rows);
+	StringInputBuilder rows(int rows);
 
 	/**
 	 * Sets the null-string representation.
@@ -44,7 +43,7 @@ public interface StringFieldBuilder extends TextInputFieldBuilder<String, Input<
 	 * @param nullRepresentation Textual representation for null strings
 	 * @return this
 	 */
-	StringFieldBuilder nullRepresentation(String nullRepresentation);
+	StringInputBuilder nullRepresentation(String nullRepresentation);
 
 	/**
 	 * Sets the null conversion mode.
@@ -60,7 +59,7 @@ public interface StringFieldBuilder extends TextInputFieldBuilder<String, Input<
 	 * @param nullSettingAllowed Should the null-string representation always be converted to null-values
 	 * @return this
 	 */
-	StringFieldBuilder nullSettingAllowed(boolean nullSettingAllowed);
+	StringInputBuilder nullSettingAllowed(boolean nullSettingAllowed);
 
 	/**
 	 * Enable or disable treating empty String values as <code>null</code> values.
@@ -70,7 +69,7 @@ public interface StringFieldBuilder extends TextInputFieldBuilder<String, Input<
 	 * @param enable True to treat empty String values as <code>null</code> values
 	 * @return this
 	 */
-	StringFieldBuilder emptyValuesAsNull(boolean enable);
+	StringInputBuilder emptyValuesAsNull(boolean enable);
 
 	/**
 	 * Enable or disable treating blank String values (with 0 length or whitespaces only Strings) as <code>null</code>
@@ -82,6 +81,6 @@ public interface StringFieldBuilder extends TextInputFieldBuilder<String, Input<
 	 *        values
 	 * @return this
 	 */
-	StringFieldBuilder blankValuesAsNull(boolean enable);
+	StringInputBuilder blankValuesAsNull(boolean enable);
 
 }

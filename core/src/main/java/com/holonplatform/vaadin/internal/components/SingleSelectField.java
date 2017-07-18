@@ -21,10 +21,10 @@ import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.property.Property;
 import com.holonplatform.core.property.PropertyBox;
 import com.holonplatform.vaadin.components.SingleSelect;
-import com.holonplatform.vaadin.components.builders.BaseSelectFieldBuilder.RenderingMode;
-import com.holonplatform.vaadin.components.builders.SelectFieldBuilder;
-import com.holonplatform.vaadin.components.builders.SinglePropertySelectFieldBuilder;
-import com.holonplatform.vaadin.components.builders.SingleSelectFieldBuilder;
+import com.holonplatform.vaadin.components.builders.BaseSelectInputBuilder.RenderingMode;
+import com.holonplatform.vaadin.components.builders.SelectInputBuilder;
+import com.holonplatform.vaadin.components.builders.SinglePropertySelectInputBuilder;
+import com.holonplatform.vaadin.components.builders.SingleSelectInputBuilder;
 import com.holonplatform.vaadin.data.ItemDataProvider;
 import com.holonplatform.vaadin.data.ItemIdentifierProvider;
 import com.holonplatform.vaadin.data.container.ItemAdapter;
@@ -157,9 +157,9 @@ public class SingleSelectField<T, ITEM> extends AbstractSelectField<T, T, ITEM> 
 	 * Base {@link SingleSelect} builder.
 	 * @param <T> Selection type
 	 */
-	static abstract class AbstractSingleSelectFieldBuilder<T, ITEM, B extends SelectFieldBuilder.SingleSelectConfigurator<T, ITEM, B>>
+	static abstract class AbstractSingleSelectFieldBuilder<T, ITEM, B extends SelectInputBuilder.SingleSelectConfigurator<T, ITEM, B>>
 			extends AbstractSelectFieldBuilder<T, SingleSelect<T>, T, ITEM, SingleSelectField<T, ITEM>, B>
-			implements SelectFieldBuilder.SingleSelectConfigurator<T, ITEM, B> {
+			implements SelectInputBuilder.SingleSelectConfigurator<T, ITEM, B> {
 
 		/**
 		 * Constructor
@@ -216,11 +216,11 @@ public class SingleSelectField<T, ITEM> extends AbstractSelectField<T, T, ITEM> 
 	}
 
 	/**
-	 * Default {@link SingleSelectFieldBuilder} implementation.
+	 * Default {@link SingleSelectInputBuilder} implementation.
 	 * @param <T> Selection type
 	 */
-	public static class Builder<T> extends AbstractSingleSelectFieldBuilder<T, T, SingleSelectFieldBuilder<T>>
-			implements SingleSelectFieldBuilder<T> {
+	public static class Builder<T> extends AbstractSingleSelectFieldBuilder<T, T, SingleSelectInputBuilder<T>>
+			implements SingleSelectInputBuilder<T> {
 
 		/**
 		 * Constructor
@@ -245,7 +245,7 @@ public class SingleSelectField<T, ITEM> extends AbstractSelectField<T, T, ITEM> 
 		 * @see com.holonplatform.vaadin.components.builders.SelectFieldBuilder#items(java.lang.Iterable)
 		 */
 		@Override
-		public SingleSelectFieldBuilder<T> items(Iterable<T> items) {
+		public SingleSelectInputBuilder<T> items(Iterable<T> items) {
 			ObjectUtils.argumentNotNull(items, "Items must be not null");
 			this.items.clear();
 			items.forEach(i -> this.items.add(i));
@@ -257,7 +257,7 @@ public class SingleSelectField<T, ITEM> extends AbstractSelectField<T, T, ITEM> 
 		 * @see com.holonplatform.vaadin.components.builders.SelectFieldBuilder#addItem(java.lang.Object)
 		 */
 		@Override
-		public SingleSelectFieldBuilder<T> addItem(T item) {
+		public SingleSelectInputBuilder<T> addItem(T item) {
 			ObjectUtils.argumentNotNull(item, "Item must be not null");
 			this.items.add(item);
 			return builder();
@@ -271,7 +271,7 @@ public class SingleSelectField<T, ITEM> extends AbstractSelectField<T, T, ITEM> 
 		 */
 		@SuppressWarnings("unchecked")
 		@Override
-		public SingleSelectFieldBuilder<T> dataSource(ItemDataProvider<T> dataProvider) {
+		public SingleSelectInputBuilder<T> dataSource(ItemDataProvider<T> dataProvider) {
 			ObjectUtils.argumentNotNull(dataProvider, "Item data provider must be not null");
 			dataSourceBuilder.dataSource(dataProvider);
 			dataSourceBuilder.itemIdentifier(ItemIdentifierProvider.identity());
@@ -287,7 +287,7 @@ public class SingleSelectField<T, ITEM> extends AbstractSelectField<T, T, ITEM> 
 		 */
 		@SuppressWarnings("unchecked")
 		@Override
-		public SingleSelectFieldBuilder<T> itemAdapter(ItemAdapter<T> itemAdapter) {
+		public SingleSelectInputBuilder<T> itemAdapter(ItemAdapter<T> itemAdapter) {
 			dataSourceBuilder.itemAdapter(itemAdapter);
 			return builder();
 		}
@@ -331,12 +331,12 @@ public class SingleSelectField<T, ITEM> extends AbstractSelectField<T, T, ITEM> 
 	}
 
 	/**
-	 * Default {@link SinglePropertySelectFieldBuilder} implementation.
+	 * Default {@link SinglePropertySelectInputBuilder} implementation.
 	 * @param <T> Selection type
 	 */
 	public static class PropertyBuilder<T>
-			extends AbstractSingleSelectFieldBuilder<T, PropertyBox, SinglePropertySelectFieldBuilder<T>>
-			implements SinglePropertySelectFieldBuilder<T> {
+			extends AbstractSingleSelectFieldBuilder<T, PropertyBox, SinglePropertySelectInputBuilder<T>>
+			implements SinglePropertySelectInputBuilder<T> {
 
 		/**
 		 * Constructor
@@ -357,7 +357,7 @@ public class SingleSelectField<T, ITEM> extends AbstractSelectField<T, T, ITEM> 
 		 */
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		@Override
-		public <P extends Property> SinglePropertySelectFieldBuilder<T> withProperties(Iterable<P> properties) {
+		public <P extends Property> SinglePropertySelectInputBuilder<T> withProperties(Iterable<P> properties) {
 			ObjectUtils.argumentNotNull(properties, "Properties must be not null");
 			properties.forEach(p -> dataSourceBuilder.withProperty(p, p.getType()));
 			return builder();
@@ -371,7 +371,7 @@ public class SingleSelectField<T, ITEM> extends AbstractSelectField<T, T, ITEM> 
 		 */
 		@SuppressWarnings("unchecked")
 		@Override
-		public SinglePropertySelectFieldBuilder<T> dataSource(ItemDataProvider<PropertyBox> dataProvider) {
+		public SinglePropertySelectInputBuilder<T> dataSource(ItemDataProvider<PropertyBox> dataProvider) {
 			ObjectUtils.argumentNotNull(dataProvider, "ItemDataProvider must be not null");
 			dataSourceBuilder.dataSource(dataProvider);
 			dataProviderConfigured = true;
@@ -385,7 +385,7 @@ public class SingleSelectField<T, ITEM> extends AbstractSelectField<T, T, ITEM> 
 		 */
 		@SuppressWarnings("unchecked")
 		@Override
-		public SinglePropertySelectFieldBuilder<T> itemAdapter(final ItemAdapter<PropertyBox> itemAdapter) {
+		public SinglePropertySelectInputBuilder<T> itemAdapter(final ItemAdapter<PropertyBox> itemAdapter) {
 			ObjectUtils.argumentNotNull(itemAdapter, "ItemAdapter must be not null");
 			dataSourceBuilder.itemAdapter(itemAdapter);
 			// set extractor
@@ -433,7 +433,7 @@ public class SingleSelectField<T, ITEM> extends AbstractSelectField<T, T, ITEM> 
 		 * @see com.holonplatform.vaadin.internal.components.builders.AbstractComponentConfigurator#builder()
 		 */
 		@Override
-		protected SinglePropertySelectFieldBuilder<T> builder() {
+		protected SinglePropertySelectInputBuilder<T> builder() {
 			return this;
 		}
 

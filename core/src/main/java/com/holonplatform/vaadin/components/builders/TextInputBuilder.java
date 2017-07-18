@@ -24,17 +24,17 @@ import com.vaadin.event.FieldEvents.FocusListener;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.ui.AbstractTextField.TextChangeEventMode;
-import com.vaadin.ui.Field;
 
 /**
- * Base builder to create {@link Field} instances backed by a text input widget.
+ * Base builder to create {@link Input} instances backed by a text input widget.
  * 
- * @param <T> Field type
+ * @param <T> Value type
  * @param <B> Concrete builder type
  * 
  * @since 5.0.0
  */
-public interface TextInputFieldBuilder<T, C extends Input<T>, B extends TextInputFieldBuilder<T, C, B>> extends ValidatableFieldBuilder<T, C, B> {
+public interface TextInputBuilder<T, C extends Input<T>, B extends TextInputBuilder<T, C, B>>
+		extends ValidatableInputBuilder<T, C, B> {
 
 	/**
 	 * Set the maximum number of characters in the field

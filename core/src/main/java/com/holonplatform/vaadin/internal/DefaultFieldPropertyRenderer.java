@@ -39,7 +39,7 @@ import com.holonplatform.core.presentation.StringValuePresenter;
 import com.holonplatform.core.property.Property;
 import com.holonplatform.core.property.PropertyRenderer;
 import com.holonplatform.core.temporal.TemporalType;
-import com.holonplatform.vaadin.components.builders.TemporalFieldBuilder;
+import com.holonplatform.vaadin.components.builders.TemporalInputBuilder;
 import com.holonplatform.vaadin.internal.components.ValidationUtils;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Field;
@@ -141,7 +141,7 @@ public class DefaultFieldPropertyRenderer<T> implements PropertyRenderer<Field, 
 	@SuppressWarnings("unchecked")
 	protected Field<T> renderTemporal(Property<T> property) {
 
-		TemporalFieldBuilder builder = null;
+		TemporalInputBuilder builder = null;
 
 		if (LocalDate.class.isAssignableFrom(property.getType())) {
 			builder = localDateField(false);
@@ -152,7 +152,7 @@ public class DefaultFieldPropertyRenderer<T> implements PropertyRenderer<Field, 
 					"Temporal type " + property.getType().getName() + " is not supported by default field renderer");
 		}
 
-		final TemporalFieldBuilder<Temporal, ?> b = builder;
+		final TemporalInputBuilder<Temporal, ?> b = builder;
 
 		// set locale from LocalizationContext, if any
 		LocalizationContext.getCurrent().filter(l -> l.isLocalized()).flatMap((c) -> c.getLocale())

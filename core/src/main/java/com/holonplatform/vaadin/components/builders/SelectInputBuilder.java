@@ -21,21 +21,20 @@ import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.ItemSet.ItemCaptionGenerator;
-import com.vaadin.ui.Field;
 
 /**
- * Builder to create selection {@link Field}s.
+ * Builder to create selection {@link Input}s.
  * 
- * @param <T> Field type
- * @param <C> Field component type
+ * @param <T> Value type
+ * @param <C> Input type
  * @param <S> Selection type
  * @param <ITEM> Selection items type
  * @param <B> Concrete builder type
  * 
  * @since 5.0.0
  */
-public interface SelectFieldBuilder<T, C extends Input<T>, S, ITEM, B extends SelectFieldBuilder<T, C, S, ITEM, B>>
-		extends BaseSelectFieldBuilder<T, C, S, ITEM, B> {
+public interface SelectInputBuilder<T, C extends Input<T>, S, ITEM, B extends SelectInputBuilder<T, C, S, ITEM, B>>
+		extends BaseSelectInputBuilder<T, C, S, ITEM, B> {
 
 	/**
 	 * Set the given items as selection item set.
@@ -46,7 +45,7 @@ public interface SelectFieldBuilder<T, C extends Input<T>, S, ITEM, B extends Se
 	 * @return this
 	 */
 	B items(Iterable<ITEM> items);
-	
+
 	/**
 	 * Set the given items as selection item set.
 	 * <p>
@@ -60,7 +59,7 @@ public interface SelectFieldBuilder<T, C extends Input<T>, S, ITEM, B extends Se
 		ObjectUtils.argumentNotNull(items, "Items must be not null");
 		return items(Arrays.asList(items));
 	}
-	
+
 	/**
 	 * Add a selection item to current selection item set.
 	 * <p>

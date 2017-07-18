@@ -22,8 +22,8 @@ import com.holonplatform.core.Validator.ValidationException;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.Registration;
-import com.holonplatform.vaadin.components.builders.DateFieldBuilder;
-import com.holonplatform.vaadin.components.builders.InvalidFieldNotificationMode;
+import com.holonplatform.vaadin.components.builders.DateInputBuilder;
+import com.holonplatform.vaadin.components.builders.InvalidInputNotificationMode;
 import com.holonplatform.vaadin.internal.components.builders.AbstractDateFieldBuilder;
 import com.vaadin.data.Property;
 import com.vaadin.data.Validator.InvalidValueException;
@@ -43,7 +43,7 @@ public class InlineDateField extends com.vaadin.ui.InlineDateField implements In
 	/**
 	 * Invalid field notification mode
 	 */
-	private InvalidFieldNotificationMode invalidFieldNotificationMode = InvalidFieldNotificationMode.defaultMode();
+	private InvalidInputNotificationMode invalidFieldNotificationMode = InvalidInputNotificationMode.defaultMode();
 
 	/**
 	 * Flag to temporary suspend validation
@@ -145,7 +145,7 @@ public class InlineDateField extends com.vaadin.ui.InlineDateField implements In
 	 * @see com.holonplatform.vaadin.components.ValidatableField#getInvalidFieldNotificationMode()
 	 */
 	@Override
-	public InvalidFieldNotificationMode getInvalidFieldNotificationMode() {
+	public InvalidInputNotificationMode getInvalidFieldNotificationMode() {
 		return invalidFieldNotificationMode;
 	}
 
@@ -156,7 +156,7 @@ public class InlineDateField extends com.vaadin.ui.InlineDateField implements In
 	 * components.ValidatableField.InvalidFieldNotificationMode)
 	 */
 	@Override
-	public void setInvalidFieldNotificationMode(InvalidFieldNotificationMode invalidFieldNotificationMode) {
+	public void setInvalidFieldNotificationMode(InvalidInputNotificationMode invalidFieldNotificationMode) {
 		ObjectUtils.argumentNotNull(invalidFieldNotificationMode, "InvalidFieldNotificationMode must be not null");
 		this.invalidFieldNotificationMode = invalidFieldNotificationMode;
 
@@ -198,9 +198,9 @@ public class InlineDateField extends com.vaadin.ui.InlineDateField implements In
 	public void setValidationVisible(boolean validateAutomatically) {
 		super.setValidationVisible(validateAutomatically);
 		if (!validateAutomatically) {
-			setInvalidFieldNotificationMode(InvalidFieldNotificationMode.NEVER);
+			setInvalidFieldNotificationMode(InvalidInputNotificationMode.NEVER);
 		} else {
-			setInvalidFieldNotificationMode(InvalidFieldNotificationMode.defaultMode());
+			setInvalidFieldNotificationMode(InvalidInputNotificationMode.defaultMode());
 		}
 	}
 
@@ -273,7 +273,7 @@ public class InlineDateField extends com.vaadin.ui.InlineDateField implements In
 		 * @see com.holonplatform.vaadin.internal.components.builders.AbstractComponentBuilder#builder()
 		 */
 		@Override
-		protected DateFieldBuilder builder() {
+		protected DateInputBuilder builder() {
 			return this;
 		}
 

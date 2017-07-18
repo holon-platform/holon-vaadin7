@@ -18,34 +18,33 @@ package com.holonplatform.vaadin.components.builders;
 import com.holonplatform.vaadin.components.Input;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusListener;
-import com.vaadin.ui.Field;
 
 /**
- * Builder to create {@link Boolean} type {@link Field} instances.
+ * Builder to create {@link Boolean} type {@link Input} instances.
  * 
  * @since 5.0.0
  */
-public interface BooleanFieldBuilder extends ValidatableFieldBuilder<Boolean, Input<Boolean>, BooleanFieldBuilder> {
+public interface BooleanInputBuilder extends ValidatableInputBuilder<Boolean, Input<Boolean>, BooleanInputBuilder> {
 
 	/**
 	 * Sets whether to treat <code>null</code> values as {@link Boolean#FALSE} values
 	 * @param nullValueAsFalse <code>true</code> to treat <code>null</code> values as {@link Boolean#FALSE} values
 	 * @return this
 	 */
-	BooleanFieldBuilder nullValueAsFalse(boolean nullValueAsFalse);
+	BooleanInputBuilder nullValueAsFalse(boolean nullValueAsFalse);
 
 	/**
 	 * Add a listener for focus gained events
 	 * @param listener Listener to add
 	 * @return this
 	 */
-	BooleanFieldBuilder withFocusListener(FocusListener listener);
+	BooleanInputBuilder withFocusListener(FocusListener listener);
 
 	/**
 	 * Add a listener for focus lost events
 	 * @param listener Listener to add
 	 * @return this
 	 */
-	BooleanFieldBuilder withBlurListener(BlurListener listener);
+	BooleanInputBuilder withBlurListener(BlurListener listener);
 
 }
