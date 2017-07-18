@@ -327,11 +327,31 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 
 	/*
 	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.ValidatableValue#isValid(com.holonplatform.vaadin.components.
+	 * ValidationErrorHandler)
+	 */
+	@Override
+	public boolean isValid(ValidationErrorHandler handler) {
+		return getInputGroup().isValid(handler);
+	}
+
+	/*
+	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.PropertyInputGroup#getValue(boolean)
 	 */
 	@Override
 	public PropertyBox getValue(boolean validate) {
 		return getInputGroup().getValue(validate);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.PropertyInputGroup#getValueIfValid(com.holonplatform.vaadin.components.
+	 * ValidationErrorHandler)
+	 */
+	@Override
+	public Optional<PropertyBox> getValueIfValid(ValidationErrorHandler errorHandler) {
+		return getInputGroup().getValueIfValid(errorHandler);
 	}
 
 	/*

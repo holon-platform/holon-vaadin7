@@ -15,6 +15,8 @@
  */
 package com.holonplatform.vaadin.components;
 
+import java.util.Optional;
+
 import com.holonplatform.core.Validator;
 import com.holonplatform.core.Validator.Validatable;
 import com.holonplatform.core.Validator.ValidationException;
@@ -112,6 +114,31 @@ public interface PropertyInputGroup
 	 */
 	default PropertyBox getValue() {
 		return getValue(true);
+	}
+
+	/**
+	 * Get the all the property {@link Input}s values using a {@link PropertyBox}, only if the bound inputs and this
+	 * {@link PropertyInputGroup} are valid. If validation fails, given <code>errorHandler</code> is used to handle the
+	 * validation errors.
+	 * @param errorHandler Validation errors handler to be used when value is not valid
+	 * @return A {@link PropertyBox} containing the values of the properties of this {@link PropertyInputGroup}, or an
+	 *         empty Optional if inputs and group validation failed
+	 */
+	Optional<PropertyBox> getValueIfValid(ValidationErrorHandler errorHandler);
+
+	/**
+	 * Get the all the property {@link Input}s values using a {@link PropertyBox}, only if the bound inputs and this
+	 * {@link PropertyInputGroup} are valid. If validation fails, default {@link ValidationErrorHandler} is used to
+	 * handle the validation errors.
+	 * <p>
+	 * If a default error handler is not configured, the {@link ValidationException} stack trace is printed.
+	 * </p>
+	 * @return A {@link PropertyBox} containing the values of the properties of this {@link PropertyInputGroup}, or an
+	 *         empty Optional if inputs and group validation failed
+	 * @see Builder#defaultValidationErrorHandler(ValidationErrorHandler)
+	 */
+	default Optional<PropertyBox> getValueIfValid() {
+		return getValueIfValid(null);
 	}
 
 	/**

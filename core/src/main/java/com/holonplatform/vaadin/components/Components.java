@@ -24,6 +24,7 @@ import com.holonplatform.vaadin.components.Dialog.QuestionDialogBuilder;
 import com.holonplatform.vaadin.components.PropertyForm.Composer;
 import com.holonplatform.vaadin.components.PropertyForm.PropertyFormBuilder;
 import com.holonplatform.vaadin.components.PropertyInputGroup.PropertyInputGroupBuilder;
+import com.holonplatform.vaadin.components.PropertyViewGroup.PropertyViewGroupBuilder;
 import com.holonplatform.vaadin.components.builders.BaseSelectInputBuilder.RenderingMode;
 import com.holonplatform.vaadin.components.builders.BooleanInputBuilder;
 import com.holonplatform.vaadin.components.builders.ButtonBuilder;
@@ -58,8 +59,10 @@ import com.holonplatform.vaadin.components.builders.StringInputBuilder;
 import com.holonplatform.vaadin.components.builders.TemporalInputBuilder.TemporalWithTimeFieldBuilder;
 import com.holonplatform.vaadin.components.builders.TemporalInputBuilder.TemporalWithoutTimeFieldBuilder;
 import com.holonplatform.vaadin.components.builders.VerticalLayoutBuilder;
+import com.holonplatform.vaadin.components.builders.ViewComponentBuilder;
 import com.holonplatform.vaadin.internal.components.BooleanField;
 import com.holonplatform.vaadin.internal.components.DateField;
+import com.holonplatform.vaadin.internal.components.DefaultPropertyViewGroup;
 import com.holonplatform.vaadin.internal.components.Filler;
 import com.holonplatform.vaadin.internal.components.InlineDateField;
 import com.holonplatform.vaadin.internal.components.LocalDateField;
@@ -314,7 +317,7 @@ public interface Components {
 	// Inputs
 
 	/**
-	 * {@link Input} type builders provider.
+	 * {@link Input} and {@link InputGroup} builders provider.
 	 */
 	static interface input {
 
@@ -516,6 +519,33 @@ public interface Components {
 		 */
 		static PropertyInputGroupBuilder propertyGroup() {
 			return PropertyInputGroup.builder();
+		}
+
+	}
+
+	// View components
+
+	/**
+	 * {@link ViewComponent} and {@link PropertyViewGroup} builders provider.
+	 */
+	static interface view {
+
+		/**
+		 * Gets a builder to create a {@link ViewComponent} instance.
+		 * @param <T> Value type
+		 * @param valueType the value type handled by the {@link ViewComponent}
+		 * @return {@link ViewComponent} builder
+		 */
+		static <T> ViewComponentBuilder<T> component(Class<? extends T> valueType) {
+			return ViewComponent.builder(valueType);
+		}
+
+		/**
+		 * Get a builder to create and setup a {@link PropertyViewGroup}.
+		 * @return {@link PropertyViewGroup} builder
+		 */
+		static PropertyViewGroupBuilder propertyGroup() {
+			return new DefaultPropertyViewGroup.DefaultBuilder();
 		}
 
 	}

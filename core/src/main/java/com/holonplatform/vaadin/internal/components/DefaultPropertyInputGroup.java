@@ -292,6 +292,25 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 
 	/*
 	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.ValidatableValue#isValid(com.holonplatform.vaadin.components.
+	 * ValidationErrorHandler)
+	 */
+	@Override
+	public boolean isValid(ValidationErrorHandler handler) {
+		try {
+			validateValue();
+		} catch (ValidationException e) {
+			ValidationErrorHandler eh = (handler != null) ? handler : getDefaultValidationErrorHandler().orElse(null);
+			if (eh != null) {
+				eh.handleValidationError(e);
+			}
+			return false;
+		}
+		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.PropertyInputGroup#getValue(boolean)
 	 */
 	@Override
@@ -299,6 +318,27 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 		PropertyBox value = PropertyBox.builder(properties).build();
 		flush(value, validate);
 		return value;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.PropertyInputGroup#getValueIfValid(com.holonplatform.vaadin.components.
+	 * ValidationErrorHandler)
+	 */
+	@Override
+	public Optional<PropertyBox> getValueIfValid(final ValidationErrorHandler errorHandler) {
+		try {
+			return Optional.of(getValue(true));
+		} catch (ValidationException e) {
+			ValidationErrorHandler eh = (errorHandler != null) ? errorHandler
+					: getDefaultValidationErrorHandler().orElse(null);
+			if (eh != null) {
+				eh.handleValidationError(e);
+			} else {
+				e.printStackTrace();
+			}
+			return Optional.empty();
+		}
 	}
 
 	/*

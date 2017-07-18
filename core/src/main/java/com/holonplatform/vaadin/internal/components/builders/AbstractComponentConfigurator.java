@@ -19,12 +19,12 @@ import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.i18n.LocalizationContext;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.vaadin.components.builders.ComponentConfigurator;
-import com.vaadin.event.ShortcutListener;
 import com.vaadin.event.ContextClickEvent.ContextClickListener;
-import com.vaadin.server.ErrorHandler;
-import com.vaadin.server.Resource;
+import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.ClientConnector.AttachListener;
 import com.vaadin.server.ClientConnector.DetachListener;
+import com.vaadin.server.ErrorHandler;
+import com.vaadin.server.Resource;
 import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.ui.AbstractComponent;
 
@@ -89,8 +89,7 @@ public abstract class AbstractComponentConfigurator<I extends AbstractComponent,
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.ComponentBuilder#height(float,
-	 * com.vaadin.server.Sizeable.Unit)
+	 * @see com.holonplatform.vaadin.components.builders.ComponentBuilder#height(float, com.vaadin.server.Sizeable.Unit)
 	 */
 	@Override
 	public B height(float height, Unit unit) {
@@ -205,6 +204,16 @@ public abstract class AbstractComponentConfigurator<I extends AbstractComponent,
 	@Override
 	public B disabled() {
 		getInstance().setEnabled(false);
+		return builder();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.builders.ComponentConfigurator#notVisible()
+	 */
+	@Override
+	public B notVisible() {
+		getInstance().setVisible(false);
 		return builder();
 	}
 

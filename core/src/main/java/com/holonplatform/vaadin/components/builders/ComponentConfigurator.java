@@ -161,6 +161,12 @@ public interface ComponentConfigurator<B extends ComponentConfigurator<B>> {
 	B disabled();
 
 	/**
+	 * Sets the components as not visible.
+	 * @return this
+	 */
+	B notVisible();
+
+	/**
 	 * Set the component as not visible.
 	 * <p>
 	 * Invisible components are not drawn in the user interface. The effect is not merely a cosmetic CSS change - no

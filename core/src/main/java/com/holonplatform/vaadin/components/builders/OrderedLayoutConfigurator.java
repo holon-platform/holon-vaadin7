@@ -46,6 +46,15 @@ public interface OrderedLayoutConfigurator<B extends OrderedLayoutConfigurator<B
 	B addAndExpand(Component component, float expandRatio);
 
 	/**
+	 * Adds the given component to layout with applying full (<code>1</code>) expand ratio.
+	 * @param component The component to add
+	 * @return this
+	 */
+	default B addAndExpandFull(Component component) {
+		return addAndExpand(component, 1f);
+	}
+
+	/**
 	 * Adds the given component to layout with given <code>expandRatio</code> and <code>alignment</code>
 	 * @param component The component to add
 	 * @param alignment the Alignment to use for the component
