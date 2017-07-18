@@ -37,7 +37,6 @@ import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.PropertyInputGroup;
 import com.holonplatform.vaadin.components.ValidationErrorHandler;
 import com.vaadin.data.Validator.InvalidValueException;
-import com.vaadin.ui.Field;
 
 /**
  * Default {@link PropertyInputGroup} implementation.
@@ -293,7 +292,7 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.PropertyFieldGroup#getValue(boolean)
+	 * @see com.holonplatform.vaadin.components.PropertyInputGroup#getValue(boolean)
 	 */
 	@Override
 	public PropertyBox getValue(boolean validate) {
@@ -304,7 +303,7 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.PropertyFieldGroup#flush(com.holonplatform.core.property.PropertyBox,
+	 * @see com.holonplatform.vaadin.components.PropertyInputGroup#flush(com.holonplatform.core.property.PropertyBox,
 	 * boolean)
 	 */
 	@SuppressWarnings("unchecked")
@@ -313,7 +312,7 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 		ObjectUtils.argumentNotNull(propertyBox, "PropertyBox must be not null");
 
 		if (validate) {
-			// Fields validation
+			// inputs validation
 			validateInputs();
 		}
 
@@ -335,7 +334,7 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.PropertyFieldGroup#setValue(com.holonplatform.core.property.PropertyBox,
+	 * @see com.holonplatform.vaadin.components.PropertyInputGroup#setValue(com.holonplatform.core.property.PropertyBox,
 	 * boolean)
 	 */
 	@SuppressWarnings("unchecked")
@@ -373,7 +372,7 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.PropertyFieldGroup#setEnabled(boolean)
+	 * @see com.holonplatform.vaadin.components.PropertyInputGroup#setEnabled(boolean)
 	 */
 	@Override
 	public void setEnabled(boolean enabled) {
@@ -382,7 +381,7 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.PropertyFieldGroup#setReadOnly(boolean)
+	 * @see com.holonplatform.vaadin.components.PropertyInputGroup#setReadOnly(boolean)
 	 */
 	@Override
 	public void setReadOnly(boolean readOnly) {
@@ -445,7 +444,7 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 	/*
 	 * (non-Javadoc)
 	 * @see
-	 * com.holonplatform.vaadin.internal.components.PropertyFieldGroupConfigurator#setPropertyHidden(com.holonplatform
+	 * com.holonplatform.vaadin.internal.components.PropertyInputGroupConfigurator#setPropertyHidden(com.holonplatform
 	 * .core.property.Property)
 	 */
 	@SuppressWarnings("rawtypes")
@@ -595,13 +594,13 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 	}
 
 	/**
-	 * Build and bind {@link Field}s to the properties of the property set.
+	 * Build and bind {@link Input}s to the properties of the property set.
 	 */
 	@Override
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void build() {
 		propertyInputs.clear();
-		// render and bind fields
+		// render and bind inputs
 		properties.forEach(p -> {
 			if (!isPropertyHidden(p)) {
 				final Optional<Input> input = render(p);
@@ -624,11 +623,10 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 	}
 
 	/**
-	 * Render given property as a {@link Field}, using custom {@link FieldPropertyRenderer} or default
-	 * {@link Property#render(Class)} method.
+	 * Render given property as a {@link Input}.
 	 * @param <T> Property type
 	 * @param property Property to render
-	 * @return Rendered field
+	 * @return Rendered input
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected <T> Optional<Input> render(Property<T> property) {
@@ -790,19 +788,11 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 			super(new DefaultPropertyInputGroup());
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.internal.components.DefaultPropertyFieldGroup.AbstractBuilder#builder()
-		 */
 		@Override
 		protected PropertyInputGroupBuilder builder() {
 			return this;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#build()
-		 */
 		@Override
 		public PropertyInputGroup build() {
 			instance.build();
@@ -842,7 +832,7 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 		/*
 		 * (non-Javadoc)
 		 * @see
-		 * com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#properties(com.holonplatform.core.property.
+		 * com.holonplatform.vaadin.components.PropertyInputGroup.Builder#properties(com.holonplatform.core.property.
 		 * Property[])
 		 */
 		@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -858,7 +848,7 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#properties(java.lang.Iterable)
+		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#properties(java.lang.Iterable)
 		 */
 		@SuppressWarnings("rawtypes")
 		@Override
@@ -872,7 +862,7 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#readOnly(com.holonplatform.core.property.
+		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#readOnly(com.holonplatform.core.property.
 		 * Property)
 		 */
 		@Override
@@ -884,7 +874,7 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#required(com.holonplatform.core.property.
+		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#required(com.holonplatform.core.property.
 		 * Property)
 		 */
 		@Override
@@ -896,7 +886,7 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#hidden(com.holonplatform.core.property.
+		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#hidden(com.holonplatform.core.property.
 		 * Property)
 		 */
 		@Override
@@ -909,8 +899,8 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 		/*
 		 * (non-Javadoc)
 		 * @see
-		 * com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#defaultValue(com.holonplatform.core.property
-		 * .Property, com.holonplatform.vaadin.components.PropertyFieldGroup.DefaultValueProvider)
+		 * com.holonplatform.vaadin.components.PropertyInputGroup.Builder#defaultValue(com.holonplatform.core.property
+		 * .Property, com.holonplatform.vaadin.components.PropertyInputGroup.DefaultValueProvider)
 		 */
 		@Override
 		public <T> B defaultValue(Property<T> property, DefaultValueProvider<T> defaultValueProvider) {
@@ -920,7 +910,7 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#withValidator(com.holonplatform.core.
+		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#withValidator(com.holonplatform.core.
 		 * property.Property, com.holonplatform.core.Validator)
 		 */
 		@Override
@@ -931,7 +921,7 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#withValidator(com.holonplatform.core.
+		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#withValidator(com.holonplatform.core.
 		 * Validator)
 		 */
 		@Override

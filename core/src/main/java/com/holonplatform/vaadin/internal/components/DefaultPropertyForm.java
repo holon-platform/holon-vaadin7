@@ -39,7 +39,6 @@ import com.holonplatform.vaadin.components.PropertyInputGroup.InputPostProcessor
 import com.holonplatform.vaadin.components.ValidationErrorHandler;
 import com.holonplatform.vaadin.internal.components.builders.AbstractComponentBuilder;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.Panel;
 
 /**
@@ -54,9 +53,9 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 	private static final long serialVersionUID = 6071630379695045884L;
 
 	/**
-	 * Backing field group
+	 * Backing input group
 	 */
-	private PropertyInputGroup fieldGroup;
+	private PropertyInputGroup inputGroup;
 
 	/**
 	 * Form content initializer
@@ -109,19 +108,19 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 	}
 
 	/**
-	 * Sets the backing field group
-	 * @param fieldGroup the fieldGroup to set
+	 * Sets the backing input group
+	 * @param inputGroup the {@link PropertyInputGroup} to set
 	 */
-	protected void setFieldGroup(PropertyInputGroup fieldGroup) {
-		this.fieldGroup = fieldGroup;
+	protected void setInputGroup(PropertyInputGroup inputGroup) {
+		this.inputGroup = inputGroup;
 	}
 
 	/**
-	 * Gets the backing field group
-	 * @return the fieldGroup
+	 * Gets the backing input group
+	 * @return the {@link PropertyInputGroup}
 	 */
-	protected PropertyInputGroup getFieldGroup() {
-		return fieldGroup;
+	protected PropertyInputGroup getInputGroup() {
+		return inputGroup;
 	}
 
 	/**
@@ -141,7 +140,7 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 	}
 
 	/**
-	 * Get the fields composer
+	 * Get the composer
 	 * @return the composer
 	 */
 	public Composer<? super C> getComposer() {
@@ -149,7 +148,7 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 	}
 
 	/**
-	 * Set the fields compsoer
+	 * Set the composer
 	 * @param composer the composer to set
 	 */
 	public void setComposer(Composer<? super C> composer) {
@@ -173,7 +172,7 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 	}
 
 	/**
-	 * Set the caption for the {@link Field}s bound to given property
+	 * Set the caption for the component bound to given property
 	 * @param property Property
 	 * @param caption Localizable caption
 	 */
@@ -184,7 +183,7 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 	}
 
 	/**
-	 * Set the caption for the {@link Field}s bound to given property as hidden
+	 * Set the caption for the component bound to given property as hidden
 	 * @param property Property
 	 */
 	protected void hidePropertyCaption(Property<?> property) {
@@ -218,7 +217,7 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 		getInitializer().ifPresent(i -> i.accept(content));
 
 		// compose
-		getComposer().compose(content, getFieldGroup());
+		getComposer().compose(content, getInputGroup());
 
 		this.composed = true;
 	}
@@ -269,52 +268,52 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 	/*
 	 * (non-Javadoc)
 	 * @see
-	 * com.holonplatform.vaadin.components.PropertyFieldGroup#addValidator(com.holonplatform.core.property.Property,
+	 * com.holonplatform.vaadin.components.PropertyInputGroup#addValidator(com.holonplatform.core.property.Property,
 	 * com.holonplatform.core.Validator)
 	 */
 	@Override
 	public <T> void addValidator(Property<T> property, Validator<T> validator) {
-		getFieldGroup().addValidator(property, validator);
+		getInputGroup().addValidator(property, validator);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.PropertyFieldGroup#removeValidator(com.holonplatform.core.property.
+	 * @see com.holonplatform.vaadin.components.PropertyInputGroup#removeValidator(com.holonplatform.core.property.
 	 * Property, com.holonplatform.core.Validator)
 	 */
 	@Override
 	public <T> void removeValidator(Property<T> property, Validator<T> validator) {
-		getFieldGroup().removeValidator(property, validator);
+		getInputGroup().removeValidator(property, validator);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * @see
-	 * com.holonplatform.vaadin.components.PropertyFieldGroup#setDefaultValueProvider(com.holonplatform.core.property.
-	 * Property, com.holonplatform.vaadin.components.PropertyFieldGroup.DefaultValueProvider)
+	 * com.holonplatform.vaadin.components.PropertyInputGroup#setDefaultValueProvider(com.holonplatform.core.property.
+	 * Property, com.holonplatform.vaadin.components.PropertyInputGroup.DefaultValueProvider)
 	 */
 	@Override
 	public <T> void setDefaultValueProvider(Property<T> property, DefaultValueProvider<T> defaultValueProvider) {
-		getFieldGroup().setDefaultValueProvider(property, defaultValueProvider);
+		getInputGroup().setDefaultValueProvider(property, defaultValueProvider);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.PropertyFieldGroup#removeDefaultValueProvider(com.holonplatform.core.
+	 * @see com.holonplatform.vaadin.components.PropertyInputGroup#removeDefaultValueProvider(com.holonplatform.core.
 	 * property.Property)
 	 */
 	@Override
 	public <T> void removeDefaultValueProvider(Property<T> property) {
-		getFieldGroup().removeDefaultValueProvider(property);
+		getInputGroup().removeDefaultValueProvider(property);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.PropertyFieldGroup#clear()
+	 * @see com.holonplatform.vaadin.components.PropertyInputGroup#clear()
 	 */
 	@Override
 	public void clear() {
-		getFieldGroup().clear();
+		getInputGroup().clear();
 	}
 
 	/*
@@ -323,46 +322,46 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 	 */
 	@Override
 	public void validateValue() throws ValidationException {
-		getFieldGroup().validateValue();
+		getInputGroup().validateValue();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.PropertyFieldGroup#getValue(boolean)
+	 * @see com.holonplatform.vaadin.components.PropertyInputGroup#getValue(boolean)
 	 */
 	@Override
 	public PropertyBox getValue(boolean validate) {
-		return getFieldGroup().getValue(validate);
+		return getInputGroup().getValue(validate);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.PropertyFieldGroup#flush(com.holonplatform.core.property.PropertyBox,
+	 * @see com.holonplatform.vaadin.components.PropertyInputGroup#flush(com.holonplatform.core.property.PropertyBox,
 	 * boolean)
 	 */
 	@Override
 	public void flush(PropertyBox propertyBox, boolean validate) {
-		getFieldGroup().flush(propertyBox, validate);
+		getInputGroup().flush(propertyBox, validate);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.PropertyFieldGroup#setValue(com.holonplatform.core.property.PropertyBox,
+	 * @see com.holonplatform.vaadin.components.PropertyInputGroup#setValue(com.holonplatform.core.property.PropertyBox,
 	 * boolean)
 	 */
 	@Override
 	public void setValue(PropertyBox propertyBox, boolean validate) {
-		getFieldGroup().setValue(propertyBox, validate);
+		getInputGroup().setValue(propertyBox, validate);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.PropertyFieldContainer#getProperties()
+	 * @see com.holonplatform.vaadin.components.PropertyInputContainer#getProperties()
 	 */
 	@SuppressWarnings("rawtypes")
 	@Override
 	public Iterable<Property> getProperties() {
-		return getFieldGroup().getProperties();
+		return getInputGroup().getProperties();
 	}
 
 	/*
@@ -371,7 +370,7 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 	 */
 	@Override
 	public Iterable<Input<?>> getInputs() {
-		return getFieldGroup().getInputs();
+		return getInputGroup().getInputs();
 	}
 
 	/*
@@ -381,16 +380,16 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 	 */
 	@Override
 	public <T> Optional<Input<T>> getInput(Property<T> property) {
-		return getFieldGroup().getInput(property);
+		return getInputGroup().getInput(property);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.PropertyFieldContainer#stream()
+	 * @see com.holonplatform.vaadin.components.PropertyInputContainer#stream()
 	 */
 	@Override
 	public <T> Stream<Binding<T>> stream() {
-		return getFieldGroup().stream();
+		return getInputGroup().stream();
 	}
 
 	/*
@@ -399,7 +398,7 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 	 */
 	@Override
 	public void addValidator(Validator<PropertyBox> validator) {
-		getFieldGroup().addValidator(validator);
+		getInputGroup().addValidator(validator);
 	}
 
 	/*
@@ -408,7 +407,7 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 	 */
 	@Override
 	public void removeValidator(Validator<PropertyBox> validator) {
-		getFieldGroup().removeValidator(validator);
+		getInputGroup().removeValidator(validator);
 	}
 
 	/*
@@ -417,7 +416,7 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 	 */
 	@Override
 	public Collection<Validator<PropertyBox>> getValidators() {
-		return getFieldGroup().getValidators();
+		return getInputGroup().getValidators();
 	}
 
 	// Builder
@@ -430,7 +429,7 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 			extends AbstractComponentBuilder<PropertyForm, DefaultPropertyForm<C>, PropertyFormBuilder<C>>
 			implements PropertyFormBuilder<C> {
 
-		private final PropertyInputGroup.PropertyInputGroupBuilder fieldGroupBuilder;
+		private final PropertyInputGroup.PropertyInputGroupBuilder inputGroupBuilder;
 
 		/**
 		 * Constructor
@@ -438,98 +437,98 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 		 */
 		public DefaultBuilder(C content) {
 			super(new DefaultPropertyForm<>(content));
-			this.fieldGroupBuilder = PropertyInputGroup.builder();
+			this.inputGroupBuilder = PropertyInputGroup.builder();
 		}
 
 		/*
 		 * (non-Javadoc)
 		 * @see
-		 * com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#properties(com.holonplatform.core.property.
+		 * com.holonplatform.vaadin.components.PropertyInputGroup.Builder#properties(com.holonplatform.core.property.
 		 * Property[])
 		 */
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		@Override
 		public <P extends Property> PropertyFormBuilder<C> properties(P... properties) {
-			fieldGroupBuilder.properties(properties);
+			inputGroupBuilder.properties(properties);
 			return this;
 		}
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#properties(java.lang.Iterable)
+		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#properties(java.lang.Iterable)
 		 */
 		@SuppressWarnings("rawtypes")
 		@Override
 		public <P extends Property> PropertyFormBuilder<C> properties(Iterable<P> properties) {
-			fieldGroupBuilder.properties(properties);
+			inputGroupBuilder.properties(properties);
 			return this;
 		}
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#readOnly(com.holonplatform.core.property.
+		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#readOnly(com.holonplatform.core.property.
 		 * Property)
 		 */
 		@Override
 		public <T> PropertyFormBuilder<C> readOnly(Property<T> property) {
-			fieldGroupBuilder.readOnly(property);
+			inputGroupBuilder.readOnly(property);
 			return this;
 		}
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#required(com.holonplatform.core.property.
+		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#required(com.holonplatform.core.property.
 		 * Property)
 		 */
 		@Override
 		public <T> PropertyFormBuilder<C> required(Property<T> property) {
-			fieldGroupBuilder.required(property);
+			inputGroupBuilder.required(property);
 			return this;
 		}
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#hidden(com.holonplatform.core.property.
+		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#hidden(com.holonplatform.core.property.
 		 * Property)
 		 */
 		@Override
 		public <T> PropertyFormBuilder<C> hidden(Property<T> property) {
-			fieldGroupBuilder.hidden(property);
+			inputGroupBuilder.hidden(property);
 			return this;
 		}
 
 		/*
 		 * (non-Javadoc)
 		 * @see
-		 * com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#defaultValue(com.holonplatform.core.property
-		 * .Property, com.holonplatform.vaadin.components.PropertyFieldGroup.DefaultValueProvider)
+		 * com.holonplatform.vaadin.components.PropertyInputGroup.Builder#defaultValue(com.holonplatform.core.property
+		 * .Property, com.holonplatform.vaadin.components.PropertyInputGroup.DefaultValueProvider)
 		 */
 		@Override
 		public <T> PropertyFormBuilder<C> defaultValue(Property<T> property,
 				DefaultValueProvider<T> defaultValueProvider) {
-			fieldGroupBuilder.defaultValue(property, defaultValueProvider);
+			inputGroupBuilder.defaultValue(property, defaultValueProvider);
 			return this;
 		}
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#withValidator(com.holonplatform.core.
+		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#withValidator(com.holonplatform.core.
 		 * property.Property, com.holonplatform.core.Validator)
 		 */
 		@Override
 		public <T> PropertyFormBuilder<C> withValidator(Property<T> property, Validator<T> validator) {
-			fieldGroupBuilder.withValidator(property, validator);
+			inputGroupBuilder.withValidator(property, validator);
 			return this;
 		}
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#withValidator(com.holonplatform.core.
+		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#withValidator(com.holonplatform.core.
 		 * Validator)
 		 */
 		@Override
 		public PropertyFormBuilder<C> withValidator(Validator<PropertyBox> validator) {
-			fieldGroupBuilder.withValidator(validator);
+			inputGroupBuilder.withValidator(validator);
 			return this;
 		}
 
@@ -542,60 +541,59 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 		@Override
 		public <T, F extends T> PropertyFormBuilder<C> bind(Property<T> property,
 				PropertyRenderer<Input<F>, T> renderer) {
-			fieldGroupBuilder.bind(property, renderer);
+			inputGroupBuilder.bind(property, renderer);
 			return this;
 		}
 
 		/*
 		 * (non-Javadoc)
-		 * @see
-		 * com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#stopFieldValidationAtFirstFailure(boolean)
+		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#stopValidationAtFirstFailure(boolean)
 		 */
 		@Override
-		public PropertyFormBuilder<C> stopValidationAtFirstFailure(boolean stopFieldValidationAtFirstFailure) {
-			fieldGroupBuilder.stopValidationAtFirstFailure(stopFieldValidationAtFirstFailure);
+		public PropertyFormBuilder<C> stopValidationAtFirstFailure(boolean stopValidationAtFirstFailure) {
+			inputGroupBuilder.stopValidationAtFirstFailure(stopValidationAtFirstFailure);
 			return this;
 		}
 
 		/*
 		 * (non-Javadoc)
 		 * @see
-		 * com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#stopOverallValidationAtFirstFailure(boolean)
+		 * com.holonplatform.vaadin.components.PropertyInputGroup.Builder#stopOverallValidationAtFirstFailure(boolean)
 		 */
 		@Override
 		public PropertyFormBuilder<C> stopOverallValidationAtFirstFailure(boolean stopOverallValidationAtFirstFailure) {
-			fieldGroupBuilder.stopOverallValidationAtFirstFailure(stopOverallValidationAtFirstFailure);
+			inputGroupBuilder.stopOverallValidationAtFirstFailure(stopOverallValidationAtFirstFailure);
 			return this;
 		}
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#ignoreValidation(boolean)
+		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#ignoreValidation(boolean)
 		 */
 		@Override
 		public PropertyFormBuilder<C> ignoreValidation(boolean ignoreValidation) {
-			fieldGroupBuilder.ignoreValidation(ignoreValidation);
+			inputGroupBuilder.ignoreValidation(ignoreValidation);
 			return this;
 		}
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#defaultValidationErrorHandler(com.
+		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#defaultValidationErrorHandler(com.
 		 * holonframework.core.Validator.ValidationErrorHandler)
 		 */
 		@Override
 		public PropertyFormBuilder<C> defaultValidationErrorHandler(ValidationErrorHandler validationErrorHandler) {
-			fieldGroupBuilder.defaultValidationErrorHandler(validationErrorHandler);
+			inputGroupBuilder.defaultValidationErrorHandler(validationErrorHandler);
 			return this;
 		}
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyFieldGroup.Builder#ignoreMissingFields(boolean)
+		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#ignoreMissingInputs(boolean)
 		 */
 		@Override
-		public PropertyFormBuilder<C> ignoreMissingInputs(boolean ignoreMissingField) {
-			fieldGroupBuilder.ignoreMissingInputs(ignoreMissingField);
+		public PropertyFormBuilder<C> ignoreMissingInputs(boolean ignoreMissingInputs) {
+			inputGroupBuilder.ignoreMissingInputs(ignoreMissingInputs);
 			return this;
 		}
 
@@ -606,7 +604,7 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 		 */
 		@Override
 		public PropertyFormBuilder<C> withInputPostProcessor(InputPostProcessor postProcessor) {
-			fieldGroupBuilder.withInputPostProcessor(postProcessor);
+			inputGroupBuilder.withInputPostProcessor(postProcessor);
 			return this;
 		}
 
@@ -716,7 +714,7 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 		 */
 		@Override
 		protected PropertyForm build(DefaultPropertyForm<C> instance) {
-			instance.setFieldGroup(fieldGroupBuilder.withInputPostProcessor(instance).build());
+			instance.setInputGroup(inputGroupBuilder.withInputPostProcessor(instance).build());
 			return instance;
 		}
 
