@@ -92,7 +92,7 @@ public abstract class AbstractCustomField<T, F extends Field> extends CustomFiel
 			try {
 				setSuspendValidationNotification(false);
 				validateValue();
-			} catch (@SuppressWarnings("unused") InvalidValueException ive) {
+			} catch (@SuppressWarnings("unused") ValidationException ive) {
 			}
 		}
 	};
