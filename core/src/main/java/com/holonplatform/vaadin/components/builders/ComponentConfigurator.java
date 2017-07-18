@@ -15,10 +15,10 @@
  */
 package com.holonplatform.vaadin.components.builders;
 
-import com.vaadin.event.ContextClickEvent.ContextClickListener;
 import com.holonplatform.core.Context;
 import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.i18n.LocalizationContext;
+import com.vaadin.event.ContextClickEvent.ContextClickListener;
 import com.vaadin.event.ShortcutListener;
 import com.vaadin.server.ClientConnector.AttachListener;
 import com.vaadin.server.ClientConnector.DetachListener;
@@ -26,7 +26,6 @@ import com.vaadin.server.ErrorHandler;
 import com.vaadin.server.Resource;
 import com.vaadin.server.Sizeable.Unit;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Field;
 
 /**
  * Interface to configure a {@link Component}.
@@ -174,10 +173,6 @@ public interface ComponentConfigurator<B extends ComponentConfigurator<B>> {
 
 	/**
 	 * Set the component as read-only. The user can not change the value of a read-only component.
-	 * <p>
-	 * As only {@link Field} components normally have a value that can be input or changed by the user, this is mostly
-	 * relevant only to field components, though not restricted to them.
-	 * </p>
 	 * @return this
 	 */
 	B readOnly();
