@@ -29,6 +29,7 @@ import com.holonplatform.core.property.Property;
 import com.holonplatform.vaadin.components.ComposableComponent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.themes.ValoTheme;
 
 /**
  * Base {@link ComposableComponent} form.
@@ -88,6 +89,7 @@ public abstract class AbstractComposableForm<C extends Component, S> extends Pan
 		if (content != null) {
 			setContent(content);
 		}
+		addStyleName(ValoTheme.PANEL_BORDERLESS);
 		// default style name
 		addStyleName("h-form");
 	}
