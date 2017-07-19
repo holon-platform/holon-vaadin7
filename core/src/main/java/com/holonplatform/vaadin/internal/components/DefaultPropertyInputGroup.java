@@ -34,6 +34,8 @@ import com.holonplatform.core.property.PropertyRenderer;
 import com.holonplatform.core.property.PropertyRendererRegistry.NoSuitableRendererAvailableException;
 import com.holonplatform.core.property.VirtualProperty;
 import com.holonplatform.vaadin.components.Input;
+import com.holonplatform.vaadin.components.PropertyBinding;
+import com.holonplatform.vaadin.components.PropertyBinding.PostProcessor;
 import com.holonplatform.vaadin.components.PropertyInputGroup;
 import com.holonplatform.vaadin.components.ValidationErrorHandler;
 import com.vaadin.data.Validator.InvalidValueException;
@@ -103,7 +105,7 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 	/**
 	 * Input post-processors
 	 */
-	private final List<InputPostProcessor> postProcessors = new LinkedList<>();
+	private final List<PostProcessor<Input<?>>> postProcessors = new LinkedList<>();
 
 	/**
 	 * Default {@link ValidationErrorHandler}
@@ -216,8 +218,8 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> Stream<Binding<T>> stream() {
-		return propertyInputs.entrySet().stream().map(e -> new PropertyInputBinding<>(e.getKey(), e.getValue()));
+	public <T> Stream<PropertyBinding<T, Input<T>>> stream() {
+		return propertyInputs.entrySet().stream().map(e -> PropertyBinding.create(e.getKey(), e.getValue()));
 	}
 
 	@Override
@@ -587,13 +589,8 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 		this.ignoreMissingInputs = ignoreMissingInputs;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.internal.components.PropertyInputGroupConfigurator#addInputPostProcessor(com.
-	 * holonplatform.vaadin.components.PropertyInputGroup.InputPostProcessor)
-	 */
 	@Override
-	public void addInputPostProcessor(InputPostProcessor postProcessor) {
+	public void addInputPostProcessor(PostProcessor<Input<?>> postProcessor) {
 		ObjectUtils.argumentNotNull(postProcessor, "InputPostProcessor must be not null");
 		postProcessors.add(postProcessor);
 	}
@@ -694,8 +691,6 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 		// Validators
 		if (!isIgnoreValidation()) {
 			// property validators
-			property.getValidators().forEach(v -> input.addValidator(v));
-			// group property validators
 			propertyValidators.getOrDefault(property, Collections.emptyList()).forEach(v -> input.addValidator(v));
 		}
 		// Read-only
@@ -1038,49 +1033,15 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#withInputPostProcessor(com.holonplatform.
-		 * vaadin.components.PropertyInputGroup.InputPostProcessor)
+		 * @see
+		 * com.holonplatform.vaadin.components.PropertyInputGroup.Builder#withPostProcessor(com.holonplatform.vaadin.
+		 * components.PropertyBinding.PostProcessor)
 		 */
 		@Override
-		public B withInputPostProcessor(InputPostProcessor postProcessor) {
-			ObjectUtils.argumentNotNull(postProcessor, "InputPostProcessor must be not null");
+		public B withPostProcessor(PostProcessor<Input<?>> postProcessor) {
+			ObjectUtils.argumentNotNull(postProcessor, "PostProcessor must be not null");
 			instance.addInputPostProcessor(postProcessor);
 			return builder();
-		}
-
-	}
-
-	/**
-	 * Default {@link Binding} implementation.
-	 * @param <T> Property type
-	 */
-	private static class PropertyInputBinding<T> implements Binding<T> {
-
-		private final Property<T> property;
-		private final Input<T> input;
-
-		public PropertyInputBinding(Property<T> property, Input<T> input) {
-			super();
-			this.property = property;
-			this.input = input;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyInputContainer.Binding#getProperty()
-		 */
-		@Override
-		public Property<T> getProperty() {
-			return property;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyInputContainer.Binding#getInput()
-		 */
-		@Override
-		public Input<T> getInput() {
-			return input;
 		}
 
 	}

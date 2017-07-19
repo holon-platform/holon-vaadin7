@@ -16,13 +16,12 @@
 package com.holonplatform.vaadin.components;
 
 import java.io.Serializable;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.property.Property;
 import com.holonplatform.core.property.PropertyBox;
 import com.holonplatform.core.property.PropertyRenderer;
+import com.holonplatform.vaadin.components.PropertyBinding.PostProcessor;
 import com.holonplatform.vaadin.internal.components.DefaultPropertyViewGroup;
 
 /**
@@ -30,36 +29,7 @@ import com.holonplatform.vaadin.internal.components.DefaultPropertyViewGroup;
  * 
  * @since 5.0.0
  */
-public interface PropertyViewGroup extends Serializable {
-
-	/**
-	 * Gets all the available properties
-	 * @return An {@link Iterable} on this {@link PropertyViewGroup} property set
-	 */
-	@SuppressWarnings("rawtypes")
-	Iterable<Property> getProperties();
-
-	/**
-	 * Gets all the {@link ViewComponent}s that have been bound to a property.
-	 * @return An {@link Iterable} on all bound ViewComponents
-	 */
-	Iterable<ViewComponent<?>> getViewComponents();
-
-	/**
-	 * Get the {@link ViewComponent} bound to given <code>property</code>, if any.
-	 * @param <T> Property type
-	 * @param property Property (not null)
-	 * @return Optional {@link ViewComponent} bound to given <code>property</code>
-	 */
-	<T> Optional<ViewComponent<T>> getViewComponent(Property<T> property);
-
-	/**
-	 * Return a {@link Stream} of the properties and their bound {@link ViewComponent}s of this
-	 * {@link PropertyViewGroup}.
-	 * @param <T> Property type
-	 * @return Property-ViewComponent {@link Binding} stream
-	 */
-	<T> Stream<Binding<T>> stream();
+public interface PropertyViewGroup extends PropertyViewSource, Serializable {
 
 	/**
 	 * Clear all the {@link ViewComponent}s.
@@ -160,12 +130,12 @@ public interface PropertyViewGroup extends Serializable {
 		}
 
 		/**
-		 * Add a {@link ViewComponentConfigurator} to allow further {@link ViewComponent} configuration after generation
-		 * and before the ViewComponent is actually bound to a property.
-		 * @param viewComponentConfigurator {@link ViewComponentConfigurator} to add (not null)
+		 * Add a {@link PostProcessor} to allow further {@link ViewComponent} configuration after generation and before
+		 * the ViewComponent is actually bound to a property.
+		 * @param postProcessor the {@link PostProcessor} to add (not null)
 		 * @return this
 		 */
-		B withViewComponentConfigurator(ViewComponentConfigurator viewComponentConfigurator);
+		B withPostProcessor(PostProcessor<ViewComponent<?>> postProcessor);
 
 		/**
 		 * Set whether to ignore properties without a bound {@link ViewComponent}. Default is <code>false</code>, and an
@@ -186,22 +156,6 @@ public interface PropertyViewGroup extends Serializable {
 	// -------
 
 	/**
-	 * Interface to allow further {@link ViewComponent} configuration after generation and before the ViewComponent is
-	 * actually bound to a property.
-	 */
-	@FunctionalInterface
-	public interface ViewComponentConfigurator {
-
-		/**
-		 * Configure the given {@link ViewComponent} before binding it to its property.
-		 * @param property Property to which the ViewComponent is bound
-		 * @param viewComponent ViewComponent to configure
-		 */
-		void configureViewComponent(Property<?> property, ViewComponent<?> viewComponent);
-
-	}
-
-	/**
 	 * A {@link PropertyRenderer} with a fixed {@link ViewComponent} rendering type.
 	 * @param <T> Property type
 	 */
@@ -217,26 +171,6 @@ public interface PropertyViewGroup extends Serializable {
 		default Class<? extends ViewComponent> getRenderType() {
 			return ViewComponent.class;
 		}
-
-	}
-
-	/**
-	 * Represents a binding between a {@link Property} and its {@link ViewComponent} in a {@link PropertyViewGroup}.
-	 * @param <T> Property type
-	 */
-	public interface Binding<T> {
-
-		/**
-		 * Get the property
-		 * @return The property
-		 */
-		Property<T> getProperty();
-
-		/**
-		 * Get the {@link ViewComponent} to which the property is bound
-		 * @return The {@link ViewComponent}
-		 */
-		ViewComponent<T> getViewComponent();
 
 	}
 

@@ -15,21 +15,21 @@
  */
 package com.holonplatform.vaadin.internal.components;
 
+import com.holonplatform.vaadin.components.ComposableComponent.Composer;
 import com.holonplatform.vaadin.components.Input;
-import com.holonplatform.vaadin.components.PropertyForm.Composer;
-import com.holonplatform.vaadin.components.PropertyInputContainer;
+import com.holonplatform.vaadin.components.PropertyInputSource;
 import com.vaadin.ui.ComponentContainer;
 
 /**
  * Default {@link Composer} using a {@link ComponentContainer} as composition layout and adding the {@link Input}
- * componens to the layout in the order they are returned from the {@link PropertyInputContainer}.
+ * componens to the layout in the order they are returned from the {@link PropertyInputSource}.
  * <p>
  * Provides a construction parameter to automatically set all inputs to full width.
  * </p>
  * 
  * @since 5.0.0
  */
-public class ComponentContainerComposer implements Composer<ComponentContainer> {
+public class ComponentContainerInputComposer implements Composer<ComponentContainer, PropertyInputSource> {
 
 	private final boolean fullWidthInputs;
 
@@ -37,25 +37,25 @@ public class ComponentContainerComposer implements Composer<ComponentContainer> 
 	 * Constructor
 	 * @param fullWidthInputs <code>true</code> to set the width for all composed {@link Input}s as <code>100%</code>.
 	 */
-	public ComponentContainerComposer(boolean fullWidthInputs) {
+	public ComponentContainerInputComposer(boolean fullWidthInputs) {
 		super();
 		this.fullWidthInputs = fullWidthInputs;
 	}
 
 	/**
 	 * Gets whether to set the width for all composed {@link Input}s as <code>100%</code>.
-	 * @return the fullWidthInputs <code>true</code> if the {@link Input}'s width must be setted to <code>100%</code>
+	 * @return <code>true</code> if the {@link Input}'s width must be setted to <code>100%</code>
 	 */
 	protected boolean isFullWidthInputs() {
 		return fullWidthInputs;
 	}
 
 	@Override
-	public void compose(ComponentContainer content, PropertyInputContainer propertyInputs) {
+	public void compose(ComponentContainer content, PropertyInputSource source) {
 		// remove all components
 		content.removeAllComponents();
 		// add components
-		propertyInputs.getInputs().forEach(input -> {
+		source.getInputs().forEach(input -> {
 			if (isFullWidthInputs()) {
 				input.getComponent().setWidth("100%");
 			}

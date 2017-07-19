@@ -28,6 +28,7 @@ import com.holonplatform.core.property.PropertyBox;
 import com.holonplatform.core.property.PropertyRenderer;
 import com.holonplatform.core.property.PropertyRendererRegistry;
 import com.holonplatform.vaadin.components.Input.InputPropertyRenderer;
+import com.holonplatform.vaadin.components.PropertyBinding.PostProcessor;
 import com.holonplatform.vaadin.internal.components.DefaultPropertyInputGroup;
 
 /**
@@ -56,7 +57,7 @@ import com.holonplatform.vaadin.internal.components.DefaultPropertyInputGroup;
  * @since 5.0.0
  */
 public interface PropertyInputGroup
-		extends InputGroup, PropertyInputContainer, ValidatorSupport<PropertyBox>, Validatable<PropertyBox> {
+		extends InputGroup, PropertyInputSource, ValidatorSupport<PropertyBox>, Validatable<PropertyBox> {
 
 	/**
 	 * Adds a {@link Validator} to the given <code>property</code>.
@@ -217,22 +218,6 @@ public interface PropertyInputGroup
 		 * @return Default value
 		 */
 		T getDefaultValue(Property<T> property);
-
-	}
-
-	/**
-	 * Callback interface to process an {@link Input} bound to a {@link Property} before the actual binding is setted
-	 * up, for example to perform additional input configuration operations.
-	 */
-	@FunctionalInterface
-	public interface InputPostProcessor {
-
-		/**
-		 * Process the given {@link Input} before binding it to its property.
-		 * @param property Property to which the {@link Input} will be bound
-		 * @param input {@link Input} component
-		 */
-		void process(Property<?> property, Input<?> input);
 
 	}
 
@@ -419,12 +404,12 @@ public interface PropertyInputGroup
 		B ignoreMissingInputs(boolean ignoreMissingInputs);
 
 		/**
-		 * Add a {@link InputPostProcessor} to allow further {@link Input} configuration before the input is actually
-		 * bound to a property.
-		 * @param postProcessor the {@link InputPostProcessor} to add (not null)
+		 * Add a {@link PostProcessor} to allow further {@link Input} configuration before the input is actually bound
+		 * to a property.
+		 * @param postProcessor the {@link PostProcessor} to add (not null)
 		 * @return this
 		 */
-		B withInputPostProcessor(InputPostProcessor postProcessor);
+		B withPostProcessor(PostProcessor<Input<?>> postProcessor);
 
 		/**
 		 * Build the {@link PropertyInputGroup}.

@@ -16,39 +16,36 @@
 package com.holonplatform.vaadin.internal.components;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-import com.holonplatform.core.Path;
 import com.holonplatform.core.Validator;
 import com.holonplatform.core.Validator.ValidationException;
 import com.holonplatform.core.i18n.Localizable;
-import com.holonplatform.core.i18n.LocalizationContext;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.property.Property;
 import com.holonplatform.core.property.PropertyBox;
 import com.holonplatform.core.property.PropertyRenderer;
 import com.holonplatform.vaadin.components.Input;
-import com.holonplatform.vaadin.components.PropertyForm;
+import com.holonplatform.vaadin.components.PropertyBinding;
+import com.holonplatform.vaadin.components.PropertyBinding.PostProcessor;
+import com.holonplatform.vaadin.components.PropertyInputForm;
 import com.holonplatform.vaadin.components.PropertyInputGroup;
-import com.holonplatform.vaadin.components.PropertyInputGroup.InputPostProcessor;
+import com.holonplatform.vaadin.components.PropertyInputSource;
 import com.holonplatform.vaadin.components.ValidationErrorHandler;
 import com.holonplatform.vaadin.internal.components.builders.AbstractComponentBuilder;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Panel;
 
 /**
- * Default {@link PropertyForm} implementation.
+ * Default {@link PropertyInputForm} implementation.
  * 
  * @param <C> Content component type.
  * 
  * @since 5.0.0
  */
-public class DefaultPropertyForm<C extends Component> extends Panel implements PropertyForm, InputPostProcessor {
+public class DefaultPropertyInputForm<C extends Component> extends AbstractComposableForm<C, PropertyInputSource>
+		implements PropertyInputForm, PostProcessor<Input<?>> {
 
 	private static final long serialVersionUID = 6071630379695045884L;
 
@@ -58,53 +55,28 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 	private PropertyInputGroup inputGroup;
 
 	/**
-	 * Form content initializer
-	 */
-	private Consumer<C> initializer;
-
-	/**
-	 * Composer
-	 */
-	private Composer<? super C> composer;
-
-	/**
-	 * Compose on attach behaviour
-	 */
-	private boolean composeOnAttach = true;
-
-	/**
-	 * Composition state
-	 */
-	private boolean composed = false;
-
-	/**
-	 * Custom property captions
-	 */
-	private Map<Property<?>, Localizable> propertyCaptions = new HashMap<>(8);
-
-	/**
-	 * Hidden property captions
-	 */
-	private Collection<Property<?>> hiddenPropertyCaptions = new HashSet<>(8);
-
-	/**
 	 * Constructor
 	 */
-	public DefaultPropertyForm() {
-		this(null);
+	public DefaultPropertyInputForm() {
+		super();
 	}
 
 	/**
 	 * Constructor with form content
 	 * @param content Form composition content
 	 */
-	public DefaultPropertyForm(C content) {
-		super();
-		if (content != null) {
-			setContent(content);
-		}
-		// default style name
-		addStyleName("h-propertyform");
+	public DefaultPropertyInputForm(C content) {
+		super(content);
+		addStyleName("h-inputform");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.internal.components.AbstractComposableForm#getComponentSource()
+	 */
+	@Override
+	protected PropertyInputSource getComponentSource() {
+		return getInputGroup();
 	}
 
 	/**
@@ -123,105 +95,6 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 		return inputGroup;
 	}
 
-	/**
-	 * Get the form content initializer
-	 * @return the form content initializer
-	 */
-	public Optional<Consumer<C>> getInitializer() {
-		return Optional.ofNullable(initializer);
-	}
-
-	/**
-	 * Set the form content initializer
-	 * @param initializer the initializer to set
-	 */
-	public void setInitializer(Consumer<C> initializer) {
-		this.initializer = initializer;
-	}
-
-	/**
-	 * Get the composer
-	 * @return the composer
-	 */
-	public Composer<? super C> getComposer() {
-		return composer;
-	}
-
-	/**
-	 * Set the composer
-	 * @param composer the composer to set
-	 */
-	public void setComposer(Composer<? super C> composer) {
-		this.composer = composer;
-	}
-
-	/**
-	 * Gets whether the form must be composed on {@link #attach()}, if not already composed invoking {@link #compose()}.
-	 * @return <code>true</code> if the form must be composed on {@link #attach()}
-	 */
-	public boolean isComposeOnAttach() {
-		return composeOnAttach;
-	}
-
-	/**
-	 * Sets whether the form must be composed on {@link #attach()}, if not already composed invoking {@link #compose()}.
-	 * @param composeOnAttach <code>true</code> to compose the form on {@link #attach()}
-	 */
-	public void setComposeOnAttach(boolean composeOnAttach) {
-		this.composeOnAttach = composeOnAttach;
-	}
-
-	/**
-	 * Set the caption for the component bound to given property
-	 * @param property Property
-	 * @param caption Localizable caption
-	 */
-	protected void setPropertyCaption(Property<?> property, Localizable caption) {
-		if (property != null && caption != null) {
-			propertyCaptions.put(property, caption);
-		}
-	}
-
-	/**
-	 * Set the caption for the component bound to given property as hidden
-	 * @param property Property
-	 */
-	protected void hidePropertyCaption(Property<?> property) {
-		if (property != null) {
-			hiddenPropertyCaptions.add(property);
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.PropertyForm#compose()
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public void compose() {
-		if (getContent() == null) {
-			throw new IllegalStateException("Missing form content");
-		}
-		if (getComposer() == null) {
-			throw new IllegalStateException("Missing form composer");
-		}
-
-		C content;
-		try {
-			content = (C) getContent();
-		} catch (Exception e) {
-			throw new IllegalStateException("Form content is not of expected type", e);
-		}
-
-		// init form content
-		getInitializer().ifPresent(i -> i.accept(content));
-
-		// compose
-		getComposer().compose(content, getInputGroup());
-
-		this.composed = true;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * @see
@@ -230,38 +103,9 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 	 */
 	@Override
 	public void process(Property<?> property, Input<?> input) {
-		// caption
 		final Component inputComponent = input.getComponent();
 		if (inputComponent != null) {
-			if (hiddenPropertyCaptions.contains(property)) {
-				inputComponent.setCaption(null);
-			} else {
-				if (propertyCaptions.containsKey(property)) {
-					inputComponent.setCaption(LocalizationContext.translate(propertyCaptions.get(property), true));
-				} else {
-					if (inputComponent.getCaption() == null) {
-						if (Path.class.isAssignableFrom(property.getClass())) {
-							inputComponent.setCaption(((Path<?>) property).getName());
-						} else {
-							inputComponent.setCaption(property.toString());
-						}
-					}
-				}
-			}
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.vaadin.ui.AbstractComponent#attach()
-	 */
-	@Override
-	public void attach() {
-		super.attach();
-
-		// check compose on attach
-		if (!composed) {
-			compose();
+			configureComponent(property, inputComponent);
 		}
 	}
 
@@ -408,7 +252,7 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 	 * @see com.holonplatform.vaadin.components.PropertyInputContainer#stream()
 	 */
 	@Override
-	public <T> Stream<Binding<T>> stream() {
+	public <T> Stream<PropertyBinding<T, Input<T>>> stream() {
 		return getInputGroup().stream();
 	}
 
@@ -442,12 +286,12 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 	// Builder
 
 	/**
-	 * Default {@link PropertyFormBuilder}.
+	 * Default {@link PropertyInputFormBuilder}.
 	 * @param <C> Content type
 	 */
 	public static class DefaultBuilder<C extends Component>
-			extends AbstractComponentBuilder<PropertyForm, DefaultPropertyForm<C>, PropertyFormBuilder<C>>
-			implements PropertyFormBuilder<C> {
+			extends AbstractComponentBuilder<PropertyInputForm, DefaultPropertyInputForm<C>, PropertyInputFormBuilder<C>>
+			implements PropertyInputFormBuilder<C> {
 
 		private final PropertyInputGroup.PropertyInputGroupBuilder inputGroupBuilder;
 
@@ -456,7 +300,7 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 		 * @param content Form composition content
 		 */
 		public DefaultBuilder(C content) {
-			super(new DefaultPropertyForm<>(content));
+			super(new DefaultPropertyInputForm<>(content));
 			this.inputGroupBuilder = PropertyInputGroup.builder();
 		}
 
@@ -468,7 +312,7 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 		 */
 		@SuppressWarnings({ "rawtypes", "unchecked" })
 		@Override
-		public <P extends Property> PropertyFormBuilder<C> properties(P... properties) {
+		public <P extends Property> PropertyInputFormBuilder<C> properties(P... properties) {
 			inputGroupBuilder.properties(properties);
 			return this;
 		}
@@ -479,7 +323,7 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 		 */
 		@SuppressWarnings("rawtypes")
 		@Override
-		public <P extends Property> PropertyFormBuilder<C> properties(Iterable<P> properties) {
+		public <P extends Property> PropertyInputFormBuilder<C> properties(Iterable<P> properties) {
 			inputGroupBuilder.properties(properties);
 			return this;
 		}
@@ -490,7 +334,7 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 		 * Property)
 		 */
 		@Override
-		public <T> PropertyFormBuilder<C> readOnly(Property<T> property) {
+		public <T> PropertyInputFormBuilder<C> readOnly(Property<T> property) {
 			inputGroupBuilder.readOnly(property);
 			return this;
 		}
@@ -501,7 +345,7 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 		 * Property)
 		 */
 		@Override
-		public <T> PropertyFormBuilder<C> required(Property<T> property) {
+		public <T> PropertyInputFormBuilder<C> required(Property<T> property) {
 			inputGroupBuilder.required(property);
 			return this;
 		}
@@ -512,7 +356,7 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 		 * Property)
 		 */
 		@Override
-		public <T> PropertyFormBuilder<C> hidden(Property<T> property) {
+		public <T> PropertyInputFormBuilder<C> hidden(Property<T> property) {
 			inputGroupBuilder.hidden(property);
 			return this;
 		}
@@ -524,7 +368,7 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 		 * .Property, com.holonplatform.vaadin.components.PropertyInputGroup.DefaultValueProvider)
 		 */
 		@Override
-		public <T> PropertyFormBuilder<C> defaultValue(Property<T> property,
+		public <T> PropertyInputFormBuilder<C> defaultValue(Property<T> property,
 				DefaultValueProvider<T> defaultValueProvider) {
 			inputGroupBuilder.defaultValue(property, defaultValueProvider);
 			return this;
@@ -536,7 +380,7 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 		 * property.Property, com.holonplatform.core.Validator)
 		 */
 		@Override
-		public <T> PropertyFormBuilder<C> withValidator(Property<T> property, Validator<T> validator) {
+		public <T> PropertyInputFormBuilder<C> withValidator(Property<T> property, Validator<T> validator) {
 			inputGroupBuilder.withValidator(property, validator);
 			return this;
 		}
@@ -547,7 +391,7 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 		 * Validator)
 		 */
 		@Override
-		public PropertyFormBuilder<C> withValidator(Validator<PropertyBox> validator) {
+		public PropertyInputFormBuilder<C> withValidator(Validator<PropertyBox> validator) {
 			inputGroupBuilder.withValidator(validator);
 			return this;
 		}
@@ -559,7 +403,7 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 		 * com.holonplatform.core.property.PropertyRenderer)
 		 */
 		@Override
-		public <T, F extends T> PropertyFormBuilder<C> bind(Property<T> property,
+		public <T, F extends T> PropertyInputFormBuilder<C> bind(Property<T> property,
 				PropertyRenderer<Input<F>, T> renderer) {
 			inputGroupBuilder.bind(property, renderer);
 			return this;
@@ -570,7 +414,7 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#stopValidationAtFirstFailure(boolean)
 		 */
 		@Override
-		public PropertyFormBuilder<C> stopValidationAtFirstFailure(boolean stopValidationAtFirstFailure) {
+		public PropertyInputFormBuilder<C> stopValidationAtFirstFailure(boolean stopValidationAtFirstFailure) {
 			inputGroupBuilder.stopValidationAtFirstFailure(stopValidationAtFirstFailure);
 			return this;
 		}
@@ -581,7 +425,7 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 		 * com.holonplatform.vaadin.components.PropertyInputGroup.Builder#stopOverallValidationAtFirstFailure(boolean)
 		 */
 		@Override
-		public PropertyFormBuilder<C> stopOverallValidationAtFirstFailure(boolean stopOverallValidationAtFirstFailure) {
+		public PropertyInputFormBuilder<C> stopOverallValidationAtFirstFailure(boolean stopOverallValidationAtFirstFailure) {
 			inputGroupBuilder.stopOverallValidationAtFirstFailure(stopOverallValidationAtFirstFailure);
 			return this;
 		}
@@ -591,7 +435,7 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#ignoreValidation(boolean)
 		 */
 		@Override
-		public PropertyFormBuilder<C> ignoreValidation(boolean ignoreValidation) {
+		public PropertyInputFormBuilder<C> ignoreValidation(boolean ignoreValidation) {
 			inputGroupBuilder.ignoreValidation(ignoreValidation);
 			return this;
 		}
@@ -602,7 +446,7 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 		 * holonframework.core.Validator.ValidationErrorHandler)
 		 */
 		@Override
-		public PropertyFormBuilder<C> defaultValidationErrorHandler(ValidationErrorHandler validationErrorHandler) {
+		public PropertyInputFormBuilder<C> defaultValidationErrorHandler(ValidationErrorHandler validationErrorHandler) {
 			inputGroupBuilder.defaultValidationErrorHandler(validationErrorHandler);
 			return this;
 		}
@@ -612,19 +456,20 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#ignoreMissingInputs(boolean)
 		 */
 		@Override
-		public PropertyFormBuilder<C> ignoreMissingInputs(boolean ignoreMissingInputs) {
+		public PropertyInputFormBuilder<C> ignoreMissingInputs(boolean ignoreMissingInputs) {
 			inputGroupBuilder.ignoreMissingInputs(ignoreMissingInputs);
 			return this;
 		}
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#withInputPostProcessor(com.holonplatform.
-		 * vaadin.components.PropertyInputGroup.InputPostProcessor)
+		 * @see
+		 * com.holonplatform.vaadin.components.PropertyInputGroup.Builder#withPostProcessor(com.holonplatform.vaadin.
+		 * components.PropertyBinding.PostProcessor)
 		 */
 		@Override
-		public PropertyFormBuilder<C> withInputPostProcessor(InputPostProcessor postProcessor) {
-			inputGroupBuilder.withInputPostProcessor(postProcessor);
+		public PropertyInputFormBuilder<C> withPostProcessor(PostProcessor<Input<?>> postProcessor) {
+			inputGroupBuilder.withPostProcessor(postProcessor);
 			return this;
 		}
 
@@ -634,7 +479,7 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 		 * Consumer)
 		 */
 		@Override
-		public PropertyFormBuilder<C> initializer(Consumer<C> initializer) {
+		public PropertyInputFormBuilder<C> initializer(Consumer<C> initializer) {
 			ObjectUtils.argumentNotNull(initializer, "Form content initializer must be not null");
 			getInstance().setInitializer(initializer);
 			return this;
@@ -642,12 +487,12 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyForm.PropertyFormBuilder#composer(com.holonplatform.vaadin.
-		 * components.PropertyForm.Composer)
+		 * @see
+		 * com.holonplatform.vaadin.components.ComposableComponent.Builder#composer(com.holonplatform.vaadin.components.
+		 * ComposableComponent.Composer)
 		 */
 		@Override
-		public com.holonplatform.vaadin.components.PropertyForm.PropertyFormBuilder<C> composer(
-				com.holonplatform.vaadin.components.PropertyForm.Composer<? super C> composer) {
+		public PropertyInputFormBuilder<C> composer(Composer<? super C, PropertyInputSource> composer) {
 			ObjectUtils.argumentNotNull(composer, "Composer must be not null");
 			getInstance().setComposer(composer);
 			return this;
@@ -658,7 +503,7 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 		 * @see com.holonplatform.vaadin.components.PropertyForm.PropertyFormBuilder#composeOnAttach(boolean)
 		 */
 		@Override
-		public PropertyFormBuilder<C> composeOnAttach(boolean composeOnAttach) {
+		public PropertyInputFormBuilder<C> composeOnAttach(boolean composeOnAttach) {
 			getInstance().setComposeOnAttach(composeOnAttach);
 			return this;
 		}
@@ -670,7 +515,7 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 		 * .property.Property, com.holonplatform.core.i18n.Localizable)
 		 */
 		@Override
-		public PropertyFormBuilder<C> propertyCaption(Property<?> property, Localizable caption) {
+		public PropertyInputFormBuilder<C> propertyCaption(Property<?> property, Localizable caption) {
 			ObjectUtils.argumentNotNull(property, "Property must be not null");
 			ObjectUtils.argumentNotNull(caption, "Caption must be not null");
 			getInstance().setPropertyCaption(property, caption);
@@ -684,7 +529,7 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 		 * .property.Property, java.lang.String)
 		 */
 		@Override
-		public PropertyFormBuilder<C> propertyCaption(Property<?> property, String caption) {
+		public PropertyInputFormBuilder<C> propertyCaption(Property<?> property, String caption) {
 			ObjectUtils.argumentNotNull(property, "Property must be not null");
 			getInstance().setPropertyCaption(property, Localizable.builder().message(caption).build());
 			return this;
@@ -697,7 +542,7 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 		 * .property.Property, java.lang.String, java.lang.String, java.lang.Object[])
 		 */
 		@Override
-		public PropertyFormBuilder<C> propertyCaption(Property<?> property, String defaultCaption, String messageCode,
+		public PropertyInputFormBuilder<C> propertyCaption(Property<?> property, String defaultCaption, String messageCode,
 				Object... arguments) {
 			ObjectUtils.argumentNotNull(property, "Property must be not null");
 			getInstance().setPropertyCaption(property, Localizable.builder().message(defaultCaption)
@@ -712,7 +557,7 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 		 * core.property.Property)
 		 */
 		@Override
-		public PropertyFormBuilder<C> hidePropertyCaption(Property<?> property) {
+		public PropertyInputFormBuilder<C> hidePropertyCaption(Property<?> property) {
 			ObjectUtils.argumentNotNull(property, "Property must be not null");
 			getInstance().hidePropertyCaption(property);
 			return this;
@@ -723,7 +568,7 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 		 * @see com.holonplatform.vaadin.internal.components.builders.AbstractComponentBuilder#builder()
 		 */
 		@Override
-		protected com.holonplatform.vaadin.components.PropertyForm.PropertyFormBuilder<C> builder() {
+		protected com.holonplatform.vaadin.components.PropertyInputForm.PropertyInputFormBuilder<C> builder() {
 			return this;
 		}
 
@@ -733,8 +578,8 @@ public class DefaultPropertyForm<C extends Component> extends Panel implements P
 		 * AbstractComponent)
 		 */
 		@Override
-		protected PropertyForm build(DefaultPropertyForm<C> instance) {
-			instance.setInputGroup(inputGroupBuilder.withInputPostProcessor(instance).build());
+		protected PropertyInputForm build(DefaultPropertyInputForm<C> instance) {
+			instance.setInputGroup(inputGroupBuilder.withPostProcessor(instance).build());
 			return instance;
 		}
 

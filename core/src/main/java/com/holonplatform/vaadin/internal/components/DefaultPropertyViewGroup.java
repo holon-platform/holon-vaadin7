@@ -28,8 +28,10 @@ import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.property.Property;
 import com.holonplatform.core.property.PropertyBox;
 import com.holonplatform.core.property.PropertyRenderer;
-import com.holonplatform.core.property.VirtualProperty;
 import com.holonplatform.core.property.PropertyRendererRegistry.NoSuitableRendererAvailableException;
+import com.holonplatform.core.property.VirtualProperty;
+import com.holonplatform.vaadin.components.PropertyBinding;
+import com.holonplatform.vaadin.components.PropertyBinding.PostProcessor;
 import com.holonplatform.vaadin.components.PropertyViewGroup;
 import com.holonplatform.vaadin.components.ViewComponent;
 
@@ -61,9 +63,9 @@ public class DefaultPropertyViewGroup implements PropertyViewGroup {
 	private final Map<Property, ViewComponentPropertyRenderer> propertyRenderers = new HashMap<>(8);
 
 	/**
-	 * ViewComponent configurators
+	 * ViewComponent post-processors
 	 */
-	private final List<ViewComponentConfigurator> viewComponentConfigurators = new LinkedList<>();
+	private final List<PostProcessor<ViewComponent<?>>> postProcessors = new LinkedList<>();
 
 	/**
 	 * Ignore missing ViewComponents
@@ -127,8 +129,8 @@ public class DefaultPropertyViewGroup implements PropertyViewGroup {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> Stream<Binding<T>> stream() {
-		return propertyViews.entrySet().stream().map(e -> new PropertyViewBinding<>(e.getKey(), e.getValue()));
+	public <T> Stream<PropertyBinding<T, ViewComponent<T>>> stream() {
+		return propertyViews.entrySet().stream().map(e -> PropertyBinding.create(e.getKey(), e.getValue()));
 	}
 
 	/*
@@ -156,8 +158,7 @@ public class DefaultPropertyViewGroup implements PropertyViewGroup {
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.components.PropertyViewGroup#setValue(com.holonplatform.core.property.PropertyBox)
+	 * @see com.holonplatform.vaadin.components.PropertyViewGroup#setValue(com.holonplatform.core.property.PropertyBox)
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
@@ -222,12 +223,12 @@ public class DefaultPropertyViewGroup implements PropertyViewGroup {
 	}
 
 	/**
-	 * Register a {@link ViewComponentConfigurator}.
-	 * @param viewComponentConfigurator the ViewComponentConfigurator to register
+	 * Register a {@link ViewComponent} {@link PostProcessor}.
+	 * @param postProcessor the post-processor to register
 	 */
-	protected void addViewComponentConfigurator(ViewComponentConfigurator viewComponentConfigurator) {
-		if (viewComponentConfigurator != null) {
-			viewComponentConfigurators.add(viewComponentConfigurator);
+	protected void addViewComponentPostProcessor(PostProcessor<ViewComponent<?>> postProcessor) {
+		if (postProcessor != null) {
+			postProcessors.add(postProcessor);
 		}
 	}
 
@@ -268,7 +269,7 @@ public class DefaultPropertyViewGroup implements PropertyViewGroup {
 	 */
 	protected void configureViewComponent(final Property<?> property, final ViewComponent<?> viewComponent) {
 		// Configurators
-		viewComponentConfigurators.forEach(fc -> fc.configureViewComponent(property, viewComponent));
+		postProcessors.forEach(fc -> fc.process(property, viewComponent));
 	}
 
 	/**
@@ -358,14 +359,14 @@ public class DefaultPropertyViewGroup implements PropertyViewGroup {
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyViewGroup.Builder#withViewComponentConfigurator(com.
-		 * holonframework.vaadin.components.PropertyViewGroup.ViewComponentConfigurator)
+		 * @see
+		 * com.holonplatform.vaadin.components.PropertyViewGroup.Builder#withPostProcessor(com.holonplatform.vaadin.
+		 * components.PropertyBinding.PostProcessor)
 		 */
 		@Override
-		public PropertyViewGroupBuilder withViewComponentConfigurator(
-				ViewComponentConfigurator viewComponentConfigurator) {
-			ObjectUtils.argumentNotNull(viewComponentConfigurator, "ViewComponentConfigurator must be not null");
-			instance.addViewComponentConfigurator(viewComponentConfigurator);
+		public PropertyViewGroupBuilder withPostProcessor(PostProcessor<ViewComponent<?>> postProcessor) {
+			ObjectUtils.argumentNotNull(postProcessor, "PostProcessor must be not null");
+			instance.addViewComponentPostProcessor(postProcessor);
 			return this;
 		}
 
@@ -387,41 +388,6 @@ public class DefaultPropertyViewGroup implements PropertyViewGroup {
 		public PropertyViewGroup build() {
 			instance.build();
 			return instance;
-		}
-
-	}
-
-	/**
-	 * Default {@link Binding} implementation.
-	 * @param <T> Property type
-	 */
-	private static class PropertyViewBinding<T> implements Binding<T> {
-
-		private final Property<T> property;
-		private final ViewComponent<T> viewComponent;
-
-		public PropertyViewBinding(Property<T> property, ViewComponent<T> viewComponent) {
-			super();
-			this.property = property;
-			this.viewComponent = viewComponent;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyViewGroup.Binding#getProperty()
-		 */
-		@Override
-		public Property<T> getProperty() {
-			return property;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyViewGroup.Binding#getViewComponent()
-		 */
-		@Override
-		public ViewComponent<T> getViewComponent() {
-			return viewComponent;
 		}
 
 	}

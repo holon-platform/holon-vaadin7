@@ -19,11 +19,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+import com.holonplatform.vaadin.components.ComposableComponent.Composer;
 import com.holonplatform.vaadin.components.Dialog.DialogBuilder;
 import com.holonplatform.vaadin.components.Dialog.QuestionDialogBuilder;
-import com.holonplatform.vaadin.components.PropertyForm.Composer;
-import com.holonplatform.vaadin.components.PropertyForm.PropertyFormBuilder;
+import com.holonplatform.vaadin.components.PropertyInputForm.PropertyInputFormBuilder;
 import com.holonplatform.vaadin.components.PropertyInputGroup.PropertyInputGroupBuilder;
+import com.holonplatform.vaadin.components.PropertyViewForm.PropertyViewFormBuilder;
 import com.holonplatform.vaadin.components.PropertyViewGroup.PropertyViewGroupBuilder;
 import com.holonplatform.vaadin.components.builders.BaseSelectInputBuilder.RenderingMode;
 import com.holonplatform.vaadin.components.builders.BooleanInputBuilder;
@@ -317,7 +318,7 @@ public interface Components {
 	// Inputs
 
 	/**
-	 * {@link Input} and {@link InputGroup} builders provider.
+	 * {@link Input}, {@link InputGroup} and {@link PropertyInputForm} builders provider.
 	 */
 	static interface input {
 
@@ -521,6 +522,56 @@ public interface Components {
 			return PropertyInputGroup.builder();
 		}
 
+		/**
+		 * Gets a builder to create a {@link PropertyInputForm}.
+		 * @param <C> Content type
+		 * @param content Form content, where fields will be composed by the form {@link Composer} (not null)
+		 * @return {@link PropertyInputForm} builder
+		 */
+		static <C extends Component> PropertyInputFormBuilder<C> form(C content) {
+			return PropertyInputForm.builder(content);
+		}
+
+		/**
+		 * Gets a builder to create a {@link PropertyInputForm} using a {@link FormLayout} as layout component and a
+		 * default {@link PropertyInputForm#componentContainerComposer()} to compose the fields on layout.
+		 * @return {@link PropertyInputForm} builder
+		 */
+		static PropertyInputFormBuilder<FormLayout> form() {
+			return PropertyInputForm.builder(formLayout().fullWidth().build())
+					.composer(PropertyInputForm.componentContainerComposer());
+		}
+
+		/**
+		 * Gets a builder to create a {@link PropertyInputForm} using a {@link VerticalLayout} as layout component and a
+		 * default {@link PropertyInputForm#componentContainerComposer()} to compose the fields on layout.
+		 * @return {@link PropertyInputForm} builder
+		 */
+		static PropertyInputFormBuilder<VerticalLayout> formVertical() {
+			return PropertyInputForm.builder(vl().fullWidth().build())
+					.composer(PropertyInputForm.componentContainerComposer());
+		}
+
+		/**
+		 * Gets a builder to create a {@link PropertyInputForm} using a {@link HorizontalLayout} as layout component and
+		 * a default {@link PropertyInputForm#componentContainerComposer()} to compose the fields on layout.
+		 * @return {@link PropertyInputForm} builder
+		 */
+		static PropertyInputFormBuilder<HorizontalLayout> formHorizontal() {
+			return PropertyInputForm.builder(hl().build())
+					.composer(PropertyInputForm.componentContainerComposer(false));
+		}
+
+		/**
+		 * Gets a builder to create a {@link PropertyInputForm} using a {@link VerticalLayout} as layout component and a
+		 * default {@link PropertyInputForm#componentContainerComposer()} to compose the fields on layout.
+		 * @return {@link PropertyInputForm} builder
+		 */
+		static PropertyInputFormBuilder<GridLayout> formGrid() {
+			return PropertyInputForm.builder(gridLayout().fullWidth().build())
+					.composer(PropertyInputForm.componentContainerComposer());
+		}
+
 	}
 
 	// View components
@@ -546,6 +597,55 @@ public interface Components {
 		 */
 		static PropertyViewGroupBuilder propertyGroup() {
 			return new DefaultPropertyViewGroup.DefaultBuilder();
+		}
+
+		/**
+		 * Gets a builder to create a {@link PropertyViewForm}.
+		 * @param <C> Content type
+		 * @param content Form content, where view components will be composed by the form {@link Composer} (not null)
+		 * @return {@link PropertyViewForm} builder
+		 */
+		static <C extends Component> PropertyInputFormBuilder<C> form(C content) {
+			return PropertyInputForm.builder(content);
+		}
+
+		/**
+		 * Gets a builder to create a {@link PropertyViewForm} using a {@link FormLayout} as layout component and a
+		 * default {@link PropertyViewForm#componentContainerComposer()} to compose the view components on layout.
+		 * @return {@link PropertyViewForm} builder
+		 */
+		static PropertyViewFormBuilder<FormLayout> form() {
+			return PropertyViewForm.builder(formLayout().fullWidth().build())
+					.composer(PropertyViewForm.componentContainerComposer());
+		}
+
+		/**
+		 * Gets a builder to create a {@link PropertyViewForm} using a {@link VerticalLayout} as layout component and a
+		 * default {@link PropertyViewForm#componentContainerComposer()} to compose the view components on layout.
+		 * @return {@link PropertyViewForm} builder
+		 */
+		static PropertyViewFormBuilder<VerticalLayout> formVertical() {
+			return PropertyViewForm.builder(vl().fullWidth().build())
+					.composer(PropertyViewForm.componentContainerComposer());
+		}
+
+		/**
+		 * Gets a builder to create a {@link PropertyViewForm} using a {@link HorizontalLayout} as layout component and
+		 * a default {@link PropertyViewForm#componentContainerComposer()} to compose the view components on layout.
+		 * @return {@link PropertyViewForm} builder
+		 */
+		static PropertyViewFormBuilder<HorizontalLayout> formHorizontal() {
+			return PropertyViewForm.builder(hl().build()).composer(PropertyViewForm.componentContainerComposer(false));
+		}
+
+		/**
+		 * Gets a builder to create a {@link PropertyViewForm} using a {@link VerticalLayout} as layout component and a
+		 * default {@link PropertyViewForm#componentContainerComposer()} to compose the view components on layout.
+		 * @return {@link PropertyViewForm} builder
+		 */
+		static PropertyViewFormBuilder<GridLayout> formGrid() {
+			return PropertyViewForm.builder(gridLayout().fullWidth().build())
+					.composer(PropertyViewForm.componentContainerComposer());
 		}
 
 	}
@@ -591,61 +691,6 @@ public interface Components {
 		 */
 		static TablePropertyListingBuilder propertiesUsingTable() {
 			return new DefaultTablePropertyListingBuilder();
-		}
-
-	}
-
-	/**
-	 * {@link PropertyForm} builders provider.
-	 */
-	static interface form {
-
-		/**
-		 * Gets a builder to create a {@link PropertyForm}.
-		 * @param <C> Content type
-		 * @param content Form content, where fields will be composed by the form {@link Composer} (not null)
-		 * @return {@link PropertyForm} builder
-		 */
-		static <C extends Component> PropertyFormBuilder<C> builder(C content) {
-			return PropertyForm.builder(content);
-		}
-
-		/**
-		 * Gets a builder to create a {@link PropertyForm} using a {@link FormLayout} as layout component and a default
-		 * {@link PropertyForm#componentContainerComposer()} to compose the fields on layout.
-		 * @return {@link PropertyForm} builder
-		 */
-		static PropertyFormBuilder<FormLayout> builder() {
-			return PropertyForm.builder(formLayout().fullWidth().build())
-					.composer(PropertyForm.componentContainerComposer());
-		}
-
-		/**
-		 * Gets a builder to create a {@link PropertyForm} using a {@link VerticalLayout} as layout component and a
-		 * default {@link PropertyForm#componentContainerComposer()} to compose the fields on layout.
-		 * @return {@link PropertyForm} builder
-		 */
-		static PropertyFormBuilder<VerticalLayout> vertical() {
-			return PropertyForm.builder(vl().fullWidth().build()).composer(PropertyForm.componentContainerComposer());
-		}
-
-		/**
-		 * Gets a builder to create a {@link PropertyForm} using a {@link HorizontalLayout} as layout component and a
-		 * default {@link PropertyForm#componentContainerComposer()} to compose the fields on layout.
-		 * @return {@link PropertyForm} builder
-		 */
-		static PropertyFormBuilder<HorizontalLayout> horizontal() {
-			return PropertyForm.builder(hl().build()).composer(PropertyForm.componentContainerComposer(false));
-		}
-
-		/**
-		 * Gets a builder to create a {@link PropertyForm} using a {@link VerticalLayout} as layout component and a
-		 * default {@link PropertyForm#componentContainerComposer()} to compose the fields on layout.
-		 * @return {@link PropertyForm} builder
-		 */
-		static PropertyFormBuilder<GridLayout> grid() {
-			return PropertyForm.builder(gridLayout().fullWidth().build())
-					.composer(PropertyForm.componentContainerComposer());
 		}
 
 	}

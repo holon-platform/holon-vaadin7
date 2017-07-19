@@ -19,6 +19,7 @@ import com.holonplatform.core.Validator;
 import com.holonplatform.core.property.Property;
 import com.holonplatform.core.property.PropertyRenderer;
 import com.holonplatform.vaadin.components.Input;
+import com.holonplatform.vaadin.components.PropertyBinding.PostProcessor;
 import com.holonplatform.vaadin.components.PropertyInputGroup;
 import com.holonplatform.vaadin.components.ValidationErrorHandler;
 
@@ -67,7 +68,7 @@ public interface PropertyInputGroupConfigurator extends PropertyInputGroup {
 	 * Set the {@link PropertyRenderer} to use with given property to obtain the property {@link Input} component.
 	 * @param <T> Property type
 	 * @param property Property (not null)
-	 * @param renderer Renderer 
+	 * @param renderer Renderer
 	 */
 	<T, F extends T> void setPropertyRenderer(Property<T> property, PropertyRenderer<Input<F>, T> renderer);
 
@@ -103,10 +104,10 @@ public interface PropertyInputGroupConfigurator extends PropertyInputGroup {
 	void setIgnoreMissingInputs(boolean ignoreMissingInputs);
 
 	/**
-	 * Add a {@link InputPostProcessor}.
-	 * @param postProcessor the InputPostProcessor to add
+	 * Add an {@link Input} {@link PostProcessor}.
+	 * @param postProcessor the post-processor to add
 	 */
-	void addInputPostProcessor(InputPostProcessor postProcessor);
+	void addInputPostProcessor(PostProcessor<Input<?>> postProcessor);
 
 	/**
 	 * Build and bind {@link Input}s to the properties of the property set.

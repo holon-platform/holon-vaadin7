@@ -21,16 +21,16 @@ import java.util.stream.Stream;
 import com.holonplatform.core.property.Property;
 
 /**
- * Container of {@link Input}s bound to a {@link Property} set, with methods to obtain the managed properties and the
- * associated inputs.
+ * Represents a source of {@link Property} - {@link Input} bindings, i.e. a container of {@link Input} components bound
+ * to a {@link Property} set, providing methods to obtain the managed properties and the associated inputs.
  *
  * @since 5.0.0
  */
-public interface PropertyInputContainer {
+public interface PropertyInputSource {
 
 	/**
 	 * Gets all the available properties
-	 * @return An {@link Iterable} on this {@link PropertyInputContainer} property set
+	 * @return An {@link Iterable} on this {@link PropertyInputSource} property set
 	 */
 	@SuppressWarnings("rawtypes")
 	Iterable<Property> getProperties();
@@ -50,30 +50,10 @@ public interface PropertyInputContainer {
 	<T> Optional<Input<T>> getInput(Property<T> property);
 
 	/**
-	 * Return a {@link Stream} of the properties and their bound {@link Input}s of this {@link PropertyInputContainer}.
+	 * Return a {@link Stream} of the properties and their bound {@link Input}s of this {@link PropertyInputSource}.
 	 * @param <T> Property type
-	 * @return Property-Input {@link Binding} stream
+	 * @return Property-Input {@link PropertyBinding} stream
 	 */
-	<T> Stream<Binding<T>> stream();
-
-	/**
-	 * Represents a binding between a {@link Property} and its {@link Input}.
-	 * @param <T> Property type
-	 */
-	public interface Binding<T> {
-
-		/**
-		 * Get the {@link Property}.
-		 * @return The property
-		 */
-		Property<T> getProperty();
-
-		/**
-		 * Get the {@link Input} to which the property is bound.
-		 * @return The input
-		 */
-		Input<T> getInput();
-
-	}
+	<T> Stream<PropertyBinding<T, Input<T>>> stream();
 
 }
