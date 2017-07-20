@@ -21,10 +21,9 @@ import com.holonplatform.core.Context;
 import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.i18n.LocalizationContext;
 import com.holonplatform.vaadin.components.Input;
+import com.holonplatform.vaadin.components.ValueHolder.ValueChangeListener;
 import com.vaadin.data.Buffered;
 import com.vaadin.data.Property;
-import com.vaadin.data.Property.ReadOnlyStatusChangeListener;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.Validator;
 import com.vaadin.data.util.converter.Converter;
 
@@ -239,18 +238,11 @@ public interface InputConfigurator<T, B extends InputConfigurator<T, B>> extends
 	B hideValidation();
 
 	/**
-	 * Add a {@link ValueChangeListener} to the field.
+	 * Add a {@link ValueChangeListener} to be notified when the input value changes.
 	 * @param listener The ValueChangeListener to add
 	 * @return this
 	 */
-	B withValueChangeListener(ValueChangeListener listener);
-
-	/**
-	 * Adds a {@link ReadOnlyStatusChangeListener} to the field
-	 * @param listener The ReadOnlyStatusChangeListener to add
-	 * @return this
-	 */
-	B withReadOnlyStatusChangeListener(ReadOnlyStatusChangeListener listener);
+	B withValueChangeListener(ValueChangeListener<T> listener);
 
 	/**
 	 * Sets the locale of this component.

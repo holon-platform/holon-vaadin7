@@ -19,12 +19,13 @@ import java.util.Locale;
 
 import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.internal.utils.ObjectUtils;
+import com.holonplatform.vaadin.components.Input;
+import com.holonplatform.vaadin.components.ValueHolder;
 import com.holonplatform.vaadin.components.builders.InputConfigurator;
 import com.holonplatform.vaadin.internal.components.ValidationUtils;
+import com.holonplatform.vaadin.internal.components.ValueChangeNotifierRegistration;
 import com.vaadin.data.Property;
 import com.vaadin.data.Validator;
-import com.vaadin.data.Property.ReadOnlyStatusChangeListener;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.ui.AbstractField;
 
@@ -205,23 +206,18 @@ public abstract class AbstractFieldConfigurator<T, C extends AbstractField<T>, B
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.FieldBuilder#withValueChangeListener(com.vaadin.data.Property.
-	 * ValueChangeListener)
+	 * @see
+	 * com.holonplatform.vaadin.components.builders.InputConfigurator#withValueChangeListener(com.holonplatform.vaadin.
+	 * components.ValueHolder.ValueChangeListener)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
-	public B withValueChangeListener(ValueChangeListener listener) {
-		getInstance().addValueChangeListener(listener);
-		return builder();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.FieldBuilder#withReadOnlyStatusChangeListener(com.vaadin.data.
-	 * Property.ReadOnlyStatusChangeListener)
-	 */
-	@Override
-	public B withReadOnlyStatusChangeListener(ReadOnlyStatusChangeListener listener) {
-		getInstance().addReadOnlyStatusChangeListener(listener);
+	public B withValueChangeListener(com.holonplatform.vaadin.components.ValueHolder.ValueChangeListener<T> listener) {
+		if (ValueHolder.class.isAssignableFrom(getInstance().getClass())) {
+			((ValueHolder<T>) getInstance()).addValueChangeListener(listener);
+		} else {
+			ValueChangeNotifierRegistration.adapt(Input.from(getInstance()), getInstance(), listener);
+		}
 		return builder();
 	}
 
