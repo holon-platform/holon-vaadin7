@@ -19,6 +19,7 @@ import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.i18n.LocalizationContext;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.property.Property;
+import com.holonplatform.core.property.PropertyBox;
 import com.holonplatform.vaadin.components.builders.ComponentBuilder;
 import com.holonplatform.vaadin.internal.components.DefaultPropertyInputForm;
 import com.vaadin.ui.Component;
@@ -32,7 +33,16 @@ import com.vaadin.ui.Component;
  * 
  * @since 5.0.0
  */
-public interface PropertyInputForm extends ComposableComponent, PropertyInputGroup {
+public interface PropertyInputForm extends ComposableComponent, ValueComponent<PropertyBox>, PropertyInputGroup {
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.PropertyInputGroup#getValue()
+	 */
+	@Override
+	default PropertyBox getValue() {
+		return PropertyInputGroup.super.getValue();
+	}
 
 	/**
 	 * Get a builder to create a {@link PropertyInputForm}.

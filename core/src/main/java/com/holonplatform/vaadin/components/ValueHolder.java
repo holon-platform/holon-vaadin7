@@ -16,7 +16,6 @@
 package com.holonplatform.vaadin.components;
 
 import java.io.Serializable;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -42,24 +41,10 @@ public interface ValueHolder<V> extends Serializable {
 	V getValue();
 
 	/**
-	 * Returns the value that represents an empty value for this value holder.
-	 * <p>
-	 * By default, <code>null</code> is returned.
-	 * </p>
-	 * @return the value that represents an empty value for this value holder
-	 */
-	default V getEmptyValue() {
-		return null;
-	}
-
-	/**
-	 * Returns whether this value holder is considered to be empty, according to its current value and empty value
-	 * representation.
+	 * Returns whether this value holder is considered to be empty, according to its current value.
 	 * @return <code>true</code> if considered empty, <code>false</code> if not
 	 */
-	default boolean isEmpty() {
-		return Objects.equals(getValue(), getEmptyValue());
-	}
+	boolean isEmpty();
 
 	/**
 	 * Clears this value holder.
@@ -67,9 +52,7 @@ public interface ValueHolder<V> extends Serializable {
 	 * By default, resets the value to the empty one.
 	 * </p>
 	 */
-	default void clear() {
-		setValue(getEmptyValue());
-	}
+	void clear();
 
 	/**
 	 * Gets the current value of this value holder as an {@link Optional}, which will be empty if the value holder is

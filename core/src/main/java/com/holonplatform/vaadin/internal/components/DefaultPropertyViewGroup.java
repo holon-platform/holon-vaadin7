@@ -34,6 +34,7 @@ import com.holonplatform.vaadin.components.PropertyBinding;
 import com.holonplatform.vaadin.components.PropertyBinding.PostProcessor;
 import com.holonplatform.vaadin.components.PropertyValueComponentSource;
 import com.holonplatform.vaadin.components.PropertyViewGroup;
+import com.holonplatform.vaadin.components.Registration;
 import com.holonplatform.vaadin.components.ValueComponent;
 import com.holonplatform.vaadin.components.ViewComponent;
 
@@ -68,6 +69,11 @@ public class DefaultPropertyViewGroup implements PropertyViewGroup, PropertyValu
 	 * ViewComponent post-processors
 	 */
 	private final List<PostProcessor<ViewComponent<?>>> postProcessors = new LinkedList<>();
+	
+	/**
+	 * Value change listeners
+	 */
+	private final List<ValueChangeListener<PropertyBox>> valueChangeListeners = new LinkedList<>();
 
 	/**
 	 * Ignore missing ViewComponents
@@ -94,12 +100,31 @@ public class DefaultPropertyViewGroup implements PropertyViewGroup, PropertyValu
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.PropertyViewGroup#getProperties()
+	 * @see com.holonplatform.vaadin.components.PropertySetBound#getProperties()
+	 */
+	@Override
+	public Iterable<Property<?>> getProperties() {
+		return Collections.unmodifiableList(properties);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.PropertySetBound#hasProperty(com.holonplatform.core.property.Property)
+	 */
+	@Override
+	public boolean hasProperty(Property<?> property) {
+		ObjectUtils.argumentNotNull(property, "Property must be not null");
+		return properties.contains(property);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.PropertySetBound#propertyStream()
 	 */
 	@SuppressWarnings("rawtypes")
 	@Override
-	public Iterable<Property> getProperties() {
-		return Collections.unmodifiableList(properties);
+	public Stream<Property> propertyStream() {
+		return properties.stream();
 	}
 
 	/*
@@ -171,7 +196,7 @@ public class DefaultPropertyViewGroup implements PropertyViewGroup, PropertyValu
 	 */
 	@Override
 	public void clear() {
-		properties.forEach(p -> propertyViews.get(p).clear());
+		setValue(null);
 	}
 
 	/*
@@ -188,6 +213,43 @@ public class DefaultPropertyViewGroup implements PropertyViewGroup, PropertyValu
 		return value;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.ValueHolder#isEmpty()
+	 */
+	@Override
+	public boolean isEmpty() {
+		return getValue().propertyValues().filter(v -> v.hasValue()).findAny().isPresent();
+	}
+
+	/* (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.ValueHolder#addValueChangeListener(com.holonplatform.vaadin.components.ValueHolder.ValueChangeListener)
+	 */
+	@Override
+	public Registration addValueChangeListener(ValueChangeListener<PropertyBox> listener) {
+		ObjectUtils.argumentNotNull(listener, "ValueChangeListener must be not null");
+		valueChangeListeners.add(listener);
+		return () -> removeValueChangeListener(listener);
+	}
+
+	/**
+	 * Removes a {@link ValueChangeListener}.
+	 * @param listener the listener to remove
+	 */
+	public void removeValueChangeListener(ValueChangeListener<PropertyBox> listener) {
+		if (listener != null) {
+			valueChangeListeners.remove(listener);
+		}
+	}
+
+	/**
+	 * Emits the value change event
+	 * @param value the changed value
+	 */
+	protected void fireValueChange(PropertyBox value) {
+		final ValueChangeEvent<PropertyBox> valueChangeEvent = new DefaultValueChangeEvent<>(this, value);
+		valueChangeListeners.forEach(l -> l.valueChange(valueChangeEvent));
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.PropertyViewGroup#setValue(com.holonplatform.core.property.PropertyBox)
@@ -196,7 +258,8 @@ public class DefaultPropertyViewGroup implements PropertyViewGroup, PropertyValu
 	@Override
 	public void setValue(PropertyBox propertyBox) {
 		if (propertyBox == null) {
-			clear();
+			// reset all values
+			properties.forEach(p -> propertyViews.get(p).clear());
 		} else {
 			properties.forEach(p -> {
 				final ViewComponent vc = propertyViews.get(p);
@@ -216,6 +279,9 @@ public class DefaultPropertyViewGroup implements PropertyViewGroup, PropertyValu
 				}
 			});
 		}
+		
+		// fire value change
+		fireValueChange(propertyBox);
 	}
 
 	/**

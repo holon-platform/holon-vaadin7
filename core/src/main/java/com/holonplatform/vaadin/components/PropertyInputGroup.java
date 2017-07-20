@@ -24,7 +24,6 @@ import com.holonplatform.core.Validator.ValidationException;
 import com.holonplatform.core.Validator.ValidatorSupport;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.property.Property;
-import com.holonplatform.core.property.Property.PropertyNotFoundException;
 import com.holonplatform.core.property.PropertyBox;
 import com.holonplatform.core.property.PropertyRenderer;
 import com.holonplatform.core.property.PropertyRendererRegistry;
@@ -57,14 +56,8 @@ import com.holonplatform.vaadin.internal.components.DefaultPropertyInputGroup;
  * 
  * @since 5.0.0
  */
-public interface PropertyInputGroup extends InputGroup, ValidatorSupport<PropertyBox>, Validatable<PropertyBox> {
-
-	/**
-	 * Gets all the available properties
-	 * @return An {@link Iterable} on this input group property set
-	 */
-	@SuppressWarnings("rawtypes")
-	Iterable<Property> getProperties();
+public interface PropertyInputGroup extends InputGroup, PropertySetBound, ValueHolder<PropertyBox>,
+		ValidatorSupport<PropertyBox>, Validatable<PropertyBox> {
 
 	/**
 	 * Gets all the {@link Input}s that have been bound to a property.
@@ -119,51 +112,68 @@ public interface PropertyInputGroup extends InputGroup, ValidatorSupport<Propert
 	<T> void removeDefaultValueProvider(Property<T> property);
 
 	/**
-	 * Get the all the property {@link Input}s values using a {@link PropertyBox}.
+	 * Get the current property values collected into a {@link PropertyBox}, using the group configured properties as
+	 * property set.
 	 * <p>
-	 * The {@link PropertyInputGroup} property set is used as the {@link PropertyBox} property set.
+	 * For each property with a bound {@link Input} component, the property value is obtained from the {@link Input}
+	 * component through the {@link Input#getValue()} method.
 	 * </p>
-	 * @param validate <code>true</code> to check the validity of the bound {@link Input}s and of this
-	 *        {@link PropertyInputGroup} before returing the value
-	 * @return A {@link PropertyBox} containing the values of the properties of this {@link PropertyInputGroup}
-	 * @throws ValidationException If <code>validate</code> is <code>true</code> and a input value is not valid
-	 * @throws OverallValidationException If overall validation failed (using {@link PropertyInputGroup} validators)
+	 * @param validate <code>true</code> to check the validity of the property bound {@link Input}s and of this
+	 *        {@link PropertyInputGroup} before returing the value, throwing a {@link ValidationException} if the
+	 *        validation is not successful.
+	 * @return A {@link PropertyBox} containing the property values (never null)
+	 * @throws ValidationException If <code>validate</code> is <code>true</code> and an {@link Input} value is not valid
+	 * @throws OverallValidationException If the overall validation failed
 	 */
 	PropertyBox getValue(boolean validate);
 
 	/**
-	 * Get the all the property {@link Input}s values using a {@link PropertyBox}, validating the bound inputs and this
-	 * {@link PropertyInputGroup} before returing the value.
+	 * Get the current property values collected into a {@link PropertyBox}, using the group configured properties as
+	 * property set.
 	 * <p>
-	 * The {@link PropertyInputGroup} property set is used as the {@link PropertyBox} property set.
+	 * For each property with a bound {@link Input} component, the property value is obtained from the {@link Input}
+	 * component through the {@link Input#getValue()} method.
 	 * </p>
-	 * @return A {@link PropertyBox} containing the values of the properties of this {@link PropertyInputGroup}
-	 * @throws ValidationException If an input value is not valid, providing the validation error message.
-	 * @throws OverallValidationException If overall validation failed (using {@link PropertyInputGroup} validators)
+	 * <p>
+	 * The available {@link Input}s and the overall group validation is performed before returning the value, throwing a
+	 * {@link ValidationException} if the validation is not successful.
+	 * </p>
+	 * @return A {@link PropertyBox} containing the property values (never null)
+	 * @throws ValidationException If one or more input value is not valid, providing the validation error messages
+	 * @throws OverallValidationException If the overall validation failed
+	 * @see #getValue(boolean)
+	 * @see #getValueIfValid()
 	 */
+	@Override
 	default PropertyBox getValue() {
 		return getValue(true);
 	}
 
 	/**
-	 * Get the all the property {@link Input}s values using a {@link PropertyBox}, only if the bound inputs and this
-	 * {@link PropertyInputGroup} are valid. If validation fails, given <code>errorHandler</code> is used to handle the
-	 * validation errors.
+	 * Get the current property values collected into a {@link PropertyBox}, using the group configured properties as
+	 * property set, only if the property bound {@link Input}s and this {@link PropertyInputGroup} are valid. If
+	 * validation fails, given <code>errorHandler</code> is used to handle the validation errors.
+	 * <p>
+	 * For each property with a bound {@link Input} component, the property value is obtained from the {@link Input}
+	 * component through the {@link Input#getValue()} method.
+	 * </p>
 	 * @param errorHandler Validation errors handler to be used when value is not valid
-	 * @return A {@link PropertyBox} containing the values of the properties of this {@link PropertyInputGroup}, or an
-	 *         empty Optional if inputs and group validation failed
+	 * @return A {@link PropertyBox} containing the property values, or an empty Optional if validation failed
 	 */
 	Optional<PropertyBox> getValueIfValid(ValidationErrorHandler errorHandler);
 
 	/**
-	 * Get the all the property {@link Input}s values using a {@link PropertyBox}, only if the bound inputs and this
-	 * {@link PropertyInputGroup} are valid. If validation fails, default {@link ValidationErrorHandler} is used to
-	 * handle the validation errors.
+	 * Get the current property values collected into a {@link PropertyBox}, using the group configured properties as
+	 * property set, only if the property bound {@link Input}s and this {@link PropertyInputGroup} are valid. If
+	 * validation fails, default {@link ValidationErrorHandler} is used to handle the validation errors.
+	 * <p>
+	 * For each property with a bound {@link Input} component, the property value is obtained from the {@link Input}
+	 * component through the {@link Input#getValue()} method.
+	 * </p>
 	 * <p>
 	 * If a default error handler is not configured, the {@link ValidationException} stack trace is printed.
 	 * </p>
-	 * @return A {@link PropertyBox} containing the values of the properties of this {@link PropertyInputGroup}, or an
-	 *         empty Optional if inputs and group validation failed
+	 * @return A {@link PropertyBox} containing the property values, or an empty Optional if validation failed
 	 * @see Builder#defaultValidationErrorHandler(ValidationErrorHandler)
 	 */
 	default Optional<PropertyBox> getValueIfValid() {
@@ -171,54 +181,34 @@ public interface PropertyInputGroup extends InputGroup, ValidatorSupport<Propert
 	}
 
 	/**
-	 * Flush all the property {@link Input}s values to given {@link PropertyBox}.
-	 * @param propertyBox PropertyBox into which to write the values (not null)
-	 * @param validate <code>true</code> to check the validity of the bound inputs and of this
-	 *        {@link PropertyInputGroup} before writing the values
-	 * @throws PropertyNotFoundException If a property to flush is not found in given {@link PropertyBox}
-	 * @throws ValidationException If <code>validate</code> is <code>true</code> and an input value is not valid
-	 * @throws OverallValidationException If overall validation failed (using {@link PropertyInputGroup} validators)
-	 */
-	void flush(PropertyBox propertyBox, boolean validate);
-
-	/**
-	 * Flush all the property {@link Input}s values to given {@link PropertyBox}, validating the bound {@link Input}s
-	 * and this {@link PropertyInputGroup} before writing the values.
-	 * @param propertyBox PropertyBox into which to write the values (not null)
-	 * @throws PropertyNotFoundException If a property to flush is not found in given {@link PropertyBox}
-	 * @throws ValidationException If an input value is not valid, providing the validation error message.
-	 * @throws OverallValidationException If overall validation failed (using {@link PropertyInputGroup} validators)
-	 */
-	default void flush(PropertyBox propertyBox) {
-		flush(propertyBox, true);
-	}
-
-	/**
-	 * Load the values contained in given {@link PropertyBox} to the bound {@link Input}s of this
-	 * {@link PropertyInputGroup}.
+	 * Set the current property values using a {@link PropertyBox}, loading the values to the available property bound
+	 * {@link Input}s through the {@link Input#setValue(Object)} method.
 	 * <p>
-	 * Only the properties of this {@link PropertyInputGroup} property set are used to read the values from the
-	 * {@link PropertyBox}.
+	 * Only the properties which belong to the group's property set are taken into account.
 	 * </p>
-	 * @param propertyBox PropertyBox from which to read the values (not null)
-	 * @param validate <code>true</code> to check the validity of the bound inputs and of this
-	 *        {@link PropertyInputGroup} after setting the values
-	 * @throws ValidationException If <code>validate</code> is <code>true</code> and an input value is not valid
-	 * @throws OverallValidationException If overall validation failed (using {@link PropertyInputGroup} validators)
+	 * @param propertyBox the {@link PropertyBox} which contains the property values to load. If <code>null</code>, all
+	 *        the {@link Input} components are cleared.
+	 * @param validate <code>true</code> to check the validity of the property bound {@link Input}s and of this
+	 *        {@link PropertyInputGroup}, throwing a {@link ValidationException} if the validation is not successful.
+	 * @throws ValidationException If <code>validate</code> is <code>true</code> and an {@link Input} value is not valid
+	 * @throws OverallValidationException If overall validation failed
 	 */
 	void setValue(PropertyBox propertyBox, boolean validate);
 
 	/**
-	 * Load the values contained in given {@link PropertyBox} to the bound {@link Input}s of this
-	 * {@link PropertyInputGroup}, validating the bound inputs and this {@link PropertyInputGroup} after setting the
-	 * values.
+	 * Set the current property values using a {@link PropertyBox}, loading the values to the available property bound
+	 * {@link Input}s through the {@link Input#setValue(Object)} method.
 	 * <p>
-	 * No validation is performed.
+	 * Only the properties which belong to the group's property set are taken into account.
 	 * </p>
-	 * @param propertyBox PropertyBox from which to read the values. If <code>null</code>, all {@link Input}s are
-	 *        cleared.
+	 * </p>
+	 * By default, no value validation is performed using this method.
+	 * </p>
+	 * @param propertyBox the {@link PropertyBox} which contains the property values to load. If <code>null</code>, all
+	 *        the {@link Input} components are cleared.
 	 * @see #setValue(PropertyBox, boolean)
 	 */
+	@Override
 	default void setValue(PropertyBox propertyBox) {
 		setValue(propertyBox, false);
 	}

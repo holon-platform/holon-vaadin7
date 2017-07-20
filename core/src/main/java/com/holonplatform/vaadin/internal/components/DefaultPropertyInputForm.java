@@ -33,6 +33,7 @@ import com.holonplatform.vaadin.components.PropertyBinding.PostProcessor;
 import com.holonplatform.vaadin.components.PropertyInputForm;
 import com.holonplatform.vaadin.components.PropertyInputGroup;
 import com.holonplatform.vaadin.components.PropertyValueComponentSource;
+import com.holonplatform.vaadin.components.Registration;
 import com.holonplatform.vaadin.components.ValidationErrorHandler;
 import com.holonplatform.vaadin.internal.components.builders.AbstractComponentBuilder;
 import com.vaadin.ui.Component;
@@ -99,6 +100,15 @@ public class DefaultPropertyInputForm<C extends Component> extends
 	 */
 	protected PropertyInputGroup getInputGroup() {
 		return inputGroup;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.ValueComponent#getComponent()
+	 */
+	@Override
+	public Component getComponent() {
+		return this;
 	}
 
 	/*
@@ -206,16 +216,6 @@ public class DefaultPropertyInputForm<C extends Component> extends
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.PropertyInputGroup#flush(com.holonplatform.core.property.PropertyBox,
-	 * boolean)
-	 */
-	@Override
-	public void flush(PropertyBox propertyBox, boolean validate) {
-		getInputGroup().flush(propertyBox, validate);
-	}
-
-	/*
-	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.PropertyInputGroup#setValue(com.holonplatform.core.property.PropertyBox,
 	 * boolean)
 	 */
@@ -228,10 +228,47 @@ public class DefaultPropertyInputForm<C extends Component> extends
 	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.PropertyInputContainer#getProperties()
 	 */
+	@Override
+	public Iterable<Property<?>> getProperties() {
+		return getInputGroup().getProperties();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.PropertySetBound#hasProperty(com.holonplatform.core.property.Property)
+	 */
+	@Override
+	public boolean hasProperty(Property<?> property) {
+		return getInputGroup().hasProperty(property);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.PropertySetBound#propertyStream()
+	 */
 	@SuppressWarnings("rawtypes")
 	@Override
-	public Iterable<Property> getProperties() {
-		return getInputGroup().getProperties();
+	public Stream<Property> propertyStream() {
+		return getInputGroup().propertyStream();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.ValueHolder#isEmpty()
+	 */
+	@Override
+	public boolean isEmpty() {
+		return getInputGroup().isEmpty();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.ValueHolder#addValueChangeListener(com.holonplatform.vaadin.components.
+	 * ValueHolder.ValueChangeListener)
+	 */
+	@Override
+	public Registration addValueChangeListener(ValueChangeListener<PropertyBox> listener) {
+		return getInputGroup().addValueChangeListener(listener);
 	}
 
 	/*

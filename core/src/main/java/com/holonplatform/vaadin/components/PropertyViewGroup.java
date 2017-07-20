@@ -15,7 +15,6 @@
  */
 package com.holonplatform.vaadin.components;
 
-import java.io.Serializable;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -31,14 +30,7 @@ import com.holonplatform.vaadin.internal.components.DefaultPropertyViewGroup;
  * 
  * @since 5.0.0
  */
-public interface PropertyViewGroup extends Serializable {
-
-	/**
-	 * Gets all the available properties
-	 * @return An {@link Iterable} on this view group property set
-	 */
-	@SuppressWarnings("rawtypes")
-	Iterable<Property> getProperties();
+public interface PropertyViewGroup extends PropertySetBound, ValueHolder<PropertyBox> {
 
 	/**
 	 * Gets all the {@link ViewComponent}s that have been bound to a property.
@@ -62,25 +54,29 @@ public interface PropertyViewGroup extends Serializable {
 	<T> Stream<PropertyBinding<T, ViewComponent<T>>> stream();
 
 	/**
-	 * Clear all the {@link ViewComponent}s.
+	 * Clears (reset the value) all the {@link ViewComponent}s.
 	 */
+	@Override
 	void clear();
 
 	/**
-	 * Get the all the property {@link ViewComponent}s values using a {@link PropertyBox}.
-	 * <p>
-	 * The {@link PropertyViewGroup} property set is used as the {@link PropertyBox} property set.
-	 * </p>
-	 * @return A {@link PropertyBox} containing the values of the properties of this {@link PropertyViewGroup}
+	 * Get the current property values collected into a {@link PropertyBox}, using the group configured properties as
+	 * property set.
+	 * @return A {@link PropertyBox} containing the property values (never null)
 	 */
+	@Override
 	PropertyBox getValue();
 
 	/**
-	 * Load the values contained in given {@link PropertyBox} to the bound {@link ViewComponent}s of this
-	 * {@link PropertyViewGroup}.
-	 * @param propertyBox PropertyBox from which to read the values. If <code>null</code>, all ViewComponents are
-	 *        cleared.
+	 * Set the current property values using a {@link PropertyBox}, loading the values to the available property bound
+	 * {@link ViewComponent}s through the {@link ViewComponent#setValue(Object)} method.
+	 * <p>
+	 * Only the properties which belong to the group's property set are taken into account.
+	 * </p>
+	 * @param propertyBox the {@link PropertyBox} which contains the property values to load. If <code>null</code>, all
+	 *        the {@link ViewComponent} components are cleared.
 	 */
+	@Override
 	void setValue(PropertyBox propertyBox);
 
 	// ------- Builders

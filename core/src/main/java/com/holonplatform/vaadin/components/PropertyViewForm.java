@@ -19,6 +19,7 @@ import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.i18n.LocalizationContext;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.property.Property;
+import com.holonplatform.core.property.PropertyBox;
 import com.holonplatform.vaadin.components.builders.ComponentBuilder;
 import com.holonplatform.vaadin.internal.components.DefaultPropertyViewForm;
 import com.vaadin.ui.Component;
@@ -33,7 +34,7 @@ import com.vaadin.ui.Component;
  * 
  * @since 5.0.0
  */
-public interface PropertyViewForm extends ComposableComponent, PropertyViewGroup {
+public interface PropertyViewForm extends ComposableComponent, ValueComponent<PropertyBox>, PropertyViewGroup {
 
 	/**
 	 * Get a builder to create a {@link PropertyViewForm}.

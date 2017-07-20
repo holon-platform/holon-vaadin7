@@ -38,6 +38,7 @@ import com.holonplatform.vaadin.components.PropertyBinding;
 import com.holonplatform.vaadin.components.PropertyBinding.PostProcessor;
 import com.holonplatform.vaadin.components.PropertyInputGroup;
 import com.holonplatform.vaadin.components.PropertyValueComponentSource;
+import com.holonplatform.vaadin.components.Registration;
 import com.holonplatform.vaadin.components.ValidationErrorHandler;
 import com.holonplatform.vaadin.components.ValueComponent;
 import com.vaadin.data.Validator.InvalidValueException;
@@ -86,6 +87,11 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 	 */
 	@SuppressWarnings("rawtypes")
 	private final Map<Property, Object> hiddenProperties = new HashMap<>();
+
+	/**
+	 * Value change listeners
+	 */
+	private final List<ValueChangeListener<PropertyBox>> valueChangeListeners = new LinkedList<>();
 
 	/**
 	 * Validators
@@ -183,12 +189,31 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.PropertyInputContainer#getProperties()
+	 * @see com.holonplatform.vaadin.components.PropertySetBound#getProperties()
+	 */
+	@Override
+	public Iterable<Property<?>> getProperties() {
+		return Collections.unmodifiableList(properties);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.PropertySetBound#hasProperty(com.holonplatform.core.property.Property)
+	 */
+	@Override
+	public boolean hasProperty(Property<?> property) {
+		ObjectUtils.argumentNotNull(property, "Property must be not null");
+		return properties.contains(property);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.PropertySetBound#propertyStream()
 	 */
 	@SuppressWarnings("rawtypes")
 	@Override
-	public Iterable<Property> getProperties() {
-		return Collections.unmodifiableList(properties);
+	public Stream<Property> propertyStream() {
+		return properties.stream();
 	}
 
 	/*
@@ -285,22 +310,9 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.InputGroup#clear()
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public void clear() {
-		try {
-			properties.forEach(p -> {
-				_input(p).ifPresent(i -> {
-					i.clear();
-					// check default value
-					if (!p.isReadOnly() && defaultValues.containsKey(p)) {
-						i.setValue(defaultValues.get(p).getDefaultValue(p));
-					}
-				});
-			});
-		} catch (@SuppressWarnings("unused") ValidationException | InvalidValueException e) {
-			// ignore any validation error
-		}
+		setValue(null, false);
 	}
 
 	/*
@@ -375,14 +387,14 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.PropertyInputGroup#flush(com.holonplatform.core.property.PropertyBox,
-	 * boolean)
+	/**
+	 * Writes the property bound {@link Input} components values, obtained through the {@link Input#getValue()} method,
+	 * to given <code>propertyBox</code>,
+	 * @param propertyBox the {@link PropertyBox} into which to write the property values (not null)
+	 * @param validate whether to perform inputs and overall validation
 	 */
 	@SuppressWarnings("unchecked")
-	@Override
-	public void flush(PropertyBox propertyBox, boolean validate) {
+	private void flush(PropertyBox propertyBox, boolean validate) {
 		ObjectUtils.argumentNotNull(propertyBox, "PropertyBox must be not null");
 
 		if (validate) {
@@ -406,6 +418,26 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 		}
 	}
 
+	/**
+	 * Reset all the {@link Input}s values.
+	 */
+	@SuppressWarnings("unchecked")
+	protected void resetValues() {
+		try {
+			properties.forEach(p -> {
+				_input(p).ifPresent(i -> {
+					i.clear();
+					// check default value
+					if (!p.isReadOnly() && defaultValues.containsKey(p)) {
+						i.setValue(defaultValues.get(p).getDefaultValue(p));
+					}
+				});
+			});
+		} catch (@SuppressWarnings("unused") ValidationException | InvalidValueException e) {
+			// ignore any validation error
+		}
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.PropertyInputGroup#setValue(com.holonplatform.core.property.PropertyBox,
@@ -416,7 +448,7 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 	public void setValue(final PropertyBox propertyBox, boolean validate) {
 		hiddenProperties.forEach((p, v) -> hiddenProperties.put(p, null));
 		if (propertyBox == null) {
-			clear();
+			resetValues();
 		} else {
 			properties.forEach(p -> {
 				if (isPropertyHidden(p)) {
@@ -442,6 +474,49 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 		if (validate) {
 			validateValue();
 		}
+		
+		// fire value change
+		fireValueChange(propertyBox);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.ValueHolder#isEmpty()
+	 */
+	@Override
+	public boolean isEmpty() {
+		return getValue(false).propertyValues().filter(v -> v.hasValue()).findAny().isPresent();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.ValueHolder#addValueChangeListener(com.holonplatform.vaadin.components.
+	 * ValueHolder.ValueChangeListener)
+	 */
+	@Override
+	public Registration addValueChangeListener(ValueChangeListener<PropertyBox> listener) {
+		ObjectUtils.argumentNotNull(listener, "ValueChangeListener must be not null");
+		valueChangeListeners.add(listener);
+		return () -> removeValueChangeListener(listener);
+	}
+
+	/**
+	 * Removes a {@link ValueChangeListener}.
+	 * @param listener the listener to remove
+	 */
+	public void removeValueChangeListener(ValueChangeListener<PropertyBox> listener) {
+		if (listener != null) {
+			valueChangeListeners.remove(listener);
+		}
+	}
+
+	/**
+	 * Emits the value change event
+	 * @param value the changed value
+	 */
+	protected void fireValueChange(PropertyBox value) {
+		final ValueChangeEvent<PropertyBox> valueChangeEvent = new DefaultValueChangeEvent<>(this, value);
+		valueChangeListeners.forEach(l -> l.valueChange(valueChangeEvent));
 	}
 
 	/*

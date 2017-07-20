@@ -29,6 +29,7 @@ import com.holonplatform.vaadin.components.PropertyBinding.PostProcessor;
 import com.holonplatform.vaadin.components.PropertyValueComponentSource;
 import com.holonplatform.vaadin.components.PropertyViewForm;
 import com.holonplatform.vaadin.components.PropertyViewGroup;
+import com.holonplatform.vaadin.components.Registration;
 import com.holonplatform.vaadin.components.ViewComponent;
 import com.holonplatform.vaadin.internal.components.builders.AbstractComponentBuilder;
 import com.vaadin.ui.Component;
@@ -100,6 +101,15 @@ public class DefaultPropertyViewForm<C extends Component>
 
 	/*
 	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.ValueComponent#getComponent()
+	 */
+	@Override
+	public Component getComponent() {
+		return this;
+	}
+
+	/*
+	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.PropertyViewGroup#clear()
 	 */
 	@Override
@@ -129,10 +139,47 @@ public class DefaultPropertyViewForm<C extends Component>
 	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.PropertyViewSource#getProperties()
 	 */
+	@Override
+	public Iterable<Property<?>> getProperties() {
+		return getViewGroup().getProperties();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.PropertySetBound#hasProperty(com.holonplatform.core.property.Property)
+	 */
+	@Override
+	public boolean hasProperty(Property<?> property) {
+		return getViewGroup().hasProperty(property);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.PropertySetBound#propertyStream()
+	 */
 	@SuppressWarnings("rawtypes")
 	@Override
-	public Iterable<Property> getProperties() {
-		return getViewGroup().getProperties();
+	public Stream<Property> propertyStream() {
+		return getViewGroup().propertyStream();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.ValueHolder#isEmpty()
+	 */
+	@Override
+	public boolean isEmpty() {
+		return getViewGroup().isEmpty();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.ValueHolder#addValueChangeListener(com.holonplatform.vaadin.components.
+	 * ValueHolder.ValueChangeListener)
+	 */
+	@Override
+	public Registration addValueChangeListener(ValueChangeListener<PropertyBox> listener) {
+		return getViewGroup().addValueChangeListener(listener);
 	}
 
 	/*

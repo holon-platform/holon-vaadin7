@@ -21,19 +21,12 @@ import java.util.stream.Stream;
 import com.holonplatform.core.property.Property;
 
 /**
- * Represent a source of {@link ValueComponent}s bound to a {@link Property}, i.e. a container of {@link ValueComponent}
- * and {@link Property} bindings.
+ * Represent a source of {@link ValueComponent}s bound to a {@link Property} set, i.e. a container of
+ * {@link ValueComponent} and {@link Property} bindings.
  *
  * @since 5.0.0
  */
-public interface PropertyValueComponentSource {
-
-	/**
-	 * Gets all the available properties.
-	 * @return An {@link Iterable} on the property set
-	 */
-	@SuppressWarnings("rawtypes")
-	Iterable<Property> getProperties();
+public interface PropertyValueComponentSource extends PropertySetBound {
 
 	/**
 	 * Gets all the {@link ValueComponent}s that have been bound to a property.
