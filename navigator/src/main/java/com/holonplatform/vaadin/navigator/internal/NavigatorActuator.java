@@ -318,11 +318,6 @@ public class NavigatorActuator<N extends Navigator & ViewNavigatorAdapter> imple
 	 */
 	protected void onViewWindowClose(final String navigationState, final View view,
 			final ViewConfiguration viewConfiguration, final Window window) {
-		// fire OnLeave
-		/*final DefaultViewNavigatorChangeEvent onLeaveEvent = new DefaultViewNavigatorChangeEvent(navigator, view, null, null, null,
-				window);
-		ViewNavigationUtils.fireViewOnLeave(view, viewConfiguration, onLeaveEvent);*/
-
 		if (navigateBackOnWindowClose) {
 			// navigate back
 			navigateBack();
