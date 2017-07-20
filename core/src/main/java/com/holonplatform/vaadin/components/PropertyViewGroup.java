@@ -122,6 +122,16 @@ public interface PropertyViewGroup extends PropertySetBound, ValueHolder<Propert
 		<P extends Property> B properties(Iterable<P> properties);
 
 		/**
+		 * Set the given property as hidden. If a property is hidden, the {@link ViewComponent} bound to the property
+		 * will never be generated, but its value will be written to a {@link PropertyBox} using
+		 * {@link PropertyViewGroup#getValue()}.
+		 * @param <T> Property type
+		 * @param property Property to set as hidden (not null)
+		 * @return this
+		 */
+		<T> B hidden(Property<T> property);
+
+		/**
 		 * Set a specific {@link PropertyRenderer} to use to render the {@link ViewComponent} to bind to given
 		 * <code>property</code>.
 		 * @param <T> Property type

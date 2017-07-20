@@ -48,6 +48,11 @@ public class DefaultPropertyViewGroup implements PropertyViewGroup, PropertyValu
 	private static final long serialVersionUID = -2110591918893531742L;
 
 	/**
+	 * Current value
+	 */
+	private PropertyBox value;
+
+	/**
 	 * Property set
 	 */
 	@SuppressWarnings("rawtypes")
@@ -66,10 +71,16 @@ public class DefaultPropertyViewGroup implements PropertyViewGroup, PropertyValu
 	private final Map<Property, ViewComponentPropertyRenderer> propertyRenderers = new HashMap<>(8);
 
 	/**
+	 * Hidden properties
+	 */
+	@SuppressWarnings("rawtypes")
+	private final Map<Property, Object> hiddenProperties = new HashMap<>();
+
+	/**
 	 * ViewComponent post-processors
 	 */
 	private final List<PostProcessor<ViewComponent<?>>> postProcessors = new LinkedList<>();
-	
+
 	/**
 	 * Value change listeners
 	 */
@@ -106,7 +117,7 @@ public class DefaultPropertyViewGroup implements PropertyViewGroup, PropertyValu
 	public Iterable<Property<?>> getProperties() {
 		return Collections.unmodifiableList(properties);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.PropertySetBound#hasProperty(com.holonplatform.core.property.Property)
@@ -206,14 +217,17 @@ public class DefaultPropertyViewGroup implements PropertyViewGroup, PropertyValu
 	@SuppressWarnings("unchecked")
 	@Override
 	public PropertyBox getValue() {
-		final PropertyBox value = PropertyBox.builder(properties).invalidAllowed(true).build();
-		properties.forEach(p -> {
-			value.setValue(p, propertyViews.get(p).getValue());
-		});
-		return value;
+		final PropertyBox propertyBox = PropertyBox.builder(properties).invalidAllowed(true).build();
+		if (value != null) {
+			properties.forEach(p -> {
+				value.getValueIfPresent(p).ifPresent(v -> propertyBox.setValue(p, v));
+			});
+		}
+		return propertyBox;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.ValueHolder#isEmpty()
 	 */
 	@Override
@@ -221,8 +235,10 @@ public class DefaultPropertyViewGroup implements PropertyViewGroup, PropertyValu
 		return getValue().propertyValues().filter(v -> v.hasValue()).findAny().isPresent();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.ValueHolder#addValueChangeListener(com.holonplatform.vaadin.components.ValueHolder.ValueChangeListener)
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.ValueHolder#addValueChangeListener(com.holonplatform.vaadin.components.
+	 * ValueHolder.ValueChangeListener)
 	 */
 	@Override
 	public Registration addValueChangeListener(ValueChangeListener<PropertyBox> listener) {
@@ -257,6 +273,7 @@ public class DefaultPropertyViewGroup implements PropertyViewGroup, PropertyValu
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void setValue(PropertyBox propertyBox) {
+		this.value = propertyBox;
 		if (propertyBox == null) {
 			// reset all values
 			properties.forEach(p -> propertyViews.get(p).clear());
@@ -279,7 +296,7 @@ public class DefaultPropertyViewGroup implements PropertyViewGroup, PropertyValu
 				}
 			});
 		}
-		
+
 		// fire value change
 		fireValueChange(propertyBox);
 	}
@@ -331,6 +348,22 @@ public class DefaultPropertyViewGroup implements PropertyViewGroup, PropertyValu
 	}
 
 	/**
+	 * Set a property as hidden in UI
+	 * @param property Property to set as hidden
+	 */
+	@SuppressWarnings("rawtypes")
+	public void setPropertyHidden(Property property) {
+		if (property != null && !hiddenProperties.containsKey(property)) {
+			hiddenProperties.put(property, null);
+		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	protected boolean isPropertyHidden(Property property) {
+		return property != null && hiddenProperties.containsKey(property);
+	}
+
+	/**
 	 * Set the {@link ViewComponentPropertyRenderer} to use with given property
 	 * @param <T> Property type
 	 * @param property Property
@@ -378,18 +411,21 @@ public class DefaultPropertyViewGroup implements PropertyViewGroup, PropertyValu
 		propertyViews.clear();
 		// render and bind ViewComponents
 		properties.forEach(p -> {
-			final Optional<ViewComponent> viewComponent = render(p);
-			if (!viewComponent.isPresent() && !isIgnoreMissingViewComponent()) {
-				throw new NoSuitableRendererAvailableException(
-						"No ViewComponent render available to render the property [" + p.toString()
-								+ "] as a ViewComponent");
+			// exclude hidden properties
+			if (!isPropertyHidden(p)) {
+				final Optional<ViewComponent> viewComponent = render(p);
+				if (!viewComponent.isPresent() && !isIgnoreMissingViewComponent()) {
+					throw new NoSuitableRendererAvailableException(
+							"No ViewComponent render available to render the property [" + p.toString()
+									+ "] as a ViewComponent");
+				}
+				viewComponent.ifPresent(v -> {
+					// configure
+					configureViewComponent(p, v);
+					// bind
+					propertyViews.put(p, v);
+				});
 			}
-			viewComponent.ifPresent(v -> {
-				// configure
-				configureViewComponent(p, v);
-				// bind
-				propertyViews.put(p, v);
-			});
 		});
 	}
 
@@ -481,6 +517,18 @@ public class DefaultPropertyViewGroup implements PropertyViewGroup, PropertyValu
 			for (P property : properties) {
 				instance.addProperty(property);
 			}
+			return builder();
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see com.holonplatform.vaadin.components.PropertyViewGroup.Builder#hidden(com.holonplatform.core.property.
+		 * Property)
+		 */
+		@Override
+		public <T> B hidden(Property<T> property) {
+			ObjectUtils.argumentNotNull(property, "Property must be not null");
+			instance.setPropertyHidden(property);
 			return builder();
 		}
 

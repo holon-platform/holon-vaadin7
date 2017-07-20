@@ -255,6 +255,17 @@ public class DefaultPropertyViewForm<C extends Component>
 			return this;
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * @see com.holonplatform.vaadin.components.PropertyViewGroup.Builder#hidden(com.holonplatform.core.property.
+		 * Property)
+		 */
+		@Override
+		public <T> PropertyViewFormBuilder<C> hidden(Property<T> property) {
+			viewGroupBuilder.hidden(property);
+			return this;
+		}
+
 		@Override
 		public <T, F extends T> PropertyViewFormBuilder<C> bind(Property<T> property,
 				PropertyRenderer<ViewComponent<F>, T> renderer) {

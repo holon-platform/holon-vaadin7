@@ -32,13 +32,11 @@ import com.holonplatform.vaadin.components.PropertyBinding.PostProcessor;
 import com.holonplatform.vaadin.internal.components.DefaultPropertyInputGroup;
 
 /**
- * A {@link InputGroup} to manage a group of {@link Input}s bound to a {@link Property} set.
+ * A {@link InputGroup} to manage a group of {@link Input}s bound to a {@link Property} set, loading and obtaining
+ * property values in and from {@link Input}s using the {@link PropertyBox} data container type.
  * <p>
  * Supports overall {@link Validator}s registration to validate all the {@link Input} values, allowing cross input
  * validation, using a {@link PropertyBox} to represent the inputs value set.
- * </p>
- * <p>
- * Fully supports {@link Input} values loading and flushing using {@link PropertyBox} instances.
  * </p>
  * <p>
  * By default, property {@link Input} components are obtained from the {@link PropertyRenderer}s registered in the
@@ -294,7 +292,7 @@ public interface PropertyInputGroup extends InputGroup, PropertySetBound, ValueH
 		/**
 		 * Set the given property as hidden. If a property is hidden, the {@link Input} bound to the property will never
 		 * be generated, but its value will be written to a {@link PropertyBox} using
-		 * {@link PropertyInputGroup#getValue()} or {@link PropertyInputGroup#flush(PropertyBox)}.
+		 * {@link PropertyInputGroup#getValue()}.
 		 * @param <T> Property type
 		 * @param property Property to set as hidden (not null)
 		 * @return this
