@@ -19,7 +19,6 @@ import com.holonplatform.core.Context;
 import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.i18n.LocalizationContext;
 import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Label;
@@ -99,12 +98,5 @@ public interface LabelBuilder extends ComponentBuilder<Label, LabelBuilder> {
 	 */
 	@SuppressWarnings("rawtypes")
 	LabelBuilder dataSource(Property dataSource);
-
-	/**
-	 * Add a {@link ValueChangeListener} to the Label.
-	 * @param listener The ValueChangeListener to add
-	 * @return this
-	 */
-	LabelBuilder withValueChangeListener(ValueChangeListener listener);
 
 }

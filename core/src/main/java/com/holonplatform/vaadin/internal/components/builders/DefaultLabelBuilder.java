@@ -19,7 +19,6 @@ import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.i18n.LocalizationContext;
 import com.holonplatform.vaadin.components.builders.LabelBuilder;
 import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Label;
@@ -143,17 +142,6 @@ public class DefaultLabelBuilder extends AbstractComponentBuilder<Label, Label, 
 	@Override
 	public LabelBuilder dataSource(Property dataSource) {
 		getInstance().setPropertyDataSource(dataSource);
-		return builder();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.LabelBuilder#withValueChangeListener(com.vaadin.data.Property.
-	 * ValueChangeListener)
-	 */
-	@Override
-	public LabelBuilder withValueChangeListener(ValueChangeListener listener) {
-		getInstance().addValueChangeListener(listener);
 		return builder();
 	}
 
