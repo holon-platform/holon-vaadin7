@@ -735,6 +735,7 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 		propertyInputs.clear();
 		// render and bind inputs
 		properties.forEach(p -> {
+			// exclude hidden properties
 			if (!isPropertyHidden(p)) {
 				final Optional<Input> input = render(p);
 				if (!input.isPresent() && !isIgnoreMissingInputs()) {
