@@ -16,6 +16,7 @@
 package com.holonplatform.vaadin.components;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import com.holonplatform.core.Validator;
 import com.holonplatform.core.Validator.Validatable;
@@ -56,8 +57,35 @@ import com.holonplatform.vaadin.internal.components.DefaultPropertyInputGroup;
  * 
  * @since 5.0.0
  */
-public interface PropertyInputGroup
-		extends InputGroup, PropertyInputSource, ValidatorSupport<PropertyBox>, Validatable<PropertyBox> {
+public interface PropertyInputGroup extends InputGroup, ValidatorSupport<PropertyBox>, Validatable<PropertyBox> {
+
+	/**
+	 * Gets all the available properties
+	 * @return An {@link Iterable} on this input group property set
+	 */
+	@SuppressWarnings("rawtypes")
+	Iterable<Property> getProperties();
+
+	/**
+	 * Gets all the {@link Input}s that have been bound to a property.
+	 * @return An {@link Iterable} on all bound {@link Input}s
+	 */
+	Iterable<Input<?>> getInputs();
+
+	/**
+	 * Get the {@link Input} bound to given <code>property</code>, if any.
+	 * @param <T> Property type
+	 * @param property Property for which to get the associated {@link Input} (not null)
+	 * @return Optional {@link Input} bound to given <code>property</code>
+	 */
+	<T> Optional<Input<T>> getInput(Property<T> property);
+
+	/**
+	 * Return a {@link Stream} of the properties and their bound {@link Input}s of this input group.
+	 * @param <T> Property type
+	 * @return Property-Input {@link PropertyBinding} stream
+	 */
+	<T> Stream<PropertyBinding<T, Input<T>>> stream();
 
 	/**
 	 * Adds a {@link Validator} to the given <code>property</code>.

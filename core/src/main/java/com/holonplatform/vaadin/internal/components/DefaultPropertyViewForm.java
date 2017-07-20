@@ -26,9 +26,9 @@ import com.holonplatform.core.property.PropertyBox;
 import com.holonplatform.core.property.PropertyRenderer;
 import com.holonplatform.vaadin.components.PropertyBinding;
 import com.holonplatform.vaadin.components.PropertyBinding.PostProcessor;
+import com.holonplatform.vaadin.components.PropertyValueComponentSource;
 import com.holonplatform.vaadin.components.PropertyViewForm;
 import com.holonplatform.vaadin.components.PropertyViewGroup;
-import com.holonplatform.vaadin.components.PropertyViewSource;
 import com.holonplatform.vaadin.components.ViewComponent;
 import com.holonplatform.vaadin.internal.components.builders.AbstractComponentBuilder;
 import com.vaadin.ui.Component;
@@ -40,7 +40,8 @@ import com.vaadin.ui.Component;
  *
  * @since 5.0.0
  */
-public class DefaultPropertyViewForm<C extends Component> extends AbstractComposableForm<C, PropertyViewSource>
+public class DefaultPropertyViewForm<C extends Component>
+		extends AbstractComposableForm<C, PropertyValueComponentSource>
 		implements PropertyViewForm, PostProcessor<ViewComponent<?>> {
 
 	private static final long serialVersionUID = -4202049108110710744L;
@@ -49,6 +50,11 @@ public class DefaultPropertyViewForm<C extends Component> extends AbstractCompos
 	 * Backing view group
 	 */
 	private PropertyViewGroup viewGroup;
+
+	/**
+	 * Value components source
+	 */
+	private PropertyValueComponentSource valueComponentSource;
 
 	/**
 	 * Constructor
@@ -71,16 +77,17 @@ public class DefaultPropertyViewForm<C extends Component> extends AbstractCompos
 	 * @see com.holonplatform.vaadin.internal.components.AbstractComposableForm#getComponentSource()
 	 */
 	@Override
-	protected PropertyViewSource getComponentSource() {
-		return getViewGroup();
+	protected PropertyValueComponentSource getComponentSource() {
+		return valueComponentSource;
 	}
 
 	/**
 	 * Sets the backing view group.
 	 * @param viewGroup the view group to set
 	 */
-	protected void setViewGroup(PropertyViewGroup viewGroup) {
+	protected <G extends PropertyViewGroup & PropertyValueComponentSource> void setViewGroup(G viewGroup) {
 		this.viewGroup = viewGroup;
+		this.valueComponentSource = viewGroup;
 	}
 
 	/**
@@ -176,7 +183,7 @@ public class DefaultPropertyViewForm<C extends Component> extends AbstractCompos
 			extends AbstractComponentBuilder<PropertyViewForm, DefaultPropertyViewForm<C>, PropertyViewFormBuilder<C>>
 			implements PropertyViewFormBuilder<C> {
 
-		private final PropertyViewGroup.PropertyViewGroupBuilder viewGroupBuilder;
+		private final DefaultPropertyViewGroup.InternalBuilder viewGroupBuilder;
 
 		/**
 		 * Constructor
@@ -184,7 +191,7 @@ public class DefaultPropertyViewForm<C extends Component> extends AbstractCompos
 		 */
 		public DefaultBuilder(C content) {
 			super(new DefaultPropertyViewForm<>(content));
-			this.viewGroupBuilder = PropertyViewGroup.builder();
+			this.viewGroupBuilder = new DefaultPropertyViewGroup.InternalBuilder();
 		}
 
 		@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -234,7 +241,7 @@ public class DefaultPropertyViewForm<C extends Component> extends AbstractCompos
 		}
 
 		@Override
-		public PropertyViewFormBuilder<C> composer(Composer<? super C, PropertyViewSource> composer) {
+		public PropertyViewFormBuilder<C> composer(Composer<? super C, PropertyValueComponentSource> composer) {
 			ObjectUtils.argumentNotNull(composer, "Composer must be not null");
 			getInstance().setComposer(composer);
 			return this;

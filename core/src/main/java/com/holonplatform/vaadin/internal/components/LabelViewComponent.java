@@ -18,6 +18,7 @@ package com.holonplatform.vaadin.internal.components;
 import com.holonplatform.core.presentation.StringValuePresenter;
 import com.holonplatform.vaadin.components.ViewComponent;
 import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 
 /**
@@ -71,6 +72,15 @@ public class LabelViewComponent<T> extends AbstractViewComponent<T> {
 
 		// default converter
 		stringConverter = (v) -> StringValuePresenter.getDefault().present(null, v, null);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.ValueComponent#getComponent()
+	 */
+	@Override
+	public Component getComponent() {
+		return this;
 	}
 
 	/**

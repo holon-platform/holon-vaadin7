@@ -32,7 +32,7 @@ import com.holonplatform.vaadin.components.PropertyBinding;
 import com.holonplatform.vaadin.components.PropertyBinding.PostProcessor;
 import com.holonplatform.vaadin.components.PropertyInputForm;
 import com.holonplatform.vaadin.components.PropertyInputGroup;
-import com.holonplatform.vaadin.components.PropertyInputSource;
+import com.holonplatform.vaadin.components.PropertyValueComponentSource;
 import com.holonplatform.vaadin.components.ValidationErrorHandler;
 import com.holonplatform.vaadin.internal.components.builders.AbstractComponentBuilder;
 import com.vaadin.ui.Component;
@@ -44,8 +44,8 @@ import com.vaadin.ui.Component;
  * 
  * @since 5.0.0
  */
-public class DefaultPropertyInputForm<C extends Component> extends AbstractComposableForm<C, PropertyInputSource>
-		implements PropertyInputForm, PostProcessor<Input<?>> {
+public class DefaultPropertyInputForm<C extends Component> extends
+		AbstractComposableForm<C, PropertyValueComponentSource> implements PropertyInputForm, PostProcessor<Input<?>> {
 
 	private static final long serialVersionUID = 6071630379695045884L;
 
@@ -53,6 +53,11 @@ public class DefaultPropertyInputForm<C extends Component> extends AbstractCompo
 	 * Backing input group
 	 */
 	private PropertyInputGroup inputGroup;
+
+	/**
+	 * Value components source
+	 */
+	private PropertyValueComponentSource valueComponentSource;
 
 	/**
 	 * Constructor
@@ -75,16 +80,17 @@ public class DefaultPropertyInputForm<C extends Component> extends AbstractCompo
 	 * @see com.holonplatform.vaadin.internal.components.AbstractComposableForm#getComponentSource()
 	 */
 	@Override
-	protected PropertyInputSource getComponentSource() {
-		return getInputGroup();
+	protected PropertyValueComponentSource getComponentSource() {
+		return valueComponentSource;
 	}
 
 	/**
 	 * Sets the backing input group
 	 * @param inputGroup the {@link PropertyInputGroup} to set
 	 */
-	protected void setInputGroup(PropertyInputGroup inputGroup) {
+	protected <G extends PropertyInputGroup & PropertyValueComponentSource> void setInputGroup(G inputGroup) {
 		this.inputGroup = inputGroup;
+		this.valueComponentSource = inputGroup;
 	}
 
 	/**
@@ -289,11 +295,11 @@ public class DefaultPropertyInputForm<C extends Component> extends AbstractCompo
 	 * Default {@link PropertyInputFormBuilder}.
 	 * @param <C> Content type
 	 */
-	public static class DefaultBuilder<C extends Component>
-			extends AbstractComponentBuilder<PropertyInputForm, DefaultPropertyInputForm<C>, PropertyInputFormBuilder<C>>
+	public static class DefaultBuilder<C extends Component> extends
+			AbstractComponentBuilder<PropertyInputForm, DefaultPropertyInputForm<C>, PropertyInputFormBuilder<C>>
 			implements PropertyInputFormBuilder<C> {
 
-		private final PropertyInputGroup.PropertyInputGroupBuilder inputGroupBuilder;
+		private final DefaultPropertyInputGroup.InternalBuilder inputGroupBuilder;
 
 		/**
 		 * Constructor
@@ -301,7 +307,7 @@ public class DefaultPropertyInputForm<C extends Component> extends AbstractCompo
 		 */
 		public DefaultBuilder(C content) {
 			super(new DefaultPropertyInputForm<>(content));
-			this.inputGroupBuilder = PropertyInputGroup.builder();
+			this.inputGroupBuilder = new DefaultPropertyInputGroup.InternalBuilder();
 		}
 
 		/*
@@ -425,7 +431,8 @@ public class DefaultPropertyInputForm<C extends Component> extends AbstractCompo
 		 * com.holonplatform.vaadin.components.PropertyInputGroup.Builder#stopOverallValidationAtFirstFailure(boolean)
 		 */
 		@Override
-		public PropertyInputFormBuilder<C> stopOverallValidationAtFirstFailure(boolean stopOverallValidationAtFirstFailure) {
+		public PropertyInputFormBuilder<C> stopOverallValidationAtFirstFailure(
+				boolean stopOverallValidationAtFirstFailure) {
 			inputGroupBuilder.stopOverallValidationAtFirstFailure(stopOverallValidationAtFirstFailure);
 			return this;
 		}
@@ -446,7 +453,8 @@ public class DefaultPropertyInputForm<C extends Component> extends AbstractCompo
 		 * holonframework.core.Validator.ValidationErrorHandler)
 		 */
 		@Override
-		public PropertyInputFormBuilder<C> defaultValidationErrorHandler(ValidationErrorHandler validationErrorHandler) {
+		public PropertyInputFormBuilder<C> defaultValidationErrorHandler(
+				ValidationErrorHandler validationErrorHandler) {
 			inputGroupBuilder.defaultValidationErrorHandler(validationErrorHandler);
 			return this;
 		}
@@ -492,7 +500,7 @@ public class DefaultPropertyInputForm<C extends Component> extends AbstractCompo
 		 * ComposableComponent.Composer)
 		 */
 		@Override
-		public PropertyInputFormBuilder<C> composer(Composer<? super C, PropertyInputSource> composer) {
+		public PropertyInputFormBuilder<C> composer(Composer<? super C, PropertyValueComponentSource> composer) {
 			ObjectUtils.argumentNotNull(composer, "Composer must be not null");
 			getInstance().setComposer(composer);
 			return this;
@@ -542,8 +550,8 @@ public class DefaultPropertyInputForm<C extends Component> extends AbstractCompo
 		 * .property.Property, java.lang.String, java.lang.String, java.lang.Object[])
 		 */
 		@Override
-		public PropertyInputFormBuilder<C> propertyCaption(Property<?> property, String defaultCaption, String messageCode,
-				Object... arguments) {
+		public PropertyInputFormBuilder<C> propertyCaption(Property<?> property, String defaultCaption,
+				String messageCode, Object... arguments) {
 			ObjectUtils.argumentNotNull(property, "Property must be not null");
 			getInstance().setPropertyCaption(property, Localizable.builder().message(defaultCaption)
 					.messageCode(messageCode).messageArguments(arguments).build());

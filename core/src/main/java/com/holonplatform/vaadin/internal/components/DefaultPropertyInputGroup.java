@@ -37,7 +37,9 @@ import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.PropertyBinding;
 import com.holonplatform.vaadin.components.PropertyBinding.PostProcessor;
 import com.holonplatform.vaadin.components.PropertyInputGroup;
+import com.holonplatform.vaadin.components.PropertyValueComponentSource;
 import com.holonplatform.vaadin.components.ValidationErrorHandler;
+import com.holonplatform.vaadin.components.ValueComponent;
 import com.vaadin.data.Validator.InvalidValueException;
 
 /**
@@ -45,7 +47,7 @@ import com.vaadin.data.Validator.InvalidValueException;
  *
  * @since 5.0.0
  */
-public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator {
+public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyValueComponentSource {
 
 	private static final long serialVersionUID = -5441417959315472240L;
 
@@ -143,7 +145,6 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 	 * Add a property to the property set
 	 * @param property Property to add
 	 */
-	@Override
 	@SuppressWarnings("rawtypes")
 	public void addProperty(Property property) {
 		if (property != null) {
@@ -219,6 +220,37 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> Stream<PropertyBinding<T, Input<T>>> stream() {
+		return propertyInputs.entrySet().stream().map(e -> PropertyBinding.create(e.getKey(), e.getValue()));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.PropertyValueComponentSource#getValueComponents()
+	 */
+	@Override
+	public Iterable<ValueComponent<?>> getValueComponents() {
+		return properties.stream().filter(p -> propertyInputs.containsKey(p)).map(p -> propertyInputs.get(p))
+				.collect(Collectors.toList());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.PropertyValueComponentSource#getValueComponent(com.holonplatform.core.
+	 * property.Property)
+	 */
+	@Override
+	public Optional<ValueComponent<?>> getValueComponent(Property<?> property) {
+		ObjectUtils.argumentNotNull(property, "Property must be not null");
+		return Optional.ofNullable(propertyInputs.get(property));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.PropertyValueComponentSource#streamOfValueComponents()
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> Stream<PropertyBinding<T, ValueComponent<T>>> streamOfValueComponents() {
 		return propertyInputs.entrySet().stream().map(e -> PropertyBinding.create(e.getKey(), e.getValue()));
 	}
 
@@ -451,9 +483,8 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 
 	/**
 	 * Set a property as read-only
-	 * @param property Property
+	 * @param property Property to set as read-only
 	 */
-	@Override
 	@SuppressWarnings("rawtypes")
 	public void setPropertyReadOnly(Property property) {
 		if (property != null && !readOnlyProperties.contains(property)) {
@@ -473,9 +504,8 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 
 	/**
 	 * Set a property as required
-	 * @param property Property
+	 * @param property Property to set as required
 	 */
-	@Override
 	@SuppressWarnings("rawtypes")
 	public void setPropertyRequired(Property property) {
 		if (property != null && !requiredProperties.contains(property)) {
@@ -483,14 +513,11 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.internal.components.PropertyInputGroupConfigurator#setPropertyHidden(com.holonplatform
-	 * .core.property.Property)
+	/**
+	 * Set a property as hidden in UI
+	 * @param property Property to set as hidden
 	 */
 	@SuppressWarnings("rawtypes")
-	@Override
 	public void setPropertyHidden(Property property) {
 		if (property != null && !hiddenProperties.containsKey(property)) {
 			hiddenProperties.put(property, null);
@@ -514,7 +541,6 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 	 * Set the default {@link ValidationErrorHandler} to use.
 	 * @param defaultValidationErrorHandler the default ValidationErrorHandler to set
 	 */
-	@Override
 	public void setDefaultValidationErrorHandler(ValidationErrorHandler defaultValidationErrorHandler) {
 		this.defaultValidationErrorHandler = defaultValidationErrorHandler;
 	}
@@ -527,12 +553,10 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 		return stopValidationAtFirstFailure;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.internal.components.PropertyInputGroupConfigurator#setStopValidationAtFirstFailure(
-	 * boolean)
+	/**
+	 * Set whether to stop validation at first validation failure.
+	 * @param stopValidationAtFirstFailure <code>true</code> to stop validation at first validation failure
 	 */
-	@Override
 	public void setStopValidationAtFirstFailure(boolean stopValidationAtFirstFailure) {
 		this.stopValidationAtFirstFailure = stopValidationAtFirstFailure;
 	}
@@ -550,7 +574,6 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 	 * @param stopOverallValidationAtFirstFailure <code>true</code> to stop overall validation at first validation
 	 *        failure
 	 */
-	@Override
 	public void setStopOverallValidationAtFirstFailure(boolean stopOverallValidationAtFirstFailure) {
 		this.stopOverallValidationAtFirstFailure = stopOverallValidationAtFirstFailure;
 	}
@@ -567,7 +590,6 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 	 * Set whether to ignore validation
 	 * @param ignoreValidation <code>true</code> to ignore validation
 	 */
-	@Override
 	public void setIgnoreValidation(boolean ignoreValidation) {
 		this.ignoreValidation = ignoreValidation;
 	}
@@ -580,16 +602,18 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 		return ignoreMissingInputs;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.internal.components.PropertyInputGroupConfigurator#setIgnoreMissingInputs(boolean)
+	/**
+	 * Set whether to ignore missing property inputs
+	 * @param ignoreMissingInputs <code>true</code> to ignore missing property inputs
 	 */
-	@Override
 	public void setIgnoreMissingInputs(boolean ignoreMissingInputs) {
 		this.ignoreMissingInputs = ignoreMissingInputs;
 	}
 
-	@Override
+	/**
+	 * Add an {@link Input} {@link PostProcessor}.
+	 * @param postProcessor the post-processor to add
+	 */
 	public void addInputPostProcessor(PostProcessor<Input<?>> postProcessor) {
 		ObjectUtils.argumentNotNull(postProcessor, "InputPostProcessor must be not null");
 		postProcessors.add(postProcessor);
@@ -601,7 +625,6 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 	 * @param property Property
 	 * @param validator Validator to add
 	 */
-	@Override
 	@SuppressWarnings("rawtypes")
 	public <T> void addPropertyValidator(Property<T> property, Validator<T> validator) {
 		ObjectUtils.argumentNotNull(property, "Property must be not null");
@@ -614,13 +637,12 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 		vs.add(validator);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.internal.components.PropertyInputGroupConfigurator#setPropertyRenderer(com.holonplatform
-	 * .core.property.Property, com.holonplatform.core.property.PropertyRenderer)
+	/**
+	 * Set the {@link PropertyRenderer} to use with given property to obtain the property {@link Input} component.
+	 * @param <T> Property type
+	 * @param property Property (not null)
+	 * @param renderer Renderer
 	 */
-	@Override
 	public <T, F extends T> void setPropertyRenderer(Property<T> property, PropertyRenderer<Input<F>, T> renderer) {
 		ObjectUtils.argumentNotNull(property, "Property must be not null");
 		if (renderer != null) {
@@ -633,7 +655,6 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 	/**
 	 * Build and bind {@link Input}s to the properties of the property set.
 	 */
-	@Override
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void build() {
 		propertyInputs.clear();
@@ -813,10 +834,33 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 	// Builder
 
 	/**
+	 * {@link PropertyInputGroup} builder.
+	 */
+	static class InternalBuilder
+			extends AbstractBuilder<DefaultPropertyInputGroup, DefaultPropertyInputGroup, InternalBuilder> {
+
+		public InternalBuilder() {
+			super(new DefaultPropertyInputGroup());
+		}
+
+		@Override
+		protected InternalBuilder builder() {
+			return this;
+		}
+
+		@Override
+		public DefaultPropertyInputGroup build() {
+			instance.build();
+			return instance;
+		}
+
+	}
+
+	/**
 	 * Default {@link PropertyInputGroupBuilder} implementation.
 	 */
 	public static class DefaultBuilder
-			extends AbstractBuilder<PropertyInputGroupConfigurator, PropertyInputGroup, PropertyInputGroupBuilder>
+			extends AbstractBuilder<DefaultPropertyInputGroup, PropertyInputGroup, PropertyInputGroupBuilder>
 			implements PropertyInputGroupBuilder {
 
 		public DefaultBuilder() {
@@ -841,7 +885,7 @@ public class DefaultPropertyInputGroup implements PropertyInputGroupConfigurator
 	 * @param <G> Actual {@link PropertyInputGroup} type
 	 * @param <B> Concrete builder type
 	 */
-	public abstract static class AbstractBuilder<C extends PropertyInputGroupConfigurator, G extends PropertyInputGroup, B extends Builder<G, B>>
+	public abstract static class AbstractBuilder<C extends DefaultPropertyInputGroup, G extends PropertyInputGroup, B extends Builder<G, B>>
 			implements Builder<G, B> {
 
 		/**

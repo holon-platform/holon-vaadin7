@@ -17,7 +17,9 @@ package com.holonplatform.vaadin.components;
 
 import java.util.function.Consumer;
 
+import com.holonplatform.vaadin.internal.components.DefaultComponentContainerComposer;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.ComponentContainer;
 
 /**
  * A {@link Component} which supports a {@link Composer} delegate to compose a set of components into its content
@@ -94,6 +96,26 @@ public interface ComposableComponent extends Component {
 		 */
 		B composeOnAttach(boolean composeOnAttach);
 
+	}
+
+	/**
+	 * Create a {@link Composer} which uses a {@link ComponentContainer} as composition layout and adds the property
+	 * components to layout in the order they are returned from the {@link PropertyValueComponentSource}.
+	 * @return A new {@link ComponentContainer} composer
+	 */
+	static Composer<ComponentContainer, PropertyValueComponentSource> componentContainerComposer() {
+		return componentContainerComposer(false);
+	}
+
+	/**
+	 * Create a {@link Composer} which uses a {@link ComponentContainer} as composition layout and adds the property
+	 * components to layout in the order they are returned from the {@link PropertyValueComponentSource}.
+	 * @param fullWidthComponents <code>true</code> to set the width of all composed components to <code>100%</code>
+	 * @return A new {@link ComponentContainer} composer
+	 */
+	static Composer<ComponentContainer, PropertyValueComponentSource> componentContainerComposer(
+			boolean fullWidthComponents) {
+		return new DefaultComponentContainerComposer(fullWidthComponents);
 	}
 
 }

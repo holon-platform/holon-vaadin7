@@ -20,44 +20,19 @@ import com.holonplatform.core.i18n.LocalizationContext;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.property.Property;
 import com.holonplatform.vaadin.components.builders.ComponentBuilder;
-import com.holonplatform.vaadin.internal.components.ComponentContainerInputComposer;
 import com.holonplatform.vaadin.internal.components.DefaultPropertyInputForm;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.ComponentContainer;
 
 /**
  * A {@link PropertyInputGroup} component to display the property {@link Input}s on a layout, using the
  * {@link ComposableComponent} composition strategy.
  * <p>
- * A {@link Composer} is used to draw the form UI, composing the {@link Input} components obtained from a
- * {@link PropertyInputSource} into the component setted as content.
+ * A {@link Composer} is used to draw the form UI.
  * </p>
  * 
  * @since 5.0.0
  */
 public interface PropertyInputForm extends ComposableComponent, PropertyInputGroup {
-
-	// Builders
-
-	/**
-	 * Create a {@link Composer} which uses a {@link ComponentContainer} as composition layout and adds the
-	 * {@link Input}s components to layout in the order they are returned from the {@link PropertyInputForm}.
-	 * @return A new {@link ComponentContainer} composer
-	 */
-	static Composer<ComponentContainer, PropertyInputSource> componentContainerComposer() {
-		return componentContainerComposer(false);
-	}
-
-	/**
-	 * Create a {@link Composer} which uses a {@link ComponentContainer} as composition layout and adds the
-	 * {@link Input}s components to layout in the order they are returned from the {@link PropertyInputForm}.
-	 * @param fullWidthInputs <code>true</code> to set the width of all composed {@link Input}s to <code>100%</code>
-	 *        before adding them to the layout
-	 * @return A new {@link ComponentContainer} composer
-	 */
-	static Composer<ComponentContainer, PropertyInputSource> componentContainerComposer(boolean fullWidthInputs) {
-		return new ComponentContainerInputComposer(fullWidthInputs);
-	}
 
 	/**
 	 * Get a builder to create a {@link PropertyInputForm}.
@@ -75,7 +50,7 @@ public interface PropertyInputForm extends ComposableComponent, PropertyInputGro
 	 * @param <C> Form content component type
 	 */
 	public interface PropertyInputFormBuilder<C extends Component>
-			extends ComposableComponent.Builder<PropertyInputSource, C, PropertyInputFormBuilder<C>>,
+			extends ComposableComponent.Builder<PropertyValueComponentSource, C, PropertyInputFormBuilder<C>>,
 			PropertyInputGroup.Builder<PropertyInputForm, PropertyInputFormBuilder<C>>,
 			ComponentBuilder<PropertyInputForm, PropertyInputFormBuilder<C>> {
 

@@ -16,6 +16,8 @@
 package com.holonplatform.vaadin.components;
 
 import java.io.Serializable;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.property.Property;
@@ -29,7 +31,35 @@ import com.holonplatform.vaadin.internal.components.DefaultPropertyViewGroup;
  * 
  * @since 5.0.0
  */
-public interface PropertyViewGroup extends PropertyViewSource, Serializable {
+public interface PropertyViewGroup extends Serializable {
+
+	/**
+	 * Gets all the available properties
+	 * @return An {@link Iterable} on this view group property set
+	 */
+	@SuppressWarnings("rawtypes")
+	Iterable<Property> getProperties();
+
+	/**
+	 * Gets all the {@link ViewComponent}s that have been bound to a property.
+	 * @return An {@link Iterable} on all bound ViewComponents
+	 */
+	Iterable<ViewComponent<?>> getViewComponents();
+
+	/**
+	 * Get the {@link ViewComponent} bound to given <code>property</code>, if any.
+	 * @param <T> Property type
+	 * @param property Property (not null)
+	 * @return Optional {@link ViewComponent} bound to given <code>property</code>
+	 */
+	<T> Optional<ViewComponent<T>> getViewComponent(Property<T> property);
+
+	/**
+	 * Return a {@link Stream} of the properties and their bound {@link ViewComponent}s of this view group.
+	 * @param <T> Property type
+	 * @return Property-ViewComponent {@link PropertyBinding} stream
+	 */
+	<T> Stream<PropertyBinding<T, ViewComponent<T>>> stream();
 
 	/**
 	 * Clear all the {@link ViewComponent}s.

@@ -40,7 +40,7 @@ import com.vaadin.ui.Field;
  * 
  * @since 5.0.0
  */
-public interface Input<V> extends ValueHolder<V>, ValidatorSupport<V>, ValidatableValue {
+public interface Input<V> extends ValueHolder<V>, ValueComponent<V>, ValidatorSupport<V>, ValidatableValue {
 
 	/**
 	 * Sets the read-only mode of this input component. The user can't change the value when in read-only mode.
@@ -74,12 +74,6 @@ public interface Input<V> extends ValueHolder<V>, ValidatorSupport<V>, Validatab
 	 * Sets the focus for this input component, if supported by concrete component implementation.
 	 */
 	void focus();
-
-	/**
-	 * Get the UI {@link Component} which represents this input component.
-	 * @return the input UI component
-	 */
-	Component getComponent();
 
 	/**
 	 * Create a {@link Input} component type from given {@link Field} instance.

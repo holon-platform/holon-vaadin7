@@ -15,13 +15,13 @@
  */
 package com.holonplatform.vaadin.internal.components;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.holonplatform.core.internal.utils.ObjectUtils;
@@ -32,7 +32,9 @@ import com.holonplatform.core.property.PropertyRendererRegistry.NoSuitableRender
 import com.holonplatform.core.property.VirtualProperty;
 import com.holonplatform.vaadin.components.PropertyBinding;
 import com.holonplatform.vaadin.components.PropertyBinding.PostProcessor;
+import com.holonplatform.vaadin.components.PropertyValueComponentSource;
 import com.holonplatform.vaadin.components.PropertyViewGroup;
+import com.holonplatform.vaadin.components.ValueComponent;
 import com.holonplatform.vaadin.components.ViewComponent;
 
 /**
@@ -40,7 +42,7 @@ import com.holonplatform.vaadin.components.ViewComponent;
  *
  * @since 5.0.0
  */
-public class DefaultPropertyViewGroup implements PropertyViewGroup {
+public class DefaultPropertyViewGroup implements PropertyViewGroup, PropertyValueComponentSource {
 
 	private static final long serialVersionUID = -2110591918893531742L;
 
@@ -106,9 +108,8 @@ public class DefaultPropertyViewGroup implements PropertyViewGroup {
 	 */
 	@Override
 	public Iterable<ViewComponent<?>> getViewComponents() {
-		final List<ViewComponent<?>> vs = new ArrayList<>(propertyViews.size());
-		properties.forEach(p -> vs.add(propertyViews.get(p)));
-		return vs;
+		return properties.stream().filter(p -> propertyViews.containsKey(p)).map(p -> propertyViews.get(p))
+				.collect(Collectors.toList());
 	}
 
 	/*
@@ -130,6 +131,37 @@ public class DefaultPropertyViewGroup implements PropertyViewGroup {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> Stream<PropertyBinding<T, ViewComponent<T>>> stream() {
+		return propertyViews.entrySet().stream().map(e -> PropertyBinding.create(e.getKey(), e.getValue()));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.PropertyValueComponentSource#getValueComponents()
+	 */
+	@Override
+	public Iterable<ValueComponent<?>> getValueComponents() {
+		return properties.stream().filter(p -> propertyViews.containsKey(p)).map(p -> propertyViews.get(p))
+				.collect(Collectors.toList());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.PropertyValueComponentSource#getValueComponent(com.holonplatform.core.
+	 * property.Property)
+	 */
+	@Override
+	public Optional<ValueComponent<?>> getValueComponent(Property<?> property) {
+		ObjectUtils.argumentNotNull(property, "Property must be not null");
+		return Optional.ofNullable(propertyViews.get(property));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.PropertyValueComponentSource#streamOfValueComponents()
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> Stream<PropertyBinding<T, ValueComponent<T>>> streamOfValueComponents() {
 		return propertyViews.entrySet().stream().map(e -> PropertyBinding.create(e.getKey(), e.getValue()));
 	}
 
@@ -297,86 +329,38 @@ public class DefaultPropertyViewGroup implements PropertyViewGroup {
 
 	// Builder
 
-	public static class DefaultBuilder implements PropertyViewGroupBuilder {
-
-		private final DefaultPropertyViewGroup instance = new DefaultPropertyViewGroup();
+	static class InternalBuilder extends AbstractBuilder<DefaultPropertyViewGroup, InternalBuilder> {
 
 		/*
 		 * (non-Javadoc)
-		 * @see
-		 * com.holonplatform.vaadin.components.PropertyViewGroup.Builder#properties(com.holonplatform.core.property.
-		 * Property[])
+		 * @see com.holonplatform.vaadin.internal.components.DefaultPropertyViewGroup.AbstractBuilder#builder()
 		 */
-		@SuppressWarnings({ "rawtypes", "unchecked" })
 		@Override
-		public <P extends Property> PropertyViewGroupBuilder properties(P... properties) {
-			if (properties != null) {
-				for (P property : properties) {
-					instance.addProperty(property);
-				}
-			}
+		protected InternalBuilder builder() {
 			return this;
 		}
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyViewGroup.Builder#properties(java.lang.Iterable)
+		 * @see com.holonplatform.vaadin.components.PropertyViewGroup.Builder#build()
 		 */
-		@SuppressWarnings("rawtypes")
 		@Override
-		public <P extends Property> PropertyViewGroupBuilder properties(Iterable<P> properties) {
-			ObjectUtils.argumentNotNull(properties, "Properties must be not null");
-			for (P property : properties) {
-				instance.addProperty(property);
-			}
-			return this;
+		public DefaultPropertyViewGroup build() {
+			instance.build();
+			return instance;
 		}
+
+	}
+
+	public static class DefaultBuilder extends AbstractBuilder<PropertyViewGroup, PropertyViewGroupBuilder>
+			implements PropertyViewGroupBuilder {
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyViewGroup.Builder#bind(com.holonplatform.core.property.
-		 * Property, com.holonplatform.core.property.PropertyRenderer)
+		 * @see com.holonplatform.vaadin.internal.components.DefaultPropertyViewGroup.AbstractBuilder#builder()
 		 */
 		@Override
-		public <T, F extends T> PropertyViewGroupBuilder bind(Property<T> property,
-				PropertyRenderer<ViewComponent<F>, T> renderer) {
-			ObjectUtils.argumentNotNull(renderer, "PropertyRenderer must be not null");
-			return bind(property, p -> renderer.render(p));
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyViewGroup.Builder#bind(com.holonplatform.core.property.
-		 * Property, com.holonplatform.vaadin.components.PropertyViewGroup.ViewComponentPropertyRenderer)
-		 */
-		@Override
-		public <T> PropertyViewGroupBuilder bind(Property<T> property, ViewComponentPropertyRenderer<T> renderer) {
-			ObjectUtils.argumentNotNull(property, "Property must be not null");
-			ObjectUtils.argumentNotNull(renderer, "PropertyRenderer must be not null");
-			instance.setPropertyRenderer(property, renderer);
-			return this;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see
-		 * com.holonplatform.vaadin.components.PropertyViewGroup.Builder#withPostProcessor(com.holonplatform.vaadin.
-		 * components.PropertyBinding.PostProcessor)
-		 */
-		@Override
-		public PropertyViewGroupBuilder withPostProcessor(PostProcessor<ViewComponent<?>> postProcessor) {
-			ObjectUtils.argumentNotNull(postProcessor, "PostProcessor must be not null");
-			instance.addViewComponentPostProcessor(postProcessor);
-			return this;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyViewGroup.Builder#ignoreMissingViewComponents(boolean)
-		 */
-		@Override
-		public PropertyViewGroupBuilder ignoreMissingViewComponents(boolean ignoreMissingViewComponents) {
-			instance.setIgnoreMissingViewComponent(ignoreMissingViewComponents);
+		protected PropertyViewGroupBuilder builder() {
 			return this;
 		}
 
@@ -388,6 +372,97 @@ public class DefaultPropertyViewGroup implements PropertyViewGroup {
 		public PropertyViewGroup build() {
 			instance.build();
 			return instance;
+		}
+
+	}
+
+	public static abstract class AbstractBuilder<G extends PropertyViewGroup, B extends Builder<G, B>>
+			implements Builder<G, B> {
+
+		protected final DefaultPropertyViewGroup instance = new DefaultPropertyViewGroup();
+
+		/**
+		 * Actual builder
+		 * @return Builder
+		 */
+		protected abstract B builder();
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * com.holonplatform.vaadin.components.PropertyViewGroup.Builder#properties(com.holonplatform.core.property.
+		 * Property[])
+		 */
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		@Override
+		public <P extends Property> B properties(P... properties) {
+			if (properties != null) {
+				for (P property : properties) {
+					instance.addProperty(property);
+				}
+			}
+			return builder();
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see com.holonplatform.vaadin.components.PropertyViewGroup.Builder#properties(java.lang.Iterable)
+		 */
+		@SuppressWarnings("rawtypes")
+		@Override
+		public <P extends Property> B properties(Iterable<P> properties) {
+			ObjectUtils.argumentNotNull(properties, "Properties must be not null");
+			for (P property : properties) {
+				instance.addProperty(property);
+			}
+			return builder();
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see com.holonplatform.vaadin.components.PropertyViewGroup.Builder#bind(com.holonplatform.core.property.
+		 * Property, com.holonplatform.core.property.PropertyRenderer)
+		 */
+		@Override
+		public <T, F extends T> B bind(Property<T> property, PropertyRenderer<ViewComponent<F>, T> renderer) {
+			ObjectUtils.argumentNotNull(renderer, "PropertyRenderer must be not null");
+			return bind(property, p -> renderer.render(p));
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see com.holonplatform.vaadin.components.PropertyViewGroup.Builder#bind(com.holonplatform.core.property.
+		 * Property, com.holonplatform.vaadin.components.PropertyViewGroup.ViewComponentPropertyRenderer)
+		 */
+		@Override
+		public <T> B bind(Property<T> property, ViewComponentPropertyRenderer<T> renderer) {
+			ObjectUtils.argumentNotNull(property, "Property must be not null");
+			ObjectUtils.argumentNotNull(renderer, "PropertyRenderer must be not null");
+			instance.setPropertyRenderer(property, renderer);
+			return builder();
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * com.holonplatform.vaadin.components.PropertyViewGroup.Builder#withPostProcessor(com.holonplatform.vaadin.
+		 * components.PropertyBinding.PostProcessor)
+		 */
+		@Override
+		public B withPostProcessor(PostProcessor<ViewComponent<?>> postProcessor) {
+			ObjectUtils.argumentNotNull(postProcessor, "PostProcessor must be not null");
+			instance.addViewComponentPostProcessor(postProcessor);
+			return builder();
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see com.holonplatform.vaadin.components.PropertyViewGroup.Builder#ignoreMissingViewComponents(boolean)
+		 */
+		@Override
+		public B ignoreMissingViewComponents(boolean ignoreMissingViewComponents) {
+			instance.setIgnoreMissingViewComponent(ignoreMissingViewComponents);
+			return builder();
 		}
 
 	}

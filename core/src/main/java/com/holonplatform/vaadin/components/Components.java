@@ -539,7 +539,7 @@ public interface Components {
 		 */
 		static PropertyInputFormBuilder<FormLayout> form() {
 			return PropertyInputForm.builder(formLayout().fullWidth().build())
-					.composer(PropertyInputForm.componentContainerComposer());
+					.composer(ComposableComponent.componentContainerComposer());
 		}
 
 		/**
@@ -549,7 +549,7 @@ public interface Components {
 		 */
 		static PropertyInputFormBuilder<VerticalLayout> formVertical() {
 			return PropertyInputForm.builder(vl().fullWidth().build())
-					.composer(PropertyInputForm.componentContainerComposer());
+					.composer(ComposableComponent.componentContainerComposer());
 		}
 
 		/**
@@ -559,7 +559,7 @@ public interface Components {
 		 */
 		static PropertyInputFormBuilder<HorizontalLayout> formHorizontal() {
 			return PropertyInputForm.builder(hl().build())
-					.composer(PropertyInputForm.componentContainerComposer(false));
+					.composer(ComposableComponent.componentContainerComposer(false));
 		}
 
 		/**
@@ -569,7 +569,7 @@ public interface Components {
 		 */
 		static PropertyInputFormBuilder<GridLayout> formGrid() {
 			return PropertyInputForm.builder(gridLayout().fullWidth().build())
-					.composer(PropertyInputForm.componentContainerComposer());
+					.composer(ComposableComponent.componentContainerComposer());
 		}
 
 	}
@@ -616,7 +616,7 @@ public interface Components {
 		 */
 		static PropertyViewFormBuilder<FormLayout> form() {
 			return PropertyViewForm.builder(formLayout().fullWidth().build())
-					.composer(PropertyViewForm.componentContainerComposer());
+					.composer(ComposableComponent.componentContainerComposer());
 		}
 
 		/**
@@ -626,7 +626,7 @@ public interface Components {
 		 */
 		static PropertyViewFormBuilder<VerticalLayout> formVertical() {
 			return PropertyViewForm.builder(vl().fullWidth().build())
-					.composer(PropertyViewForm.componentContainerComposer());
+					.composer(ComposableComponent.componentContainerComposer());
 		}
 
 		/**
@@ -635,7 +635,8 @@ public interface Components {
 		 * @return {@link PropertyViewForm} builder
 		 */
 		static PropertyViewFormBuilder<HorizontalLayout> formHorizontal() {
-			return PropertyViewForm.builder(hl().build()).composer(PropertyViewForm.componentContainerComposer(false));
+			return PropertyViewForm.builder(hl().build())
+					.composer(ComposableComponent.componentContainerComposer(false));
 		}
 
 		/**
@@ -645,7 +646,7 @@ public interface Components {
 		 */
 		static PropertyViewFormBuilder<GridLayout> formGrid() {
 			return PropertyViewForm.builder(gridLayout().fullWidth().build())
-					.composer(PropertyViewForm.componentContainerComposer());
+					.composer(ComposableComponent.componentContainerComposer());
 		}
 
 	}
