@@ -314,12 +314,14 @@ public class NavigatorActuator<N extends Navigator & ViewNavigatorAdapter> imple
 	 * @param navigationState Navigation state
 	 * @param view Displayed view
 	 * @param viewConfiguration View configuration
+	 * @param window view window
 	 */
 	protected void onViewWindowClose(final String navigationState, final View view,
-			final ViewConfiguration viewConfiguration) {
+			final ViewConfiguration viewConfiguration, final Window window) {
 		// fire OnLeave
-		final ViewChangeEvent onLeaveEvent = new ViewChangeEvent(navigator, view, null, null, null);
-		ViewNavigationUtils.fireViewOnLeave(view, viewConfiguration, onLeaveEvent);
+		/*final DefaultViewNavigatorChangeEvent onLeaveEvent = new DefaultViewNavigatorChangeEvent(navigator, view, null, null, null,
+				window);
+		ViewNavigationUtils.fireViewOnLeave(view, viewConfiguration, onLeaveEvent);*/
 
 		if (navigateBackOnWindowClose) {
 			// navigate back
@@ -417,13 +419,13 @@ public class NavigatorActuator<N extends Navigator & ViewNavigatorAdapter> imple
 				boolean accepted = ((SubViewContainer) parent).display(view, viewName, parsedParameters);
 				// if accepted, fire lifecycle methods
 				if (accepted) {
+					DefaultViewNavigatorChangeEvent evt = new DefaultViewNavigatorChangeEvent(navigator, oldView, view, viewName,
+							parameters, getViewWindow(buildNavigationState(viewName, parameters)));
 					// onLeave on old view
 					if (oldView != null) {
-						ViewNavigationUtils.fireViewOnLeave(oldView, viewConfiguration,
-								new ViewChangeEvent(navigator, oldView, view, viewName, parameters));
+						ViewNavigationUtils.fireViewOnLeave(oldView, viewConfiguration, evt);
 					}
 					// enter and onShow on new view
-					ViewChangeEvent evt = new ViewChangeEvent(navigator, oldView, view, viewName, parameters);
 					view.enter(evt);
 					ViewNavigationUtils.fireViewOnShow(view, viewConfiguration, evt, false);
 				}
@@ -559,15 +561,16 @@ public class NavigatorActuator<N extends Navigator & ViewNavigatorAdapter> imple
 		this.currentViewName = event.getViewName();
 
 		// navigation state
-		String navigationState = buildNavigationState(event.getViewName(), event.getParameters());
+		final String navigationState = buildNavigationState(event.getViewName(), event.getParameters());
 
 		// fire OnLeave on old view
 		if (!viewWindows.containsKey(navigationState)) {
-			// avoid to fire OnLeave listeners when the old view was displayed in window
+			// avoid to fire OnLeave listeners when the view was displayed in window
 			if (event.getOldView() != null && !SharedUtil.equals(event.getOldView(), event.getNewView())) {
 				ViewConfiguration configuration = getViewConfiguration(event.getOldView().getClass());
 				if (configuration != null) {
-					ViewNavigationUtils.fireViewOnLeave(event.getOldView(), configuration, event);
+					ViewNavigationUtils.fireViewOnLeave(event.getOldView(), configuration,
+							DefaultViewNavigatorChangeEvent.create(event, navigator, null));
 				} else {
 					LOGGER.warn("Failed to obtain ViewConfiguration for view class " + event.getOldView().getClass()
 							+ ": OnLeave methods firing skipped");
@@ -588,7 +591,8 @@ public class NavigatorActuator<N extends Navigator & ViewNavigatorAdapter> imple
 			// fire OnShow methods declared to be fired at refresh
 			if (configuration != null && SharedUtil.equals(event.getOldView(), event.getNewView())) {
 				// is a refresh
-				ViewNavigationUtils.fireViewOnShow(event.getNewView(), configuration, event, true);
+				ViewNavigationUtils.fireViewOnShow(event.getNewView(), configuration,
+						DefaultViewNavigatorChangeEvent.create(event, navigator, getViewWindow(navigationState)), true);
 			}
 		}
 	}
@@ -598,7 +602,10 @@ public class NavigatorActuator<N extends Navigator & ViewNavigatorAdapter> imple
 		if (event.getNewView() != null) {
 			ViewConfiguration configuration = getViewConfiguration(event.getNewView().getClass());
 			if (configuration != null) {
-				ViewNavigationUtils.fireViewOnShow(event.getNewView(), configuration, event, false);
+				ViewNavigationUtils.fireViewOnShow(event.getNewView(), configuration,
+						DefaultViewNavigatorChangeEvent.create(event, navigator,
+								getViewWindow(buildNavigationState(event.getViewName(), event.getParameters()))),
+						false);
 			} else {
 				LOGGER.warn("Failed to obtain ViewConfiguration for view class " + event.getOldView().getClass()
 						+ ": OnShow methods firing skipped");
@@ -963,7 +970,7 @@ public class NavigatorActuator<N extends Navigator & ViewNavigatorAdapter> imple
 
 			@Override
 			public void windowClose(CloseEvent e) {
-				onViewWindowClose(navigationState, view, viewConfiguration);
+				onViewWindowClose(navigationState, view, viewConfiguration, e.getWindow());
 			}
 		});
 
@@ -1011,6 +1018,19 @@ public class NavigatorActuator<N extends Navigator & ViewNavigatorAdapter> imple
 		wnd.addStyleName(ViewWindowConfiguration.DEFAULT_WINDOW_STYLE_NAME);
 
 		return wnd;
+	}
+
+	/**
+	 * Get the view navigation window associated to given state, if present.
+	 * @param navigationState Navigation state
+	 * @return view navigation window, <code>null</code> if not present
+	 */
+	protected Window getViewWindow(String navigationState) {
+		WeakReference<Window> wr = viewWindows.get(navigationState);
+		if (wr != null) {
+			return wr.get();
+		}
+		return null;
 	}
 
 	/**

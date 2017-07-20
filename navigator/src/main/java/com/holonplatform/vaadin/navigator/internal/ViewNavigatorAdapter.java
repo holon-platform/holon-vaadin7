@@ -19,7 +19,6 @@ import com.holonplatform.vaadin.navigator.ViewNavigator;
 import com.holonplatform.vaadin.navigator.internal.ViewConfiguration.ViewConfigurationProvider;
 import com.vaadin.navigator.NavigationStateManager;
 import com.vaadin.navigator.View;
-import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.navigator.ViewDisplay;
 import com.vaadin.ui.UI;
 
@@ -34,7 +33,7 @@ public interface ViewNavigatorAdapter extends ViewNavigator, ViewConfigurationPr
 	 * Update current navigation state relying in given View change event
 	 * @param event View change event
 	 */
-	void updateCurrentNavigationState(ViewChangeEvent event);
+	void updateCurrentNavigationState(com.vaadin.navigator.ViewChangeListener.ViewChangeEvent event);
 
 	/**
 	 * Navigate to given state

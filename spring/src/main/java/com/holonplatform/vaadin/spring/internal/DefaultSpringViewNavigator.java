@@ -37,7 +37,6 @@ import com.holonplatform.vaadin.spring.ErrorView;
 import com.holonplatform.vaadin.spring.SpringViewNavigator;
 import com.vaadin.navigator.NavigationStateManager;
 import com.vaadin.navigator.View;
-import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.navigator.ViewDisplay;
 import com.vaadin.navigator.ViewProvider;
 import com.vaadin.spring.annotation.SpringView;
@@ -203,7 +202,7 @@ public class DefaultSpringViewNavigator extends SpringNavigator implements ViewN
 	 * navigator.ViewChangeListener.ViewChangeEvent)
 	 */
 	@Override
-	public void updateCurrentNavigationState(ViewChangeEvent event) {
+	public void updateCurrentNavigationState(com.vaadin.navigator.ViewChangeListener.ViewChangeEvent event) {
 		super.updateNavigationState(event);
 	}
 
@@ -271,7 +270,7 @@ public class DefaultSpringViewNavigator extends SpringNavigator implements ViewN
 	 * com.vaadin.navigator.Navigator#updateNavigationState(com.vaadin.navigator.ViewChangeListener.ViewChangeEvent)
 	 */
 	@Override
-	protected void updateNavigationState(ViewChangeEvent event) {
+	protected void updateNavigationState(com.vaadin.navigator.ViewChangeListener.ViewChangeEvent event) {
 		super.updateNavigationState(event);
 		actuator.postUpdateNavigationState(event);
 	}
@@ -281,7 +280,7 @@ public class DefaultSpringViewNavigator extends SpringNavigator implements ViewN
 	 * @see com.vaadin.navigator.Navigator#fireAfterViewChange(com.vaadin.navigator.ViewChangeListener.ViewChangeEvent)
 	 */
 	@Override
-	protected void fireAfterViewChange(ViewChangeEvent event) {
+	protected void fireAfterViewChange(com.vaadin.navigator.ViewChangeListener.ViewChangeEvent event) {
 		actuator.preAfterViewChange(event);
 		super.fireAfterViewChange(event);
 	}

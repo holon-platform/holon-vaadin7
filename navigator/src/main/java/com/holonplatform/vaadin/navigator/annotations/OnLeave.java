@@ -22,6 +22,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.holonplatform.vaadin.navigator.ViewNavigator.ViewNavigatorChangeEvent;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 
@@ -30,8 +31,8 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
  * the view is about to be deactivated (i.e. a navigation to another view was triggered).
  * 
  * <p>
- * Annotated methods may provide an optional parameter of {@link ViewChangeEvent} type to obtain informations about view
- * navigation.
+ * Annotated methods may provide an optional parameter of {@link ViewNavigatorChangeEvent} or default
+ * {@link ViewChangeEvent} type to obtain informations about view navigation.
  * </p>
  * 
  * If more than one OnLeave annotated method in present in view actual class or in it's class hierarchy, all these

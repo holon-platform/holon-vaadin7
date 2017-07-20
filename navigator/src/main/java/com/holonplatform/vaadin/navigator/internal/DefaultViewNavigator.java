@@ -22,7 +22,6 @@ import com.holonplatform.vaadin.navigator.internal.ViewConfiguration.ViewWindowC
 import com.vaadin.navigator.NavigationStateManager;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
-import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.navigator.ViewDisplay;
 import com.vaadin.navigator.ViewProvider;
 import com.vaadin.server.Page;
@@ -142,7 +141,7 @@ public class DefaultViewNavigator extends Navigator implements ViewNavigatorAdap
 	 * navigator.ViewChangeListener.ViewChangeEvent)
 	 */
 	@Override
-	public void updateCurrentNavigationState(ViewChangeEvent event) {
+	public void updateCurrentNavigationState(com.vaadin.navigator.ViewChangeListener.ViewChangeEvent event) {
 		super.updateNavigationState(event);
 	}
 
@@ -210,7 +209,7 @@ public class DefaultViewNavigator extends Navigator implements ViewNavigatorAdap
 	 * com.vaadin.navigator.Navigator#updateNavigationState(com.vaadin.navigator.ViewChangeListener.ViewChangeEvent)
 	 */
 	@Override
-	protected void updateNavigationState(ViewChangeEvent event) {
+	protected void updateNavigationState(com.vaadin.navigator.ViewChangeListener.ViewChangeEvent event) {
 		super.updateNavigationState(event);
 		actuator.postUpdateNavigationState(event);
 	}
@@ -220,7 +219,7 @@ public class DefaultViewNavigator extends Navigator implements ViewNavigatorAdap
 	 * @see com.vaadin.navigator.Navigator#fireAfterViewChange(com.vaadin.navigator.ViewChangeListener.ViewChangeEvent)
 	 */
 	@Override
-	protected void fireAfterViewChange(ViewChangeEvent event) {
+	protected void fireAfterViewChange(com.vaadin.navigator.ViewChangeListener.ViewChangeEvent event) {
 		actuator.preAfterViewChange(event);
 		super.fireAfterViewChange(event);
 	}

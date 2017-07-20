@@ -33,17 +33,17 @@ import com.holonplatform.vaadin.navigator.annotations.SubViewOf;
 import com.holonplatform.vaadin.navigator.annotations.ViewParameter;
 import com.holonplatform.vaadin.navigator.internal.DefaultNavigationBuilder;
 import com.holonplatform.vaadin.navigator.internal.DefaultViewNavigator;
+import com.holonplatform.vaadin.navigator.internal.ViewConfiguration.ViewWindowConfiguration;
 import com.holonplatform.vaadin.navigator.internal.ViewDisplayUtils;
 import com.holonplatform.vaadin.navigator.internal.ViewNavigationUtils;
-import com.holonplatform.vaadin.navigator.internal.ViewConfiguration.ViewWindowConfiguration;
 import com.vaadin.navigator.NavigationStateManager;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.server.VaadinRequest;
 import com.vaadin.navigator.ViewDisplay;
 import com.vaadin.navigator.ViewProvider;
+import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.SingleComponentContainer;
@@ -81,9 +81,9 @@ import com.vaadin.ui.Window;
  * <p>
  * View display lifecycle can be intercepted by the view instance itself, using {@link OnShow} and {@link OnLeave}
  * annotated methods. This methods must be <code>public</code> and provide zero or only one parameter of
- * {@link ViewChangeEvent} type. The {@link OnShow} annotated method will be called when the View is displayed in
- * application interface, the {@link OnLeave} annotated methods will be called when the View is about to be deactivated
- * to be replaced by another view in the navigation flow.
+ * {@link ViewNavigatorChangeEvent} or default {@link ViewChangeEvent} type. The {@link OnShow} annotated method will be
+ * called when the View is displayed in application interface, the {@link OnLeave} annotated methods will be called when
+ * the View is about to be deactivated to be replaced by another view in the navigation flow.
  * </p>
  * 
  * <p>
@@ -269,6 +269,52 @@ public interface ViewNavigator extends Serializable {
 	 */
 	static Component getViewContent(View view) {
 		return ViewDisplayUtils.getViewContent(view);
+	}
+
+	// Events
+
+	/**
+	 * View change event.
+	 */
+	public interface ViewNavigatorChangeEvent extends Serializable {
+
+		/**
+		 * Returns the navigator that triggered this event.
+		 * @return the {@link ViewNavigator} (not null)
+		 */
+		ViewNavigator getViewNavigator();
+
+		/**
+		 * Returns the view being deactivated.
+		 * @return the old View (may be null)
+		 */
+		View getOldView();
+
+		/**
+		 * Returns the view being activated.
+		 * @return the new View (not null)
+		 */
+		View getNewView();
+
+		/**
+		 * Returns the view name of the view being activated.
+		 * @return view name of the new View (not null)
+		 */
+		String getViewName();
+
+		/**
+		 * Returns the parameters for the view being activated.
+		 * @return the navigation parameters for the new view (may be null)
+		 */
+		String getParameters();
+
+		/**
+		 * If the navigation to the view being activated is requested in window, returns the {@link Window} into which
+		 * the view is displayed.
+		 * @return Optional view container window
+		 */
+		Optional<Window> getWindow();
+
 	}
 
 	// Builder

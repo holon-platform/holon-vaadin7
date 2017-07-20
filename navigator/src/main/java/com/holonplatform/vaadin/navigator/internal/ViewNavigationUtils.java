@@ -63,6 +63,7 @@ import com.holonplatform.vaadin.internal.VaadinLogger;
 import com.holonplatform.vaadin.navigator.SubViewContainer;
 import com.holonplatform.vaadin.navigator.ViewContentProvider;
 import com.holonplatform.vaadin.navigator.ViewNavigator;
+import com.holonplatform.vaadin.navigator.ViewNavigator.ViewNavigatorChangeEvent;
 import com.holonplatform.vaadin.navigator.annotations.OnLeave;
 import com.holonplatform.vaadin.navigator.annotations.OnShow;
 import com.holonplatform.vaadin.navigator.annotations.SubViewOf;
@@ -169,8 +170,8 @@ public final class ViewNavigationUtils implements Serializable {
 	 * @param refresh <code>true</code> if is a page refresh
 	 * @throws ViewConfigurationException Error invoking view methods
 	 */
-	public static void fireViewOnShow(View view, ViewConfiguration configuration, ViewChangeEvent event,
-			boolean refresh) throws ViewConfigurationException {
+	public static <E extends ViewChangeEvent & ViewNavigatorChangeEvent> void fireViewOnShow(View view,
+			ViewConfiguration configuration, E event, boolean refresh) throws ViewConfigurationException {
 		if (view == null) {
 			throw new ViewConfigurationException("Null view instance");
 		}
@@ -201,8 +202,8 @@ public final class ViewNavigationUtils implements Serializable {
 	 * @param event View change event
 	 * @throws ViewConfigurationException Error invoking view methods
 	 */
-	public static void fireViewOnLeave(View view, ViewConfiguration configuration, ViewChangeEvent event)
-			throws ViewConfigurationException {
+	public static <E extends ViewChangeEvent & ViewNavigatorChangeEvent> void fireViewOnLeave(View view,
+			ViewConfiguration configuration, E event) throws ViewConfigurationException {
 		if (view == null) {
 			throw new ViewConfigurationException("Null view instance");
 		}
@@ -742,7 +743,8 @@ public final class ViewNavigationUtils implements Serializable {
 		}
 		if (params == 1) {
 			Parameter param = method.getParameters()[0];
-			if (param.isVarArgs() || !ViewChangeEvent.class.isAssignableFrom(param.getType())) {
+			if (param.isVarArgs() || !(ViewChangeEvent.class.isAssignableFrom(param.getType())
+					|| ViewNavigatorChangeEvent.class.isAssignableFrom(param.getType()))) {
 				throw new ViewConfigurationException(
 						"Invalid " + message + " method in view class " + viewClass.getName()
 								+ ": method must have no parameters or only one parameter of type ViewChangeEvent");
