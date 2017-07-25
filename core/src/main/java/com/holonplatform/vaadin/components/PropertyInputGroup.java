@@ -358,6 +358,7 @@ public interface PropertyInputGroup extends PropertySetBound, ValueHolder<Proper
 		 * Set the {@link ValidationStatusHandler} to use to track given <code>property</code> validation status
 		 * changes.
 		 * @param <T> Property type
+		 * @param property Property for which to set the validation status handler
 		 * @param validationStatusHandler the {@link ValidationStatusHandler} to associate to given
 		 *        <code>property</code> (not null)
 		 * @return this
