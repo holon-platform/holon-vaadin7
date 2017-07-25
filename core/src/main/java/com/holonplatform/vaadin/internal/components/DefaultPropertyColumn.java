@@ -139,8 +139,7 @@ public class DefaultPropertyColumn<T, P> implements PropertyColumn<T, P> {
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.internal.components.support.PropertyColumn#setCaption(com.holonplatform.core.i18n.
+	 * @see com.holonplatform.vaadin.internal.components.support.PropertyColumn#setCaption(com.holonplatform.core.i18n.
 	 * Localizable)
 	 */
 	@Override

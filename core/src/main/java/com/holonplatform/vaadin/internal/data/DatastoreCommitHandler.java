@@ -41,7 +41,7 @@ public class DatastoreCommitHandler implements CommitHandler<PropertyBox> {
 	 * Data target
 	 */
 	private final DataTarget<?> target;
-	
+
 	/**
 	 * Construct a new DatastoreItemDataProvider.
 	 * @param datastore Datastore to use (not null)
@@ -55,8 +55,10 @@ public class DatastoreCommitHandler implements CommitHandler<PropertyBox> {
 		this.target = target;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.holonplatform.vaadin.data.ItemDataSource.CommitHandler#commit(java.util.Collection, java.util.Collection, java.util.Collection)
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.data.ItemDataSource.CommitHandler#commit(java.util.Collection,
+	 * java.util.Collection, java.util.Collection)
 	 */
 	@Override
 	public void commit(Collection<PropertyBox> addedItems, Collection<PropertyBox> modifiedItems,

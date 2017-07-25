@@ -98,54 +98,51 @@ public final class ContainerUtils implements Serializable {
 				Object propertyId = sf.getPropertyId();
 				String value = sf.getFilterString();
 				if (sf.isOnlyMatchPrefix()) {
-					return Optional.of(QueryFilter.startsWith(getQueryExpression(propertyId, configuration),
-							value, sf.isIgnoreCase()));
+					return Optional.of(QueryFilter.startsWith(getQueryExpression(propertyId, configuration), value,
+							sf.isIgnoreCase()));
 				} else {
-					return Optional.of(QueryFilter.contains(getQueryExpression(propertyId, configuration),
-							value, sf.isIgnoreCase()));
+					return Optional.of(QueryFilter.contains(getQueryExpression(propertyId, configuration), value,
+							sf.isIgnoreCase()));
 				}
 			} else if (filter instanceof Equal) {
-				return Optional
-						.of(QueryFilter.eq(getQueryExpression(((Equal) filter).getPropertyId(), configuration),
-								((Equal) filter).getValue()));
+				return Optional.of(QueryFilter.eq(getQueryExpression(((Equal) filter).getPropertyId(), configuration),
+						((Equal) filter).getValue()));
 			} else if (filter instanceof Greater) {
-				return Optional.of(
-						QueryFilter.gt(getQueryExpression(((Greater) filter).getPropertyId(), configuration),
-								((Greater) filter).getValue()));
+				return Optional.of(QueryFilter.gt(getQueryExpression(((Greater) filter).getPropertyId(), configuration),
+						((Greater) filter).getValue()));
 			} else if (filter instanceof GreaterOrEqual) {
-				return Optional.of(QueryFilter.goe(
-						getQueryExpression(((GreaterOrEqual) filter).getPropertyId(), configuration),
-						((GreaterOrEqual) filter).getValue()));
+				return Optional.of(
+						QueryFilter.goe(getQueryExpression(((GreaterOrEqual) filter).getPropertyId(), configuration),
+								((GreaterOrEqual) filter).getValue()));
 			} else if (filter instanceof Less) {
-				return Optional
-						.of(QueryFilter.lt(getQueryExpression(((Less) filter).getPropertyId(), configuration),
-								((Less) filter).getValue()));
+				return Optional.of(QueryFilter.lt(getQueryExpression(((Less) filter).getPropertyId(), configuration),
+						((Less) filter).getValue()));
 			} else if (filter instanceof LessOrEqual) {
-				return Optional.of(QueryFilter.loe(
-						getQueryExpression(((LessOrEqual) filter).getPropertyId(), configuration),
-						((LessOrEqual) filter).getValue()));
+				return Optional
+						.of(QueryFilter.loe(getQueryExpression(((LessOrEqual) filter).getPropertyId(), configuration),
+								((LessOrEqual) filter).getValue()));
 			} else if (filter instanceof Like) {
 				String value = ((Like) filter).getValue();
 				if (value == null)
 					value = "";
 				if (value.startsWith("%") && value.endsWith("%")) {
-					return Optional.of(QueryFilter.contains(
-							getQueryExpression(((Like) filter).getPropertyId(), configuration),
-							value.substring(1, value.length() - 1), !((Like) filter).isCaseSensitive()));
+					return Optional
+							.of(QueryFilter.contains(getQueryExpression(((Like) filter).getPropertyId(), configuration),
+									value.substring(1, value.length() - 1), !((Like) filter).isCaseSensitive()));
 				} else if (value.startsWith("%")) {
-					return Optional.of(QueryFilter.startsWith(
-							getQueryExpression(((Like) filter).getPropertyId(), configuration),
-							value.substring(1), !((Like) filter).isCaseSensitive()));
+					return Optional.of(
+							QueryFilter.startsWith(getQueryExpression(((Like) filter).getPropertyId(), configuration),
+									value.substring(1), !((Like) filter).isCaseSensitive()));
 				} else if (value.endsWith("%")) {
-					return Optional.of(QueryFilter.endsWith(
-							getQueryExpression(((Like) filter).getPropertyId(), configuration),
-							value.substring(0, value.length() - 1), !((Like) filter).isCaseSensitive()));
+					return Optional
+							.of(QueryFilter.endsWith(getQueryExpression(((Like) filter).getPropertyId(), configuration),
+									value.substring(0, value.length() - 1), !((Like) filter).isCaseSensitive()));
 				}
 			} else if (filter instanceof Between) {
 				Object from = ((Between) filter).getStartValue();
 				Object to = ((Between) filter).getEndValue();
-				return Optional.of(QueryFilter.between(
-						getQueryExpression(((Between) filter).getPropertyId(), configuration), from, to));
+				return Optional.of(QueryFilter
+						.between(getQueryExpression(((Between) filter).getPropertyId(), configuration), from, to));
 			} else if (filter instanceof Not) {
 				return convertContainerFilter(configuration, ((Not) filter).getFilter()).map(f -> QueryFilter.not(f));
 			} else if (filter instanceof And) {

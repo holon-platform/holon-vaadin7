@@ -13,22 +13,26 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package com.holonplatform.vaadin.components;
-
-import com.holonplatform.core.Validator.ValidationException;
+package com.holonplatform.vaadin.internal.components;
 
 /**
- * Interface to handle the {@link ValidationException} thrown as consequence of a validation.
- * 
+ * Support for UI required indicator display.
+ *
  * @since 5.0.0
  */
-@FunctionalInterface
-public interface ValidationErrorHandler {
+public interface RequiredIndicatorSupport {
 
 	/**
-	 * Handle given {@link ValidationException}.
-	 * @param error The {@link ValidationException} to handle
+	 * Sets the required indicator visible or not.
+	 * @param requiredIndicatorVisible <code>true</code> to make the required indicator visible, <code>false</code> if
+	 *        not
 	 */
-	void handleValidationError(ValidationException error);
+	void setRequiredIndicatorVisible(boolean requiredIndicatorVisible);
+
+	/**
+	 * Checks whether the required indicator is visible.
+	 * @return <code>true</code> if visible, <code>false</code> if not
+	 */
+	boolean isRequiredIndicatorVisible();
 
 }

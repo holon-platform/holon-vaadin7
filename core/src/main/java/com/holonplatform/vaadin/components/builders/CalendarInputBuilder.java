@@ -31,7 +31,7 @@ import com.holonplatform.vaadin.components.Input;
  * 
  * @since 5.0.0
  */
-public interface CalendarInputBuilder<T, B extends CalendarInputBuilder<T, B>> extends ValidatableInputBuilder<T, Input<T>, B> {
+public interface CalendarInputBuilder<T, B extends CalendarInputBuilder<T, B>> extends InputBuilder<T, Input<T>, B> {
 
 	/**
 	 * Sets date format to use for internal component date display.

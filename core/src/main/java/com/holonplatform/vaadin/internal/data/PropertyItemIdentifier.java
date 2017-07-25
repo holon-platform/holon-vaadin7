@@ -29,7 +29,7 @@ import com.holonplatform.vaadin.data.ItemIdentifierProvider;
 public class PropertyItemIdentifier<ID> implements ItemIdentifierProvider<PropertyBox, ID> {
 
 	private static final long serialVersionUID = -1930051385936109313L;
-	
+
 	private final Property<ID> identifierProperty;
 
 	/**

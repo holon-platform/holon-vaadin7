@@ -103,8 +103,7 @@ public class DefaultDialog extends AbstractDialog {
 
 		/*
 		 * (non-Javadoc)
-		 * @see
-		 * com.holonplatform.vaadin.components.Dialog.DialogBuilder#okButtonConfigurator(com.holonplatform.vaadin.
+		 * @see com.holonplatform.vaadin.components.Dialog.DialogBuilder#okButtonConfigurator(com.holonplatform.vaadin.
 		 * components.Dialog.DialogButtonConfigurator)
 		 */
 		@Override

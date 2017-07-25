@@ -28,7 +28,7 @@ import com.holonplatform.vaadin.components.ValueHolder.ValueChangeEvent;
 public class DefaultValueChangeEvent<V> implements ValueChangeEvent<V> {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private final ValueHolder<V> source;
 	private final V value;
 

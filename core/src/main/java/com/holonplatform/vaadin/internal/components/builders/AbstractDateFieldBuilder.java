@@ -23,7 +23,6 @@ import com.holonplatform.core.i18n.LocalizationContext;
 import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.builders.CalendarInputBuilder;
 import com.holonplatform.vaadin.components.builders.DateInputBuilder;
-import com.holonplatform.vaadin.internal.components.ValidatableField;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.DateField;
 
@@ -34,8 +33,8 @@ import com.vaadin.ui.DateField;
  * 
  * @since 5.0.0
  */
-public abstract class AbstractDateFieldBuilder<I extends DateField & ValidatableField<Date>>
-		extends AbstractValidatableFieldBuilder<Date, Input<Date>, I, DateInputBuilder> implements DateInputBuilder {
+public abstract class AbstractDateFieldBuilder<I extends DateField>
+		extends AbstractFieldBuilder<Date, Input<Date>, I, DateInputBuilder> implements DateInputBuilder {
 
 	protected Localizable parseErrorMessage;
 	protected Localizable outOfRangeMessage;

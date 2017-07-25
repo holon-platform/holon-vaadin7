@@ -15,8 +15,6 @@
  */
 package com.holonplatform.vaadin.components;
 
-import com.holonplatform.core.Validator;
-import com.holonplatform.core.Validator.ValidatorSupport;
 import com.holonplatform.core.property.Property;
 import com.holonplatform.core.property.PropertyRenderer;
 import com.holonplatform.vaadin.internal.components.InputFieldWrapper;
@@ -31,16 +29,12 @@ import com.vaadin.ui.Field;
  * <p>
  * The actual UI {@link Component} which represents the input component can be obtained through {@link #getComponent()}.
  * </p>
- * <p>
- * The input component supports {@link Validator}s and current value validation through the {@link ValidatableValue}
- * interface.
- * </p>
  * 
  * @param <V> Value type
  * 
  * @since 5.0.0
  */
-public interface Input<V> extends ValueHolder<V>, ValueComponent<V>, ValidatorSupport<V>, ValidatableValue {
+public interface Input<V> extends ValueHolder<V>, ValueComponent<V> {
 
 	/**
 	 * Sets the read-only mode of this input component. The user can't change the value when in read-only mode.

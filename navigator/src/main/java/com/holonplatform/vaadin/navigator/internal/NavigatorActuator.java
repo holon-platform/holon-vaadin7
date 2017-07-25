@@ -389,7 +389,7 @@ public class NavigatorActuator<N extends Navigator & ViewNavigatorAdapter> imple
 		if (parentViewName != null) {
 			// navigate to parent view container
 			try {
-				navigateToState(viewConfiguration, parentViewName, view, viewName);
+				navigateToState(viewConfiguration, parentViewName);
 			} catch (Exception e) {
 				throw new ViewNavigationException(parentViewName, e);
 			}
@@ -398,8 +398,9 @@ public class NavigatorActuator<N extends Navigator & ViewNavigatorAdapter> imple
 				// check parent container
 				View parent = navigator.getCurrentView();
 				if (!(parent instanceof SubViewContainer)) {
-					throw new ViewNavigationException(viewName, "Declared parent view name " + parentViewName
-							+ " of sub view " + viewName + " is not a SubViewContainer");
+					throw new ViewNavigationException(buildNavigationState(viewName, parameters),
+							"Declared parent view name " + parentViewName + " of sub view " + viewName
+									+ " is not a SubViewContainer");
 				}
 				// process view parameters
 				Map<String, String> parsedParameters;
@@ -414,8 +415,8 @@ public class NavigatorActuator<N extends Navigator & ViewNavigatorAdapter> imple
 				boolean accepted = ((SubViewContainer) parent).display(view, viewName, parsedParameters);
 				// if accepted, fire lifecycle methods
 				if (accepted) {
-					DefaultViewNavigatorChangeEvent evt = new DefaultViewNavigatorChangeEvent(navigator, oldView, view, viewName,
-							parameters, getViewWindow(buildNavigationState(viewName, parameters)));
+					DefaultViewNavigatorChangeEvent evt = new DefaultViewNavigatorChangeEvent(navigator, oldView, view,
+							viewName, parameters, getViewWindow(buildNavigationState(viewName, parameters)));
 					// onLeave on old view
 					if (oldView != null) {
 						ViewNavigationUtils.fireViewOnLeave(oldView, viewConfiguration, evt);
@@ -527,7 +528,7 @@ public class NavigatorActuator<N extends Navigator & ViewNavigatorAdapter> imple
 		}
 
 		if (view == null) {
-			throw new ViewNavigationException(viewName,
+			throw new ViewNavigationException(navigationState,
 					"Failed to obtain a View using view name " + viewName + " from registered ViewProviders");
 		}
 
@@ -616,36 +617,17 @@ public class NavigatorActuator<N extends Navigator & ViewNavigatorAdapter> imple
 	 * @param viewConfiguration View configuration. If <code>null</code> the view configuration is obtained using
 	 *        {@link #getViewConfiguration(Class)}
 	 * @param navigationState Navigation state
-	 * @param view Optional view class
-	 * @param viewName Optional view name
 	 */
-	private void navigateToState(ViewConfiguration viewConfiguration, String navigationState, View view,
-			String viewName) {
-		ViewConfiguration cfg = (viewConfiguration != null) ? viewConfiguration
-				: (view != null) ? getViewConfiguration(view.getClass()) : null;
+	private void navigateToState(ViewConfiguration viewConfiguration, String navigationState) {
 		// check authentication
-		if (checkAuthentication(viewName, cfg)) {
+		if (checkAuthentication(navigationState, viewConfiguration)) {
 			navigator.navigateToState(navigationState);
 		} else {
 			// track view in history to allow backward navigation
-			if (!isVolatile(cfg, navigationState)) {
+			if (!isVolatile(viewConfiguration, navigationState)) {
 				trackInHistory(navigationState);
 			}
 		}
-	}
-
-	/**
-	 * Navigate to given state using concrete {@link Navigator}.
-	 * <p>
-	 * Authentication check using {@link Authenticate} annotation is performed before the actual view navigation.
-	 * </p>
-	 * @param viewConfiguration View configuration. If <code>null</code> the view configuration is obtained using
-	 *        {@link #getViewConfiguration(Class)}
-	 * @param navigationState Navigation state
-	 */
-	private void navigateToState(ViewConfiguration viewConfiguration, String navigationState) {
-		ViewAndName vn = getViewAndName(navigationState);
-		navigateToState(viewConfiguration, navigationState, vn.view, vn.name);
 	}
 
 	/**
@@ -665,7 +647,7 @@ public class NavigatorActuator<N extends Navigator & ViewNavigatorAdapter> imple
 		ViewConfiguration cfg = (viewConfiguration != null) ? viewConfiguration
 				: (view != null) ? getViewConfiguration(view.getClass()) : null;
 		// check authentication
-		if (checkAuthentication(viewName, cfg)) {
+		if (checkAuthentication(navigationState, cfg)) {
 			navigator.navigateToView(view, viewName, parameters);
 		} else {
 			// track view in history to allow backward navigation
@@ -880,18 +862,12 @@ public class NavigatorActuator<N extends Navigator & ViewNavigatorAdapter> imple
 	 * @param navigationState Navigation state
 	 * @return View instance and view name
 	 */
-	protected ViewAndName getViewAndName(String navigationState) {
-		ViewAndName vn = new ViewAndName();
-		ViewProvider longestViewNameProvider = getViewProvider(navigationState);
-		if (longestViewNameProvider != null) {
-			String viewName = longestViewNameProvider.getViewName(navigationState);
-			vn.name = viewName;
-			if (viewName != null) {
-				vn.view = longestViewNameProvider.getView(viewName);
-			}
-		}
-		return vn;
-	}
+	/*
+	 * protected ViewAndName getViewAndName(String navigationState) { ViewAndName vn = new ViewAndName(); ViewProvider
+	 * longestViewNameProvider = getViewProvider(navigationState); if (longestViewNameProvider != null) { String
+	 * viewName = longestViewNameProvider.getViewName(navigationState); vn.name = viewName; if (viewName != null) {
+	 * vn.view = longestViewNameProvider.getView(viewName); } } return vn; }
+	 */
 
 	/**
 	 * Get View name and parameters from given navigation state
@@ -1116,13 +1092,13 @@ public class NavigatorActuator<N extends Navigator & ViewNavigatorAdapter> imple
 	/**
 	 * Check authentication using {@link Authenticate} annotation on given view class or the {@link UI} class to which
 	 * navigator is bound.
-	 * @param viewName View name
+	 * @param navigationState Navigation state
 	 * @param viewConfiguration View configuration
 	 * @return <code>true</code> if authentication is not required or if it is required and the current
 	 *         {@link AuthContext} is authenticated, <code>false</code> otherwise
 	 * @throws ViewNavigationException Missing {@link AuthContext} from context or other unexpected error
 	 */
-	protected boolean checkAuthentication(final String viewName, final ViewConfiguration viewConfiguration)
+	protected boolean checkAuthentication(final String navigationState, final ViewConfiguration viewConfiguration)
 			throws ViewNavigationException {
 		if (!suspendAuthenticationCheck) {
 			Authenticate authc = (viewConfiguration != null)
@@ -1131,7 +1107,7 @@ public class NavigatorActuator<N extends Navigator & ViewNavigatorAdapter> imple
 
 				// check auth context
 				final AuthContext authContext = AuthContext.getCurrent().orElseThrow(() -> new ViewNavigationException(
-						viewName,
+						navigationState,
 						"No AuthContext available as Context resource: failed to process Authenticate annotation on View or UI"));
 
 				if (!authContext.getAuthentication().isPresent()) {
@@ -1146,7 +1122,7 @@ public class NavigatorActuator<N extends Navigator & ViewNavigatorAdapter> imple
 							// failed, ignore
 						}
 					}
-					onAuthenticationFailed(authc, viewName);
+					onAuthenticationFailed(authc, navigationState);
 					return false;
 				}
 
@@ -1159,10 +1135,10 @@ public class NavigatorActuator<N extends Navigator & ViewNavigatorAdapter> imple
 	 * Invoked when authentication is missing or failed using {@link AuthContext} during {@link Authenticate} annotation
 	 * processing.
 	 * @param authc Authenticate annotation
-	 * @param viewName View name
+	 * @param navigationState Navigation state
 	 * @throws ViewNavigationException If cannot be performed any redirection using {@link Authenticate#redirectURI()}
 	 */
-	protected void onAuthenticationFailed(final Authenticate authc, final String viewName)
+	protected void onAuthenticationFailed(final Authenticate authc, final String navigationState)
 			throws ViewNavigationException {
 		// redirect
 		String redirectURI = AnnotationUtils.getStringValue(authc.redirectURI());
@@ -1181,7 +1157,7 @@ public class NavigatorActuator<N extends Navigator & ViewNavigatorAdapter> imple
 				Page.getCurrent().open(redirectURI, null);
 			}
 		} else {
-			throw new ViewNavigationException(viewName, "Authentication required");
+			throw new ViewNavigationException(navigationState, "Authentication required");
 		}
 	}
 
@@ -1202,13 +1178,6 @@ public class NavigatorActuator<N extends Navigator & ViewNavigatorAdapter> imple
 			}
 		}
 		return null;
-	}
-
-	protected static final class ViewAndName {
-
-		public View view;
-		public String name;
-
 	}
 
 }

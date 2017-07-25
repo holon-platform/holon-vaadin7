@@ -24,7 +24,7 @@ import com.vaadin.event.FieldEvents.FocusListener;
  * 
  * @since 5.0.0
  */
-public interface BooleanInputBuilder extends ValidatableInputBuilder<Boolean, Input<Boolean>, BooleanInputBuilder> {
+public interface BooleanInputBuilder extends InputBuilder<Boolean, Input<Boolean>, BooleanInputBuilder> {
 
 	/**
 	 * Sets whether to treat <code>null</code> values as {@link Boolean#FALSE} values

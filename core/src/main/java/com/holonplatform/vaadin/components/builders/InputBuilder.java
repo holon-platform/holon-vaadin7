@@ -16,6 +16,7 @@
 package com.holonplatform.vaadin.components.builders;
 
 import com.holonplatform.vaadin.components.Input;
+import com.holonplatform.vaadin.components.ValidatableInput;
 import com.vaadin.ui.Field;
 
 /**
@@ -42,6 +43,12 @@ public interface InputBuilder<T, C extends Input<T>, B extends InputBuilder<T, C
 	 * @return the {@link Input} instance
 	 */
 	C build();
+
+	/**
+	 * Build a {@link ValidatableInput} input component.
+	 * @return {@link ValidatableInput} builder
+	 */
+	ValidatableInputBuilder<T, ValidatableInput<T>> validatable();
 
 	/**
 	 * Build the input component as a {@link Field}.

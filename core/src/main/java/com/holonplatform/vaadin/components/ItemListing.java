@@ -362,7 +362,7 @@ public interface ItemListing<T, P> extends ItemSet, Selectable<T>, Component {
 	}
 
 	// Builders
-	
+
 	/**
 	 * Builder to create an {@link ItemListing} instance.
 	 * <p>
@@ -375,7 +375,7 @@ public interface ItemListing<T, P> extends ItemSet, Selectable<T>, Component {
 	static <T, P> GridItemListingBuilder<T, P> builder() {
 		return gridBuilder();
 	}
-	
+
 	/**
 	 * Builder to create an {@link ItemListing} instance using a {@link Grid} as backing component.
 	 * @param <T> Item data type
@@ -385,7 +385,7 @@ public interface ItemListing<T, P> extends ItemSet, Selectable<T>, Component {
 	static <T, P> GridItemListingBuilder<T, P> gridBuilder() {
 		return new DefaultGridItemListingBuilder<>();
 	}
-	
+
 	/**
 	 * Builder to create an {@link ItemListing} instance using a {@link Table} as backing component.
 	 * @param <T> Item data type

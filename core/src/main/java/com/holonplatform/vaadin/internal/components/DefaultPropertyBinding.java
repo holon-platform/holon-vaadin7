@@ -29,7 +29,7 @@ import com.holonplatform.vaadin.components.PropertyBinding;
 public class DefaultPropertyBinding<T, B> implements PropertyBinding<T, B> {
 
 	private static final long serialVersionUID = -6134557608912391745L;
-	
+
 	private final Property<T> property;
 	private final B component;
 

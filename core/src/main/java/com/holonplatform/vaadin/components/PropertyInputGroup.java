@@ -19,9 +19,8 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import com.holonplatform.core.Validator;
-import com.holonplatform.core.Validator.Validatable;
 import com.holonplatform.core.Validator.ValidationException;
-import com.holonplatform.core.Validator.ValidatorSupport;
+import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.property.Property;
 import com.holonplatform.core.property.PropertyBox;
@@ -30,6 +29,8 @@ import com.holonplatform.core.property.PropertyRendererRegistry;
 import com.holonplatform.vaadin.components.Input.InputPropertyRenderer;
 import com.holonplatform.vaadin.components.PropertyBinding.PostProcessor;
 import com.holonplatform.vaadin.internal.components.DefaultPropertyInputGroup;
+import com.holonplatform.vaadin.internal.components.ValidationUtils;
+import com.vaadin.ui.Label;
 
 /**
  * A {@link InputGroup} to manage a group of {@link Input}s bound to a {@link Property} set, loading and obtaining
@@ -54,8 +55,7 @@ import com.holonplatform.vaadin.internal.components.DefaultPropertyInputGroup;
  * 
  * @since 5.0.0
  */
-public interface PropertyInputGroup extends InputGroup, PropertySetBound, ValueHolder<PropertyBox>,
-		ValidatorSupport<PropertyBox>, Validatable<PropertyBox> {
+public interface PropertyInputGroup extends PropertySetBound, ValueHolder<PropertyBox>, Validatable {
 
 	/**
 	 * Gets all the {@link Input}s that have been bound to a property.
@@ -77,37 +77,6 @@ public interface PropertyInputGroup extends InputGroup, PropertySetBound, ValueH
 	 * @return Property-Input {@link PropertyBinding} stream
 	 */
 	<T> Stream<PropertyBinding<T, Input<T>>> stream();
-
-	/**
-	 * Adds a {@link Validator} to the given <code>property</code>.
-	 * @param <T> Property type
-	 * @param property Property (not null)
-	 * @param validator Validator to add (not null)
-	 */
-	<T> void addValidator(Property<T> property, Validator<T> validator);
-
-	/**
-	 * Removes a {@link Validator} from the given <code>property</code>.
-	 * @param <T> Property type
-	 * @param property Property (not null)
-	 * @param validator Validator to remove (not null)
-	 */
-	<T> void removeValidator(Property<T> property, Validator<T> validator);
-
-	/**
-	 * Set a {@link DefaultValueProvider} to obtain the given property default value.
-	 * @param <T> Property type
-	 * @param property Property (not null)
-	 * @param defaultValueProvider DefaultValueProvider (not null)
-	 */
-	<T> void setDefaultValueProvider(Property<T> property, DefaultValueProvider<T> defaultValueProvider);
-
-	/**
-	 * Remove the {@link DefaultValueProvider} bound to given property, if any.
-	 * @param <T> Property type
-	 * @param property Property (not null)
-	 */
-	<T> void removeDefaultValueProvider(Property<T> property);
 
 	/**
 	 * Get the current property values collected into a {@link PropertyBox}, using the group configured properties as
@@ -150,19 +119,6 @@ public interface PropertyInputGroup extends InputGroup, PropertySetBound, ValueH
 	/**
 	 * Get the current property values collected into a {@link PropertyBox}, using the group configured properties as
 	 * property set, only if the property bound {@link Input}s and this {@link PropertyInputGroup} are valid. If
-	 * validation fails, given <code>errorHandler</code> is used to handle the validation errors.
-	 * <p>
-	 * For each property with a bound {@link Input} component, the property value is obtained from the {@link Input}
-	 * component through the {@link Input#getValue()} method.
-	 * </p>
-	 * @param errorHandler Validation errors handler to be used when value is not valid
-	 * @return A {@link PropertyBox} containing the property values, or an empty Optional if validation failed
-	 */
-	Optional<PropertyBox> getValueIfValid(ValidationErrorHandler errorHandler);
-
-	/**
-	 * Get the current property values collected into a {@link PropertyBox}, using the group configured properties as
-	 * property set, only if the property bound {@link Input}s and this {@link PropertyInputGroup} are valid. If
 	 * validation fails, default {@link ValidationErrorHandler} is used to handle the validation errors.
 	 * <p>
 	 * For each property with a bound {@link Input} component, the property value is obtained from the {@link Input}
@@ -174,9 +130,7 @@ public interface PropertyInputGroup extends InputGroup, PropertySetBound, ValueH
 	 * @return A {@link PropertyBox} containing the property values, or an empty Optional if validation failed
 	 * @see Builder#defaultValidationErrorHandler(ValidationErrorHandler)
 	 */
-	default Optional<PropertyBox> getValueIfValid() {
-		return getValueIfValid(null);
-	}
+	Optional<PropertyBox> getValueIfValid();
 
 	/**
 	 * Set the current property values using a {@link PropertyBox}, loading the values to the available property bound
@@ -210,6 +164,18 @@ public interface PropertyInputGroup extends InputGroup, PropertySetBound, ValueH
 	default void setValue(PropertyBox propertyBox) {
 		setValue(propertyBox, false);
 	}
+
+	/**
+	 * Set the read-only mode for all the group inputs.
+	 * @param readOnly <code>true</code> to set all inputs as read-only, <code>false</code> to unset
+	 */
+	void setReadOnly(boolean readOnly);
+
+	/**
+	 * Updates the enabled state of all the group inputs.
+	 * @param enabled <code>true</code> to enable all group inputs, <code>false</code> to disable them
+	 */
+	void setEnabled(boolean enabled);
 
 	/**
 	 * Get a {@link Builder} to create and setup a {@link PropertyInputGroup}.
@@ -290,6 +256,54 @@ public interface PropertyInputGroup extends InputGroup, PropertySetBound, ValueH
 		<T> B required(Property<T> property);
 
 		/**
+		 * Set the given property as required, using given {@link Validator} to check the property value. If a property
+		 * is required, the {@link Input} bound to the property will be setted as required, and its validation will fail
+		 * when empty.
+		 * @param <T> Property type
+		 * @param property Property to set as required (not null)
+		 * @param validator The {@link Validator} to use to check the required property value (not null)
+		 * @return this
+		 */
+		<T> B required(Property<T> property, Validator<T> validator);
+
+		/**
+		 * Set the given property as required. If a property is required, the {@link Input} bound to the property will
+		 * be setted as required, and its validation will fail when empty.
+		 * @param <T> Property type
+		 * @param property Property to set as required (not null)
+		 * @param message The message to use to notify the required validation failure
+		 * @return this
+		 */
+		<T> B required(Property<T> property, Localizable message);
+
+		/**
+		 * Set the given property as required. If a property is required, the {@link Input} bound to the property will
+		 * be setted as required, and its validation will fail when empty.
+		 * @param <T> Property type
+		 * @param property Property to set as required (not null)
+		 * @param message The default message to use to notify the required validation failure
+		 * @param messageCode The message localization code
+		 * @param arguments Optional message translation arguments
+		 * @return this
+		 */
+		default <T> B required(Property<T> property, String message, String messageCode, Object... arguments) {
+			return required(property, Localizable.builder().message(message).messageCode(messageCode)
+					.messageArguments(arguments).build());
+		}
+
+		/**
+		 * Set the given property as required. If a property is required, the {@link Input} bound to the property will
+		 * be setted as required, and its validation will fail when empty.
+		 * @param <T> Property type
+		 * @param property Property to set as required (not null)
+		 * @param message The default message to use to notify the required validation failure
+		 * @return this
+		 */
+		default <T> B required(Property<T> property, String message) {
+			return required(property, Localizable.builder().message(message).build());
+		}
+
+		/**
 		 * Set the given property as hidden. If a property is hidden, the {@link Input} bound to the property will never
 		 * be generated, but its value will be written to a {@link PropertyBox} using
 		 * {@link PropertyInputGroup#getValue()}.
@@ -318,6 +332,17 @@ public interface PropertyInputGroup extends InputGroup, PropertySetBound, ValueH
 		<T> B withValidator(Property<T> property, Validator<T> validator);
 
 		/**
+		 * Adds a {@link com.vaadin.data.Validator} to the {@link Input} bound to given <code>property</code>.
+		 * @param <T> Property type
+		 * @param property Property (not null)
+		 * @param validator Validator to add (not null)
+		 * @return this
+		 */
+		default <T> B withVaadinValidator(Property<T> property, com.vaadin.data.Validator validator) {
+			return withValidator(property, ValidationUtils.asValidator(validator));
+		}
+
+		/**
 		 * Adds a {@link Validator} to the {@link PropertyInputGroup}, using a {@link PropertyBox} to provide the
 		 * property values to validate.
 		 * @param validator Validator to add (not null)
@@ -326,15 +351,108 @@ public interface PropertyInputGroup extends InputGroup, PropertySetBound, ValueH
 		B withValidator(Validator<PropertyBox> validator);
 
 		/**
+		 * Adds a {@link com.vaadin.data.Validator} to the {@link PropertyInputGroup}.
+		 * @param validator Validator to add (not null)
+		 * @return this
+		 */
+		default B withVaadinValidator(com.vaadin.data.Validator validator) {
+			return withValidator(ValidationUtils.asValidator(validator));
+		}
+
+		/**
+		 * Set the {@link ValidationStatusHandler} to use to track given <code>property</code> validation status
+		 * changes.
+		 * @param validationStatusHandler the {@link ValidationStatusHandler} to associate to given
+		 *        <code>property</code> (not null)
+		 */
+		<T> B validationStatusHandler(Property<T> property, ValidationStatusHandler validationStatusHandler);
+
+		/**
+		 * Set the {@link Label} to use to track given <code>property</code> validation status changes.
+		 * @param statusLabel the status {@link Label} to use to track given <code>property</code> validation status
+		 *        (not null)
+		 */
+		default <T> B validationStatusHandler(Property<T> property, Label statusLabel) {
+			return validationStatusHandler(property, ValidationStatusHandler.label(statusLabel));
+		}
+
+		/**
+		 * Set the {@link ValidationStatusHandler} to use to track all the properties validation status changes.
+		 * <p>
+		 * A specific {@link ValidationStatusHandler} for each property can be configured using
+		 * {@link #validationStatusHandler(Property, ValidationStatusHandler)}.
+		 * </p>
+		 * @param validationStatusHandler the {@link ValidationStatusHandler} to set
+		 * @return this
+		 */
+		B propertiesValidationStatusHandler(ValidationStatusHandler validationStatusHandler);
+
+		/**
+		 * Set the {@link ValidationStatusHandler} to use to track overall validation status changes.
+		 * @param validationStatusHandler the {@link ValidationStatusHandler} to set (not null)
+		 * @return this
+		 */
+		B validationStatusHandler(ValidationStatusHandler validationStatusHandler);
+
+		/**
+		 * Set the {@link Label} to use as status label to track overall validation status changes.
+		 * @param statusLabel the status {@link Label} to set (not null)
+		 * @return this
+		 */
+		default B validationStatusHandler(Label statusLabel) {
+			return validationStatusHandler(ValidationStatusHandler.label(statusLabel));
+		}
+
+		/**
+		 * Sets whether to validate the available {@link Input}s value every time the {@link Input} value changes.
+		 * <p>
+		 * Default is <code>true</code>.
+		 * </p>
+		 * @param validateOnValueChange <code>true</code> to perform value validation every time a {@link Input} value
+		 *        changes, <code>false</code> if not
+		 * @return this
+		 */
+		B validateOnValueChange(boolean validateOnValueChange);
+
+		/**
+		 * Set whether to stop validation at first validation failure. If <code>true</code>, only the first
+		 * {@link ValidationException} is thrown at validation, otherwise a {@link ValidationException} containing all
+		 * the occurred validation exception is thrown.
+		 * @param stopValidationAtFirstFailure <code>true</code> to stop validation at first validation failure
+		 * @return this
+		 */
+		B stopValidationAtFirstFailure(boolean stopValidationAtFirstFailure);
+
+		/**
+		 * Set whether to stop overall validation at first validation failure. If <code>true</code>, only the first
+		 * {@link OverallValidationException} is thrown at validation, otherwise a {@link OverallValidationException}
+		 * containing all the occurred validation exception is thrown.
+		 * <p>
+		 * The overall validation is the one which is performed using validators added with
+		 * {@link #withValidator(Validator)} method.
+		 * </p>
+		 * @param stopOverallValidationAtFirstFailure <code>true</code> to stop overall validation at first validation
+		 *        failure
+		 * @return this
+		 */
+		B stopOverallValidationAtFirstFailure(boolean stopOverallValidationAtFirstFailure);
+
+		/**
+		 * Set to ignore any {@link Property} registered {@link Validator} when binding the property to an {@link Input}
+		 * component, i.e. to not inherit property {@link Validator}s when the property-input binding is performed.
+		 * @return this
+		 */
+		B ignorePropertyValidation();
+
+		/**
 		 * Set the specific {@link PropertyRenderer} to use to render the {@link Input} to bind to given
 		 * <code>property</code>.
 		 * @param <T> Property type
-		 * @param <F> Rendered input type
 		 * @param property Property (not null)
 		 * @param renderer Property renderer (not null)
 		 * @return this
 		 */
-		<T, F extends T> B bind(Property<T> property, PropertyRenderer<Input<F>, T> renderer);
+		<T> B bind(Property<T> property, PropertyRenderer<Input<T>, T> renderer);
 
 		/**
 		 * Convenience method to set a specific {@link PropertyRenderer} to use to render the {@link Input} to bind to
@@ -366,50 +484,6 @@ public interface PropertyInputGroup extends InputGroup, PropertySetBound, ValueH
 			ObjectUtils.argumentNotNull(input, "Input must be not null");
 			return bind(property, p -> input);
 		}
-
-		/**
-		 * Set whether to stop validation at first validation failure. If <code>true</code>, only the first
-		 * {@link ValidationException} is thrown at validation, otherwise a {@link ValidationException} containing all
-		 * the occurred validation exception is thrown.
-		 * @param stopValidationAtFirstFailure <code>true</code> to stop validation at first validation failure
-		 * @return this
-		 */
-		B stopValidationAtFirstFailure(boolean stopValidationAtFirstFailure);
-
-		/**
-		 * Set whether to stop overall validation at first validation failure. If <code>true</code>, only the first
-		 * {@link OverallValidationException} is thrown at validation, otherwise a {@link OverallValidationException}
-		 * containing all the occurred validation exception is thrown.
-		 * <p>
-		 * The overall validation is the one which is performed using validators added with
-		 * {@link #withValidator(Validator)} method.
-		 * </p>
-		 * @param stopOverallValidationAtFirstFailure <code>true</code> to stop overall validation at first validation
-		 *        failure
-		 * @return this
-		 */
-		B stopOverallValidationAtFirstFailure(boolean stopOverallValidationAtFirstFailure);
-
-		/**
-		 * Set whether to ignore any {@link Validator} bound to property {@link Input}s or directly to
-		 * {@link PropertyInputGroup}. Default is <code>false</code>.
-		 * @param ignoreValidation <code>true</code> to ignore any {@link Validator} bound to property inputs or
-		 *        directly to {@link PropertyInputGroup}.
-		 * @return this
-		 */
-		B ignoreValidation(boolean ignoreValidation);
-
-		/**
-		 * Set a default {@link ValidationErrorHandler} to use to handle {@link ValidationException} when validation is
-		 * performed.
-		 * <p>
-		 * If a default {@link ValidationErrorHandler} is configured, the {@link PropertyInputGroup#validate()} will
-		 * never throw any {@link ValidationException}, delegating validation error management to the default handler.
-		 * </p>
-		 * @param validationErrorHandler The handler to set
-		 * @return this
-		 */
-		B defaultValidationErrorHandler(ValidationErrorHandler validationErrorHandler);
 
 		/**
 		 * Set whether to ignore properties without a bound {@link Input}. Default is <code>false</code>, and an

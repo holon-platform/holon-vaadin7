@@ -19,15 +19,14 @@ import java.util.Locale;
 
 import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.i18n.LocalizationContext;
-import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.vaadin.components.Input;
+import com.holonplatform.vaadin.components.ValidatableInput;
 import com.holonplatform.vaadin.components.ValueHolder;
 import com.holonplatform.vaadin.components.ValueHolder.ValueChangeListener;
 import com.holonplatform.vaadin.components.builders.InputBuilder;
-import com.holonplatform.vaadin.internal.components.ValidationUtils;
+import com.holonplatform.vaadin.components.builders.ValidatableInputBuilder;
 import com.holonplatform.vaadin.internal.components.ValueChangeNotifierRegistration;
 import com.vaadin.data.Property;
-import com.vaadin.data.Validator;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Field;
@@ -44,13 +43,6 @@ import com.vaadin.ui.Field;
 public abstract class AbstractFieldBuilder<T, C extends Input<T>, I extends AbstractField<T>, B extends InputBuilder<T, C, B>>
 		extends AbstractLocalizableComponentConfigurator<I, B> implements InputBuilder<T, C, B> {
 
-	/**
-	 * Default validation error message for required fields.
-	 */
-	static final Localizable DEFAULT_REQUIRED_ERROR = Localizable.builder().message("Value is required")
-			.messageCode(com.holonplatform.core.Validator.DEFAULT_MESSAGE_CODE_PREFIX + "required").build();
-
-	protected Localizable requiredError;
 	protected Localizable conversionError;
 
 	public AbstractFieldBuilder(I instance) {
@@ -80,16 +72,8 @@ public abstract class AbstractFieldBuilder<T, C extends Input<T>, I extends Abst
 	protected void localize(I instance) {
 		super.localize(instance);
 
-		if (requiredError != null) {
-			instance.setRequiredError(LocalizationContext.translate(requiredError, true));
-		}
 		if (conversionError != null) {
 			instance.setConversionError(LocalizationContext.translate(conversionError, true));
-		}
-
-		// Set default required error if none setted
-		if (instance.getRequiredError() == null || instance.getRequiredError().trim().equals("")) {
-			instance.setRequiredError(LocalizationContext.translate(DEFAULT_REQUIRED_ERROR, true));
 		}
 	}
 
@@ -100,27 +84,6 @@ public abstract class AbstractFieldBuilder<T, C extends Input<T>, I extends Abst
 	@Override
 	public B tabIndex(int tabIndex) {
 		getInstance().setTabIndex(tabIndex);
-		return builder();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.FieldBuilder#required()
-	 */
-	@Override
-	public B required() {
-		getInstance().setRequired(true);
-		return builder();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.FieldBuilder#requiredError(com.holonplatform.core.i18n.
-	 * Localizable)
-	 */
-	@Override
-	public B requiredError(Localizable requiredError) {
-		this.requiredError = requiredError;
 		return builder();
 	}
 
@@ -219,37 +182,6 @@ public abstract class AbstractFieldBuilder<T, C extends Input<T>, I extends Abst
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.FieldBuilder#withValidator(com.vaadin.data.Validator)
-	 */
-	@Override
-	public B withValidator(Validator validator) {
-		getInstance().addValidator(validator);
-		return builder();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.FieldBuilder#withValidator(com.holonplatform.core.Validator)
-	 */
-	@Override
-	public B withValidator(com.holonplatform.core.Validator<T> validator) {
-		ObjectUtils.argumentNotNull(validator, "Validator must be not null");
-		getInstance().addValidator(ValidationUtils.asVaadinValidator(validator));
-		return builder();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.FieldBuilder#hideValidation()
-	 */
-	@Override
-	public B hideValidation() {
-		getInstance().setValidationVisible(false);
-		return builder();
-	}
-
-	/*
-	 * (non-Javadoc)
 	 * @see
 	 * com.holonplatform.vaadin.components.builders.InputConfigurator#withValueChangeListener(com.holonplatform.vaadin.
 	 * components.ValueHolder.ValueChangeListener)
@@ -301,6 +233,15 @@ public abstract class AbstractFieldBuilder<T, C extends Input<T>, I extends Abst
 	@Override
 	public Field<T> asField() {
 		return buildAsField(setupLocalization(instance));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.builders.InputBuilder#validatable()
+	 */
+	@Override
+	public ValidatableInputBuilder<T, ValidatableInput<T>> validatable() {
+		return new DefaultValidatableInputBuilder<>(build());
 	}
 
 }

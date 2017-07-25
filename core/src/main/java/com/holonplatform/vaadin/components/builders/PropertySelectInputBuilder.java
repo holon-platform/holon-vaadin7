@@ -39,7 +39,7 @@ import com.holonplatform.vaadin.internal.data.DatastoreItemDataProvider;
  */
 public interface PropertySelectInputBuilder<T, C extends Input<T>, S, B extends PropertySelectInputBuilder<T, C, S, B>>
 		extends BaseSelectInputBuilder<T, C, S, PropertyBox, B> {
-	
+
 	/**
 	 * Add properties to include in {@link PropertyBox} selection items.
 	 * @param <P> Property type

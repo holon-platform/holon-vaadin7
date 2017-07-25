@@ -24,7 +24,7 @@ import com.holonplatform.core.i18n.LocalizationContext;
 import com.holonplatform.core.internal.utils.TypeUtils;
 import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.builders.NumberInputBuilder;
-import com.holonplatform.vaadin.internal.components.builders.AbstractValidatableFieldBuilder;
+import com.holonplatform.vaadin.internal.components.builders.AbstractFieldBuilder;
 import com.holonplatform.vaadin.internal.converters.StringToNumberConverter;
 import com.vaadin.event.FieldEvents.BlurListener;
 import com.vaadin.event.FieldEvents.FocusListener;
@@ -362,12 +362,6 @@ public class NumberField<T extends Number> extends AbstractCustomField<T, Numeri
 
 	/**
 	 * Returns the last known cursor position of the field.
-	 * <p>
-	 * Note that due to the client server nature or the GWT terminal, Vaadin cannot provide the exact value of the
-	 * cursor position in most situations. The value is updated only when the client side terminal communicates to
-	 * TextField, like on {@link ValueChangeEvent}s and {@link TextChangeEvent} s. This may change later if a deep push
-	 * integration is built to Vaadin.
-	 * </p>
 	 * @return the cursor position
 	 */
 	public int getCursorPosition() {
@@ -424,9 +418,8 @@ public class NumberField<T extends Number> extends AbstractCustomField<T, Numeri
 
 	// Builder
 
-	public static class Builder<T extends Number>
-			extends AbstractValidatableFieldBuilder<T, Input<T>, NumberField<T>, NumberInputBuilder<T>>
-			implements NumberInputBuilder<T> {
+	public static class Builder<T extends Number> extends
+			AbstractFieldBuilder<T, Input<T>, NumberField<T>, NumberInputBuilder<T>> implements NumberInputBuilder<T> {
 
 		protected Localizable inputPrompt;
 

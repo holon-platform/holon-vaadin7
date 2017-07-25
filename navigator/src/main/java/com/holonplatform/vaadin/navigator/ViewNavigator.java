@@ -488,45 +488,45 @@ public interface ViewNavigator extends Serializable {
 		/**
 		 * View name to which this exception is related
 		 */
-		private final String viewName;
+		private final String navigationState;
 
 		/**
 		 * Constructor with error message
-		 * @param viewName View name
+		 * @param navigationState Navigation state
 		 * @param message Error message
 		 */
-		public ViewNavigationException(String viewName, String message) {
+		public ViewNavigationException(String navigationState, String message) {
 			super(message);
-			this.viewName = viewName;
+			this.navigationState = navigationState;
 		}
 
 		/**
 		 * Constructor with nested exception
-		 * @param viewName View name
+		 * @param navigationState Navigation state
 		 * @param cause Nested exception
 		 */
-		public ViewNavigationException(String viewName, Throwable cause) {
+		public ViewNavigationException(String navigationState, Throwable cause) {
 			super(cause);
-			this.viewName = viewName;
+			this.navigationState = navigationState;
 		}
 
 		/**
 		 * Constructor with error message and nested exception
-		 * @param viewName View name
+		 * @param navigationState Navigation state
 		 * @param message Error message
 		 * @param cause Nested exception
 		 */
-		public ViewNavigationException(String viewName, String message, Throwable cause) {
+		public ViewNavigationException(String navigationState, String message, Throwable cause) {
 			super(message, cause);
-			this.viewName = viewName;
+			this.navigationState = navigationState;
 		}
 
 		/**
-		 * Get the view name to which this exception is related
-		 * @return View name
+		 * Get the navigation state to which this exception is related, if available
+		 * @return the navigation state
 		 */
-		public String getViewName() {
-			return viewName;
+		public Optional<String> getNavigationState() {
+			return Optional.ofNullable(navigationState);
 		}
 
 	}

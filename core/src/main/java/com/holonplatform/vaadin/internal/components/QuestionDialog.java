@@ -171,8 +171,7 @@ public class QuestionDialog extends AbstractDialog {
 
 		/*
 		 * (non-Javadoc)
-		 * @see
-		 * com.holonplatform.vaadin.components.Dialog.QuestionDialogBuilder#noButtonConfigurator(com.holonplatform.
+		 * @see com.holonplatform.vaadin.components.Dialog.QuestionDialogBuilder#noButtonConfigurator(com.holonplatform.
 		 * vaadin.components.Dialog.DialogButtonConfigurator)
 		 */
 		@Override

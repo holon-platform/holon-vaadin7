@@ -23,7 +23,7 @@ import com.holonplatform.vaadin.components.Input;
  * 
  * @since 5.0.0
  */
-public interface SecretInputBuilder extends ValidatableInputBuilder<String, Input<String>, SecretInputBuilder> {
+public interface SecretInputBuilder extends InputBuilder<String, Input<String>, SecretInputBuilder> {
 
 	/**
 	 * Enable or disable treating empty String values as <code>null</code> values.

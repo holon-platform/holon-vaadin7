@@ -15,12 +15,9 @@
  */
 package com.holonplatform.vaadin.internal.components;
 
-import com.holonplatform.core.Validator;
-import com.holonplatform.core.Validator.ValidationException;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.Registration;
-import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
 
@@ -48,6 +45,14 @@ public class InputFieldWrapper<V> implements Input<V> {
 		super();
 		ObjectUtils.argumentNotNull(field, "Field must be not null");
 		this.field = field;
+	}
+
+	/**
+	 * Get the wrapped {@link Field}.
+	 * @return the wrapped field
+	 */
+	public Field<V> getField() {
+		return field;
 	}
 
 	/*
@@ -138,37 +143,6 @@ public class InputFieldWrapper<V> implements Input<V> {
 	@Override
 	public Component getComponent() {
 		return field;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.core.Validator.ValidatorSupport#addValidator(com.holonplatform.core.Validator)
-	 */
-	@Override
-	public void addValidator(Validator<V> validator) {
-		field.addValidator(ValidationUtils.asVaadinValidator(validator));
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.core.Validator.ValidatorSupport#removeValidator(com.holonplatform.core.Validator)
-	 */
-	@Override
-	public void removeValidator(Validator<V> validator) {
-		ValidationUtils.removeValidator(field, validator);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.ValidatableValue#validateValue()
-	 */
-	@Override
-	public void validateValue() throws ValidationException {
-		try {
-			field.validate();
-		} catch (InvalidValueException e) {
-			throw ValidationUtils.translateValidationException(e);
-		}
 	}
 
 	/*

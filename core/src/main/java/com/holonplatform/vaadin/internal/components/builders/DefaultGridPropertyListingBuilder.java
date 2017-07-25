@@ -95,8 +95,7 @@ public class DefaultGridPropertyListingBuilder extends
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.components.builders.PropertyListingBuilder.GridPropertyListingBuilder#renderer(com.
+	 * @see com.holonplatform.vaadin.components.builders.PropertyListingBuilder.GridPropertyListingBuilder#renderer(com.
 	 * holonframework.core.property.Property, com.vaadin.ui.renderers.Renderer)
 	 */
 	@Override

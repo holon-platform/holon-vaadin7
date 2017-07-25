@@ -36,15 +36,18 @@ public class DefaultTableItemListingBuilder<T, P> extends
 		super(new DefaultItemListing<>(RenderingMode.TABLE));
 	}
 
-	/* (non-Javadoc)
-	 * @see com.holonplatform.vaadin.internal.components.builders.AbstractComponentBuilder#build(com.vaadin.ui.AbstractComponent)
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.internal.components.builders.AbstractComponentBuilder#build(com.vaadin.ui.
+	 * AbstractComponent)
 	 */
 	@Override
 	protected ItemListing<T, P> build(DefaultItemListing<T, P> instance) {
 		return instance;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.internal.components.builders.AbstractComponentConfigurator#builder()
 	 */
 	@Override

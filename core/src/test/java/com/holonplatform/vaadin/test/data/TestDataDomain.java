@@ -25,7 +25,7 @@ public class TestDataDomain implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	// TODO
-	//@Id
+	// @Id
 	private String code;
 	private String description;
 	private Integer sequence;

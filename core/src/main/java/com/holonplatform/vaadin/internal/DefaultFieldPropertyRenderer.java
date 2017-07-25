@@ -33,7 +33,6 @@ import com.holonplatform.core.property.PropertyRenderer;
 import com.holonplatform.core.temporal.TemporalType;
 import com.holonplatform.vaadin.components.Components.input;
 import com.holonplatform.vaadin.components.builders.TemporalInputBuilder;
-import com.holonplatform.vaadin.internal.components.ValidationUtils;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Field;
 
@@ -211,7 +210,8 @@ public class DefaultFieldPropertyRenderer<T> implements PropertyRenderer<Field, 
 		// caption
 		field.setCaption(LocalizationContext.translate(property, true));
 		// validation
-		ValidationUtils.registerValidators(property, field);
+		// TODO remove
+		// ValidationUtils.registerValidators(property, field);
 		return field;
 	}
 

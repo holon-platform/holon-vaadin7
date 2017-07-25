@@ -55,8 +55,7 @@ public class DefaultOrderedLayoutConfigurator<I extends AbstractOrderedLayout & 
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.components.builders.OrderedLayoutConfigurator#addAndExpand(com.vaadin.ui.Component,
+	 * @see com.holonplatform.vaadin.components.builders.OrderedLayoutConfigurator#addAndExpand(com.vaadin.ui.Component,
 	 * float)
 	 */
 	@Override

@@ -24,8 +24,8 @@ import com.holonplatform.core.property.PropertyBox;
 import com.holonplatform.vaadin.data.ItemIdentifierProvider;
 
 /**
- * A {@link ItemIdentifierProvider} using a set a {@link Property}s as identifiers, providing consistent {@link Object#equals(Object)} 
- * and {@link Object#hashCode()} methods.
+ * A {@link ItemIdentifierProvider} using a set a {@link Property}s as identifiers, providing consistent
+ * {@link Object#equals(Object)} and {@link Object#hashCode()} methods.
  * 
  * @since 5.0.0
  */
@@ -33,9 +33,9 @@ import com.holonplatform.vaadin.data.ItemIdentifierProvider;
 public class PropertiesItemIdentifier implements ItemIdentifierProvider<PropertyBox, Object> {
 
 	private static final long serialVersionUID = 1302051519350991920L;
-	
+
 	private final Property[] properties;
-	
+
 	public PropertiesItemIdentifier(Property... properties) {
 		super();
 		ObjectUtils.argumentNotNull(properties, "Identifier properties must be not null");
@@ -45,7 +45,8 @@ public class PropertiesItemIdentifier implements ItemIdentifierProvider<Property
 		this.properties = properties;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.data.ItemIdentifierProvider#getItemId(java.lang.Object)
 	 */
 	@SuppressWarnings("unchecked")
@@ -56,17 +57,17 @@ public class PropertiesItemIdentifier implements ItemIdentifierProvider<Property
 				return item.getValue(properties[0]);
 			}
 			Object[] values = new Object[properties.length];
-			for (int i=0; i<properties.length; i++) {
+			for (int i = 0; i < properties.length; i++) {
 				values[i] = item.getValue(properties[i]);
 			}
 			return new Identifier(values);
 		}
 		return null;
 	}
-	
+
 	@SuppressWarnings("serial")
 	private class Identifier implements Serializable {
-		
+
 		private final Object[] values;
 
 		public Identifier(Object[] values) {
@@ -74,7 +75,8 @@ public class PropertiesItemIdentifier implements ItemIdentifierProvider<Property
 			this.values = values;
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
 		 * @see java.lang.Object#hashCode()
 		 */
 		@Override
@@ -86,7 +88,8 @@ public class PropertiesItemIdentifier implements ItemIdentifierProvider<Property
 			return result;
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
 		 * @see java.lang.Object#equals(java.lang.Object)
 		 */
 		@Override
@@ -108,7 +111,7 @@ public class PropertiesItemIdentifier implements ItemIdentifierProvider<Property
 		private PropertiesItemIdentifier getOuterType() {
 			return PropertiesItemIdentifier.this;
 		}
-		
+
 	}
 
 }

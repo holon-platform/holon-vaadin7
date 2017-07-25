@@ -157,8 +157,7 @@ public class TestItemStore {
 	@Test
 	public void testStoreMaxSize() {
 
-		ItemStore<String> store = new DefaultItemStore<>(new TestConfiguration(2), new TestDataProvider(),
-				null, 100);
+		ItemStore<String> store = new DefaultItemStore<>(new TestConfiguration(2), new TestDataProvider(), null, 100);
 
 		assertEquals(2, store.size());
 

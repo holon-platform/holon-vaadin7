@@ -74,7 +74,7 @@ public interface PropertyBoxItem extends Item {
 	static <P extends Property<?>> PropertyBoxItem empty(Iterable<P> properties) {
 		return create(PropertyBox.builder(properties).build());
 	}
-	
+
 	/**
 	 * Create a PropertyBoxItem using given <code>properties</code> as property set and reading property values from
 	 * given <code>bean</code> instance.

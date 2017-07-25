@@ -24,7 +24,7 @@ import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.i18n.LocalizationContext;
 import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.builders.TemporalInputBuilder;
-import com.holonplatform.vaadin.internal.components.builders.AbstractValidatableFieldBuilder;
+import com.holonplatform.vaadin.internal.components.builders.AbstractFieldBuilder;
 import com.holonplatform.vaadin.internal.converters.TimeZonedConverter;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.event.FieldEvents.BlurListener;
@@ -274,7 +274,7 @@ public abstract class AbstractTemporalField<T extends Temporal> extends Abstract
 	 * Base builder
 	 */
 	public abstract static class AbstractTemporalFieldBuilder<T extends Temporal, C extends AbstractTemporalField<T>, B extends TemporalInputBuilder<T, B>>
-			extends AbstractValidatableFieldBuilder<T, Input<T>, C, B> implements TemporalInputBuilder<T, B> {
+			extends AbstractFieldBuilder<T, Input<T>, C, B> implements TemporalInputBuilder<T, B> {
 
 		protected Localizable parseErrorMessage;
 		protected Localizable outOfRangeMessage;

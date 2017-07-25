@@ -43,8 +43,7 @@ public class DefaultPropertyBoxProperty<T> extends AbstractProperty<T> {
 	 */
 	private final PropertyBox propertyBox;
 
-	public DefaultPropertyBoxProperty(com.holonplatform.core.property.Property<T> propertyId,
-			PropertyBox propertyBox) {
+	public DefaultPropertyBoxProperty(com.holonplatform.core.property.Property<T> propertyId, PropertyBox propertyBox) {
 		super();
 
 		ObjectUtils.argumentNotNull(propertyId, "Property must be not null");

@@ -38,7 +38,7 @@ import com.vaadin.shared.ui.combobox.FilteringMode;
  * @since 5.0.0
  */
 public interface BaseSelectInputBuilder<T, C extends Input<T>, S, ITEM, B extends BaseSelectInputBuilder<T, C, S, ITEM, B>>
-		extends ValidatableInputBuilder<T, C, B>, BaseItemDataSourceComponentBuilder<B> {
+		extends InputBuilder<T, C, B>, BaseItemDataSourceComponentBuilder<B> {
 
 	/**
 	 * Select UI rendering mode

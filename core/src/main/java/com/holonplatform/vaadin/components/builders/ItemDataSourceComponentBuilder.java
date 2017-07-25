@@ -32,7 +32,7 @@ import com.vaadin.ui.Component;
  */
 public interface ItemDataSourceComponentBuilder<ITEM, C extends Component, B extends ItemDataSourceComponentBuilder<ITEM, C, B>>
 		extends BaseItemDataSourceComponentBuilder<B>, ComponentBuilder<C, B> {
-	
+
 	/**
 	 * Set the data source items data provider and the {@link ItemIdentifierProvider} to obtain item identifiers.
 	 * @param dataProvider Items data provider (not null)

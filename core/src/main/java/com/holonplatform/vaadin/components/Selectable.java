@@ -51,12 +51,12 @@ public interface Selectable<T> {
 	 * @return Selected items set, empty if none
 	 */
 	Set<T> getSelectedItems();
-	
-	 /**
-     * Get the first selected item.
-     * @return the first selected item, empty if none
-     */
-    Optional<T> getFirstSelectedItem();
+
+	/**
+	 * Get the first selected item.
+	 * @return the first selected item, empty if none
+	 */
+	Optional<T> getFirstSelectedItem();
 
 	/**
 	 * Selects the given item. If the item is already selected, does nothing.

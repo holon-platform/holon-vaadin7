@@ -502,7 +502,7 @@ public class TestItemQueryContainer {
 					sb.append(" where ");
 					sb.append(((Path) ef.getLeftOperand()).getName());
 					sb.append(" = '");
-					sb.append(QueryUtils.getConstantExpressionValue((QueryExpression<?>)ef.getRightOperand().get()));
+					sb.append(QueryUtils.getConstantExpressionValue((QueryExpression<?>) ef.getRightOperand().get()));
 					sb.append("'");
 				}
 			}

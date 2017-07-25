@@ -24,7 +24,6 @@ import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.ValueHolder.ValueChangeListener;
 import com.vaadin.data.Buffered;
 import com.vaadin.data.Property;
-import com.vaadin.data.Validator;
 import com.vaadin.data.util.converter.Converter;
 
 /**
@@ -54,50 +53,6 @@ public interface InputConfigurator<T, B extends InputConfigurator<T, B>> extends
 	 * @return this
 	 */
 	B tabIndex(int tabIndex);
-
-	/**
-	 * Sets the field required. Required fields must filled by the user.
-	 * @return this
-	 */
-	B required();
-
-	/**
-	 * Sets the error message to be displayed if a required field is empty.
-	 * @param requiredError Error message
-	 * @return this
-	 */
-	default B requiredError(String requiredError) {
-		return requiredError(Localizable.builder().message(requiredError).build());
-	}
-
-	/**
-	 * Sets the error message to be displayed if a required field is empty, using a localizable
-	 * <code>messageCode</code>.
-	 * <p>
-	 * For error localization, a {@link LocalizationContext} must be available and localized as {@link Context} resource
-	 * when component is built.
-	 * </p>
-	 * @param defaultRequiredError Default error message if no translation is available for given
-	 *        <code>messageCode</code> for current Locale.
-	 * @param messageCode Required error message translation message key
-	 * @param arguments Optional translation arguments
-	 * @return this
-	 */
-	default B requiredError(String defaultRequiredError, String messageCode, Object... arguments) {
-		return requiredError(Localizable.builder().message(defaultRequiredError).messageCode(messageCode)
-				.messageArguments(arguments).build());
-	}
-
-	/**
-	 * Sets the error message to be displayed if a required field is empty, using a {@link Localizable} message.
-	 * <p>
-	 * For error localization, a {@link LocalizationContext} must be available and localized as {@link Context} resource
-	 * when component is built.
-	 * </p>
-	 * @param requiredError Required error message
-	 * @return this
-	 */
-	B requiredError(Localizable requiredError);
 
 	/**
 	 * Sets an initial value for the field.
@@ -209,35 +164,6 @@ public interface InputConfigurator<T, B extends InputConfigurator<T, B>> extends
 	B dataSource(Property dataSource);
 
 	/**
-	 * Adds a value {@link Validator} to the field.
-	 * <p>
-	 * The validator is activated every time the object's value needs to be verified. This usually happens when the
-	 * object's value changes.
-	 * </p>
-	 * @param validator The Validator to add
-	 * @return this
-	 */
-	B withValidator(Validator validator);
-
-	/**
-	 * Adds a value {@link com.holonplatform.core.Validator} to the field.
-	 * <p>
-	 * The validator is activated every time the object's value needs to be verified. This usually happens when the
-	 * object's value changes.
-	 * </p>
-	 * @param validator The Validator to add
-	 * @return this
-	 */
-	B withValidator(com.holonplatform.core.Validator<T> validator);
-
-	/**
-	 * Disable automatic, visible validation. Validation methods still work, but one must show the validation in their
-	 * own code.
-	 * @return this
-	 */
-	B hideValidation();
-
-	/**
 	 * Add a {@link ValueChangeListener} to be notified when the input value changes.
 	 * @param listener The ValueChangeListener to add
 	 * @return this
@@ -245,7 +171,7 @@ public interface InputConfigurator<T, B extends InputConfigurator<T, B>> extends
 	B withValueChangeListener(ValueChangeListener<T> listener);
 
 	/**
-	 * Sets the locale of this component.
+	 * Sets the locale of this {@link Input} component.
 	 * @param locale The Locale to set
 	 * @return this
 	 */

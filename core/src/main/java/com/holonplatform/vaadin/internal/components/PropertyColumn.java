@@ -142,16 +142,16 @@ public interface PropertyColumn<T, P> extends Serializable {
 	/**
 	 * Gets the {@link PropertyEditorFactory} to use to provide the editor {@link Field} for the property to which the
 	 * column is bound
-	 * @return The {@link PropertyEditorFactory} to use to provide the editor {@link Field} for the property to which the
-	 *         column is bound
+	 * @return The {@link PropertyEditorFactory} to use to provide the editor {@link Field} for the property to which
+	 *         the column is bound
 	 */
 	PropertyEditorFactory<P> getEditorFactory();
 
 	/**
 	 * Sets the {@link PropertyEditorFactory} to use to provide the editor {@link Field} for the property to which the
 	 * column is bound
-	 * @param editorFactory The {@link PropertyEditorFactory} to use to provide the editor {@link Field} for the property
-	 *        to which the column is bound
+	 * @param editorFactory The {@link PropertyEditorFactory} to use to provide the editor {@link Field} for the
+	 *        property to which the column is bound
 	 */
 	void setEditorFactory(PropertyEditorFactory<P> editorFactory);
 

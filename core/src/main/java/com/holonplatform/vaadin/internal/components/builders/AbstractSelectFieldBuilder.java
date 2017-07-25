@@ -47,7 +47,7 @@ import com.vaadin.ui.Field;
  * @since 5.0.0
  */
 public abstract class AbstractSelectFieldBuilder<T, C extends Input<T>, S, ITEM, I extends AbstractSelectField<T, S, ITEM>, B extends BaseSelectInputBuilder<T, C, S, ITEM, B>>
-		extends AbstractValidatableFieldBuilder<T, C, I, B> implements BaseSelectInputBuilder<T, C, S, ITEM, B> {
+		extends AbstractFieldBuilder<T, C, I, B> implements BaseSelectInputBuilder<T, C, S, ITEM, B> {
 
 	/**
 	 * Explicitly added selection items

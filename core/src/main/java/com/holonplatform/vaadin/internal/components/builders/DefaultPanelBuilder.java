@@ -88,8 +88,7 @@ public class DefaultPanelBuilder extends AbstractSingleComponentContainerBuilder
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.components.builders.PanelBuilder#withActionHandler(com.vaadin.event.Action.Handler)
+	 * @see com.holonplatform.vaadin.components.builders.PanelBuilder#withActionHandler(com.vaadin.event.Action.Handler)
 	 */
 	@Override
 	public PanelBuilder withActionHandler(Handler actionHandler) {

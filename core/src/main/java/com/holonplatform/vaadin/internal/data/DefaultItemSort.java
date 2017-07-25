@@ -27,17 +27,18 @@ import com.holonplatform.vaadin.data.ItemDataSource.ItemSort;
 public class DefaultItemSort<PROPERTY> implements ItemSort<PROPERTY> {
 
 	private static final long serialVersionUID = 6547344951159124335L;
-	
+
 	private final PROPERTY property;
 	private final boolean ascending;
-	
+
 	public DefaultItemSort(PROPERTY property, boolean ascending) {
 		super();
 		this.property = property;
 		this.ascending = ascending;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.data.ItemDataSource.ItemSort#getProperty()
 	 */
 	@Override
@@ -45,7 +46,8 @@ public class DefaultItemSort<PROPERTY> implements ItemSort<PROPERTY> {
 		return property;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.data.ItemDataSource.ItemSort#isAscending()
 	 */
 	@Override

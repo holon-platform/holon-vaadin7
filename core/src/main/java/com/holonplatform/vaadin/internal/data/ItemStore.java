@@ -72,9 +72,9 @@ public interface ItemStore<ITEM> extends Serializable {
 	 * @return List of item ids, an empty List in no item is present in store
 	 */
 	List<?> getItemIds();
-	
+
 	/**
-	 * Get the identifier of given item	
+	 * Get the identifier of given item
 	 * @param item Item to get the identifier for
 	 * @return Item identifier
 	 */
@@ -120,7 +120,7 @@ public interface ItemStore<ITEM> extends Serializable {
 	 * @return <code>true</code> if item was found and removed
 	 */
 	boolean removeItem(int index);
-	
+
 	/**
 	 * Removes given item.
 	 * @param item Item to remove
@@ -184,7 +184,7 @@ public interface ItemStore<ITEM> extends Serializable {
 	 * @return <code>true</code> if the store is freezed
 	 */
 	boolean isFreezed();
-	
+
 	/**
 	 * Add an item action listener.
 	 * @param listener Listener to add (not null)

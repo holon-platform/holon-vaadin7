@@ -34,7 +34,7 @@ import com.vaadin.ui.AbstractTextField.TextChangeEventMode;
  * @since 5.0.0
  */
 public interface TextInputBuilder<T, C extends Input<T>, B extends TextInputBuilder<T, C, B>>
-		extends ValidatableInputBuilder<T, C, B> {
+		extends InputBuilder<T, C, B> {
 
 	/**
 	 * Set the maximum number of characters in the field

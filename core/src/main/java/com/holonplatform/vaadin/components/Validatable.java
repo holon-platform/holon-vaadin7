@@ -23,35 +23,22 @@ import com.holonplatform.core.Validator.ValidationException;
  * 
  * @since 5.0.0
  */
-public interface ValidatableValue {
+public interface Validatable {
 
 	/**
 	 * Validate the current value.
 	 * @throws ValidationException If the value is not valid
 	 */
-	void validateValue() throws ValidationException;
+	void validate() throws ValidationException;
 
 	/**
 	 * Check if the current value is valid, swallowing any validation exception.
 	 * @return <code>true</code> if the current value is valid, <code>false</code> otherwise
 	 */
 	default boolean isValid() {
-		return isValid(null);
-	}
-
-	/**
-	 * Check if the current value is valid, using given {@link ValidationErrorHandler} to handle any
-	 * {@link ValidationException}.
-	 * @param handler Optional validation error handler
-	 * @return <code>true</code> if the current value is valid, <code>false</code> otherwise
-	 */
-	default boolean isValid(ValidationErrorHandler handler) {
 		try {
-			validateValue();
-		} catch (ValidationException e) {
-			if (handler != null) {
-				handler.handleValidationError(e);
-			}
+			validate();
+		} catch (@SuppressWarnings("unused") ValidationException e) {
 			return false;
 		}
 		return true;

@@ -729,8 +729,7 @@ public class DefaultItemDataSourceContainer<ITEM, PROPERTY>
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.querycontainer.ItemQueryContainer#setFixedQueryFilter(com.holonplatform.core.query.
+	 * @see com.holonplatform.vaadin.querycontainer.ItemQueryContainer#setFixedQueryFilter(com.holonplatform.core.query.
 	 * QueryFilter)
 	 */
 	@Override

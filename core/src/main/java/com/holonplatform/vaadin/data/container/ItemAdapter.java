@@ -36,7 +36,7 @@ public interface ItemAdapter<ITEM> extends Serializable {
 	 * @return Container Item
 	 */
 	Item adapt(Configuration<?> configuration, ITEM item);
-	
+
 	/**
 	 * Restore item data from given container item.
 	 * @param configuration Data source configuration

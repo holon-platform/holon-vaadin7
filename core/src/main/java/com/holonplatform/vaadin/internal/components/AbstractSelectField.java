@@ -243,14 +243,14 @@ public abstract class AbstractSelectField<T, S, ITEM> extends AbstractCustomFiel
 		return getItemDataExtractor().map(e -> e.extractItemData(getDataSourceConfiguration(), itemId, item))
 				.orElseThrow(() -> new IllegalStateException("Missing ItemDataExtractor"));
 	}
-	
+
 	/**
 	 * Get data source configuration
 	 * @return data source configuration
 	 */
 	protected Configuration<?> getDataSourceConfiguration() {
 		if (getContainerDataSource() instanceof ItemDataSource) {
-			return ((ItemDataSource<?,?>)getContainerDataSource()).getConfiguration();
+			return ((ItemDataSource<?, ?>) getContainerDataSource()).getConfiguration();
 		}
 		return null;
 	}
@@ -499,8 +499,7 @@ public abstract class AbstractSelectField<T, S, ITEM> extends AbstractCustomFiel
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.components.Selectable#removeSelectionListener(com.holonplatform.vaadin.components.
+	 * @see com.holonplatform.vaadin.components.Selectable#removeSelectionListener(com.holonplatform.vaadin.components.
 	 * Selectable.SelectionListener)
 	 */
 	@Override

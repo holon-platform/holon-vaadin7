@@ -507,14 +507,6 @@ public interface Components {
 		}
 
 		/**
-		 * Gets a builder to create a {@link InputGroup}.
-		 * @return {@link InputGroup} builder
-		 */
-		static InputGroup.Builder group() {
-			return InputGroup.builder();
-		}
-
-		/**
 		 * Gets a builder to create a {@link PropertyInputGroup}.
 		 * @return {@link PropertyInputGroup} builder
 		 */

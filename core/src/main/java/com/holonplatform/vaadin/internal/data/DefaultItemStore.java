@@ -143,8 +143,7 @@ public class DefaultItemStore<ITEM> implements ItemStore<ITEM> {
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.internal.data.ItemStore#removeItemActionListener(com.holonplatform.vaadin.internal.
+	 * @see com.holonplatform.vaadin.internal.data.ItemStore#removeItemActionListener(com.holonplatform.vaadin.internal.
 	 * data.ItemStore.ItemActionListener)
 	 */
 	@Override

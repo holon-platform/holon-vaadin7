@@ -161,7 +161,7 @@ public class ItemStoreIds<ITEM, T> extends AbstractList<T> implements Serializab
 	public boolean contains(final Object o) {
 		return indexOf(o) != -1;
 	}
-	
+
 	/**
 	 * Get the id of given item
 	 * @param item Item for which to obtain the id
@@ -171,9 +171,8 @@ public class ItemStoreIds<ITEM, T> extends AbstractList<T> implements Serializab
 	protected T getItemId(ITEM item) {
 		Object id = itemIdentifier.getItemId(item);
 		if (id == null) {
-			throw new IllegalStateException(
-					"Invalid item " + item.getClass().getName() + ": missing item identifier (ItemIdentifierProvider ["
-							+ itemIdentifier + "] returned null)");
+			throw new IllegalStateException("Invalid item " + item.getClass().getName()
+					+ ": missing item identifier (ItemIdentifierProvider [" + itemIdentifier + "] returned null)");
 		}
 		return (T) id;
 	}

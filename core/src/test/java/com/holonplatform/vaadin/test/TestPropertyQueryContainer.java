@@ -213,9 +213,9 @@ public class TestPropertyQueryContainer {
 
 		obs = (boolean) container.getItem("c20").getItemProperty(TestData.OBSOLETE).getValue();
 		assertFalse(obs);
-		
+
 		datastore.bulkUpdate(TARGET).filter(TestData.ID.eq("c20")).set(TestData.OBSOLETE, Boolean.TRUE).execute();
-		
+
 		container = ItemDataSourceContainer.<PropertyBox, Property>builder()
 				.dataSource(new TestPropertyDataProvider(datastore)).itemAdapter(new PropertyBoxItemAdapter())
 				.withProperty(TestData.ID, TestData.ID.getType())
@@ -271,8 +271,7 @@ public class TestPropertyQueryContainer {
 
 		boolean obs = (boolean) container.getItem("c20").getItemProperty(TestData.OBSOLETE).getValue();
 		assertTrue(obs);
-		
-		
+
 		Optional<PropertyBox> box = datastore.query().target(TARGET).filter(TestData.ID.eq("c20"))
 				.findOne(TestData.PROPERTIES);
 		assertTrue(box.isPresent());
@@ -285,9 +284,9 @@ public class TestPropertyQueryContainer {
 
 		obs = (boolean) container.getItem("c20").getItemProperty(TestData.OBSOLETE).getValue();
 		assertFalse(obs);
-		
+
 		datastore.bulkUpdate(TARGET).filter(TestData.ID.eq("c20")).set(TestData.OBSOLETE, Boolean.TRUE).execute();
-		
+
 	}
 
 	@SuppressWarnings("serial")

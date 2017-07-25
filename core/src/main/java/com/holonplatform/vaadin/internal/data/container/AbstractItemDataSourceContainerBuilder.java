@@ -71,8 +71,7 @@ public abstract class AbstractItemDataSourceContainerBuilder<ITEM, PROPERTY, B e
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.data.container.ItemDataSourceContainerBuilder#itemAdapter(com.holonplatform.vaadin.
+	 * @see com.holonplatform.vaadin.data.container.ItemDataSourceContainerBuilder#itemAdapter(com.holonplatform.vaadin.
 	 * data.container.ItemAdapter)
 	 */
 	@Override

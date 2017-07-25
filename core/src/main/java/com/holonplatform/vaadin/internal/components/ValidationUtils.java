@@ -16,7 +16,6 @@
 package com.holonplatform.vaadin.internal.components;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,9 +24,7 @@ import com.holonplatform.core.Validator.Validatable;
 import com.holonplatform.core.Validator.ValidationException;
 import com.holonplatform.core.i18n.LocalizationContext;
 import com.holonplatform.core.internal.utils.ObjectUtils;
-import com.holonplatform.vaadin.components.builders.InvalidInputNotificationMode;
 import com.vaadin.data.Validator.InvalidValueException;
-import com.vaadin.server.ClientConnector;
 
 /**
  * Utility class to handle validation using {@link Validator} and {@link Validatable} and to convert and adapt
@@ -88,6 +85,16 @@ public final class ValidationUtils implements Serializable {
 	}
 
 	/**
+	 * Convert a Vaadin {@link com.vaadin.data.Validator} into a {@link Validator}.
+	 * @param <T> Value type
+	 * @param validator Validator to convert (not null)
+	 * @return Converted validator
+	 */
+	public static <T> Validator<T> asValidator(final com.vaadin.data.Validator validator) {
+		return new VaadinValidatorWrapper<>(validator);
+	}
+
+	/**
 	 * Translate a {@link ValidationException} into a Vaadin {@link InvalidValueException}.
 	 * @param exception Exception to translate (not null)
 	 * @return Translated InvalidValueException
@@ -136,94 +143,6 @@ public final class ValidationUtils implements Serializable {
 			ve.setCauses(cs.toArray(new ValidationException[0]));
 		}
 		return ve;
-	}
-
-	/**
-	 * Unregister given <code>validator</code> from given Validatable
-	 * @param validatable Validators container
-	 * @param validator Validator to remove
-	 * @return <code>true</code> if validator was found and removed
-	 */
-	@SuppressWarnings("rawtypes")
-	public static boolean removeValidator(com.vaadin.data.Validatable validatable, Validator validator) {
-		if (validator != null) {
-			Collection<com.vaadin.data.Validator> validators = validatable.getValidators();
-			if (validators != null) {
-				com.vaadin.data.Validator toRemove = null;
-				for (com.vaadin.data.Validator v : validators) {
-					if (v instanceof ValidatorWrapper && ((ValidatorWrapper) v).getValidator().equals(validator)) {
-						toRemove = v;
-						break;
-					}
-				}
-				if (toRemove != null) {
-					validatable.removeValidator(toRemove);
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Setup ValidatableField when {@link InvalidInputNotificationMode} changes
-	 * @param field Field
-	 */
-	public static void setupInvalidFieldNotificationMode(final ValidatableField<?> field) {
-		if (InvalidInputNotificationMode.ALWAYS != field.getInvalidFieldNotificationMode()) {
-			field.changeValidationVisibility(false);
-		} else {
-			field.changeValidationVisibility(true);
-		}
-	}
-
-	/**
-	 * {@link ValidatableField} pre-validation operations
-	 * @param field Field
-	 */
-	public static void preValidate(final ValidatableField<?> field) {
-		if (!field.isSuspendValidationNotification()
-				&& InvalidInputNotificationMode.NEVER != field.getInvalidFieldNotificationMode()) {
-			field.changeValidationVisibility(true);
-		}
-	}
-
-	/**
-	 * {@link ValidatableField} pre value setting operations
-	 * @param field Field
-	 */
-	public static void preValueSet(final ValidatableField<?> field) {
-		if (field.getInvalidFieldNotificationMode() != InvalidInputNotificationMode.ALWAYS) {
-			field.changeValidationVisibility(false);
-			field.setSuspendValidationNotification(true);
-		}
-	}
-
-	/**
-	 * Operation wrapper of {@link ClientConnector#beforeClientResponse(boolean)} for {@link ValidatableField}s
-	 * @param field Field
-	 * @param initial Initial state
-	 * @param action Concrete action executor
-	 */
-	public static void beforeClientResponse(final ValidatableField<?> field, final boolean initial,
-			ClientSynchAction action) {
-		boolean resynch = false;
-		if (!initial && (InvalidInputNotificationMode.ALWAYS == field.getInvalidFieldNotificationMode()
-				|| InvalidInputNotificationMode.USER_INPUT_AND_EXPLICIT_VALIDATION == field
-						.getInvalidFieldNotificationMode())
-				&& !field.isSuspendValidationNotification()) {
-			field.changeValidationVisibility(true);
-			resynch = true;
-		}
-		if (field.isSuspendValidationNotification()) {
-			field.setSuspendValidationNotification(false);
-		}
-		// cocrete action
-		action.beforeClientResponse(initial);
-		// force repaint to display validation status
-		if (resynch) {
-			field.markAsDirty();
-		}
 	}
 
 }

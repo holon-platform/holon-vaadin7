@@ -15,18 +15,19 @@
  */
 package com.holonplatform.vaadin.internal.components;
 
-import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.holonplatform.core.Validator;
 import com.holonplatform.core.Validator.ValidationException;
+import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.property.Property;
 import com.holonplatform.core.property.PropertyBox;
@@ -39,9 +40,11 @@ import com.holonplatform.vaadin.components.PropertyBinding.PostProcessor;
 import com.holonplatform.vaadin.components.PropertyInputGroup;
 import com.holonplatform.vaadin.components.PropertyValueComponentSource;
 import com.holonplatform.vaadin.components.Registration;
-import com.holonplatform.vaadin.components.ValidationErrorHandler;
+import com.holonplatform.vaadin.components.ValidationStatusHandler;
+import com.holonplatform.vaadin.components.ValidationStatusHandler.Status;
 import com.holonplatform.vaadin.components.ValueComponent;
 import com.vaadin.data.Validator.InvalidValueException;
+import com.vaadin.ui.Field;
 
 /**
  * Default {@link PropertyInputGroup} implementation.
@@ -56,37 +59,13 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 	 * Property set
 	 */
 	@SuppressWarnings("rawtypes")
-	private final List<Property> properties = new LinkedList<>();
+	private final List<Property> propertySet = new LinkedList<>();
 
 	/**
-	 * Inputs bindings
+	 * Property configurations
 	 */
 	@SuppressWarnings("rawtypes")
-	private final Map<Property, Input> propertyInputs = new HashMap<>();
-
-	/**
-	 * Custom PropertyRenderers
-	 */
-	@SuppressWarnings("rawtypes")
-	private final Map<Property, PropertyRenderer> propertyRenderers = new HashMap<>(8);
-
-	/**
-	 * Read-only properties
-	 */
-	@SuppressWarnings("rawtypes")
-	private final List<Property> readOnlyProperties = new LinkedList<>();
-
-	/**
-	 * Required properties
-	 */
-	@SuppressWarnings("rawtypes")
-	private final List<Property> requiredProperties = new LinkedList<>();
-
-	/**
-	 * Hidden properties
-	 */
-	@SuppressWarnings("rawtypes")
-	private final Map<Property, Object> hiddenProperties = new HashMap<>();
+	private final Map<Property, PropertyConfiguration> properties = new LinkedHashMap<>();
 
 	/**
 	 * Value change listeners
@@ -99,26 +78,24 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 	private final List<Validator<PropertyBox>> validators = new LinkedList<>();
 
 	/**
-	 * Property validators
-	 */
-	@SuppressWarnings("rawtypes")
-	private final Map<Property, List<Validator>> propertyValidators = new HashMap<>(8);
-
-	/**
-	 * Default value providers
-	 */
-	@SuppressWarnings("rawtypes")
-	private final Map<Property, DefaultValueProvider> defaultValues = new HashMap<>(4);
-
-	/**
 	 * Input post-processors
 	 */
 	private final List<PostProcessor<Input<?>>> postProcessors = new LinkedList<>();
 
 	/**
-	 * Default {@link ValidationErrorHandler}
+	 * Overall validation status handler
 	 */
-	private ValidationErrorHandler defaultValidationErrorHandler;
+	private ValidationStatusHandler validationStatusHandler = null;
+
+	/**
+	 * Validation status handler for all the properties
+	 */
+	private ValidationStatusHandler propertiesValidationStatusHandler = null;
+
+	/**
+	 * Whether to validate inputs at value change
+	 */
+	private boolean validateOnValueChange = true;
 
 	/**
 	 * Validation behaviour
@@ -133,12 +110,17 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 	/**
 	 * Ignore validation
 	 */
-	private boolean ignoreValidation = false;
+	private boolean ignorePropertyValidation = false;
 
 	/**
 	 * Whether to ignore missing inputs
 	 */
 	private boolean ignoreMissingInputs = false;
+
+	/**
+	 * External {@link ValueComponent} supplier
+	 */
+	private Supplier<ValueComponent<PropertyBox>> valueComponentSupplier;
 
 	/**
 	 * Constructor
@@ -148,43 +130,19 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 	}
 
 	/**
-	 * Add a property to the property set
-	 * @param property Property to add
+	 * Get the external {@link ValueComponent} supplier.
+	 * @return Optional external {@link ValueComponent} supplier
 	 */
-	@SuppressWarnings("rawtypes")
-	public void addProperty(Property property) {
-		if (property != null) {
-			properties.add(property);
-		}
+	protected Optional<ValueComponent<PropertyBox>> getOverallValueComponent() {
+		return Optional.ofNullable(valueComponentSupplier != null ? valueComponentSupplier.get() : null);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.core.Validator.ValidatorSupport#addValidator(com.holonplatform.core.Validator)
+	/**
+	 * Set the external {@link ValueComponent} supplier.
+	 * @param valueComponentSupplier the {@link ValueComponent} supplier to set
 	 */
-	@Override
-	public void addValidator(Validator<PropertyBox> validator) {
-		ObjectUtils.argumentNotNull(validator, "Validator must be not null");
-		validators.add(validator);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.core.Validator.ValidatorSupport#removeValidator(com.holonplatform.core.Validator)
-	 */
-	@Override
-	public void removeValidator(Validator<PropertyBox> validator) {
-		ObjectUtils.argumentNotNull(validator, "Validator must be not null");
-		validators.remove(validator);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.core.Validator.Validatable#getValidators()
-	 */
-	@Override
-	public Collection<Validator<PropertyBox>> getValidators() {
-		return Collections.unmodifiableList(validators);
+	void setValueComponentSupplier(Supplier<ValueComponent<PropertyBox>> valueComponentSupplier) {
+		this.valueComponentSupplier = valueComponentSupplier;
 	}
 
 	/*
@@ -193,7 +151,7 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 	 */
 	@Override
 	public Iterable<Property<?>> getProperties() {
-		return Collections.unmodifiableList(properties);
+		return Collections.unmodifiableList(propertySet);
 	}
 
 	/*
@@ -203,7 +161,7 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 	@Override
 	public boolean hasProperty(Property<?> property) {
 		ObjectUtils.argumentNotNull(property, "Property must be not null");
-		return properties.contains(property);
+		return propertySet.contains(property);
 	}
 
 	/*
@@ -213,7 +171,7 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 	@SuppressWarnings("rawtypes")
 	@Override
 	public Stream<Property> propertyStream() {
-		return properties.stream();
+		return propertySet.stream();
 	}
 
 	/*
@@ -222,8 +180,8 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 	 */
 	@Override
 	public Iterable<Input<?>> getInputs() {
-		return properties.stream().filter(p -> propertyInputs.containsKey(p)).map(p -> propertyInputs.get(p))
-				.collect(Collectors.toList());
+		return propertySet.stream().filter(p -> _propertyConfiguration(p).getInput().isPresent())
+				.map(p -> _propertyConfiguration(p).getInput().get()).collect(Collectors.toList());
 	}
 
 	/*
@@ -231,11 +189,13 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 	 * @see
 	 * com.holonplatform.vaadin.components.PropertyInputContainer#getInput(com.holonplatform.core.property.Property)
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public <T> Optional<Input<T>> getInput(Property<T> property) {
 		ObjectUtils.argumentNotNull(property, "Property must be not null");
-		return Optional.ofNullable(propertyInputs.get(property));
+		if (propertySet.contains(property)) {
+			return getPropertyConfiguration(property).getInput();
+		}
+		return Optional.empty();
 	}
 
 	/*
@@ -245,7 +205,8 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> Stream<PropertyBinding<T, Input<T>>> stream() {
-		return propertyInputs.entrySet().stream().map(e -> PropertyBinding.create(e.getKey(), e.getValue()));
+		return propertySet.stream().filter(p -> _propertyConfiguration(p).getInput().isPresent())
+				.map(p -> PropertyBinding.create(p, _propertyConfiguration(p).getInput().get()));
 	}
 
 	/*
@@ -254,8 +215,8 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 	 */
 	@Override
 	public Iterable<ValueComponent<?>> getValueComponents() {
-		return properties.stream().filter(p -> propertyInputs.containsKey(p)).map(p -> propertyInputs.get(p))
-				.collect(Collectors.toList());
+		return propertySet.stream().filter(p -> _propertyConfiguration(p).getInput().isPresent())
+				.map(p -> _propertyConfiguration(p).getInput().get()).collect(Collectors.toList());
 	}
 
 	/*
@@ -266,7 +227,10 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 	@Override
 	public Optional<ValueComponent<?>> getValueComponent(Property<?> property) {
 		ObjectUtils.argumentNotNull(property, "Property must be not null");
-		return Optional.ofNullable(propertyInputs.get(property));
+		if (propertySet.contains(property)) {
+			return getPropertyConfiguration(property).getInput().map(i -> i);
+		}
+		return Optional.empty();
 	}
 
 	/*
@@ -276,34 +240,8 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> Stream<PropertyBinding<T, ValueComponent<T>>> streamOfValueComponents() {
-		return propertyInputs.entrySet().stream().map(e -> PropertyBinding.create(e.getKey(), e.getValue()));
-	}
-
-	@Override
-	public <T> void addValidator(Property<T> property, Validator<T> validator) {
-		ObjectUtils.argumentNotNull(property, "Property must be not null");
-		ObjectUtils.argumentNotNull(validator, "Validator must be not null");
-		getInput(property).ifPresent(i -> i.addValidator(validator));
-	}
-
-	@Override
-	public <T> void removeValidator(Property<T> property, Validator<T> validator) {
-		ObjectUtils.argumentNotNull(property, "Property must be not null");
-		ObjectUtils.argumentNotNull(validator, "Validator must be not null");
-		getInput(property).ifPresent(i -> i.removeValidator(validator));
-	}
-
-	@Override
-	public <T> void setDefaultValueProvider(Property<T> property, DefaultValueProvider<T> defaultValueProvider) {
-		ObjectUtils.argumentNotNull(property, "Property must be not null");
-		ObjectUtils.argumentNotNull(defaultValueProvider, "DefaultValueProvider must be not null");
-		defaultValues.put(property, defaultValueProvider);
-	}
-
-	@Override
-	public <T> void removeDefaultValueProvider(Property<T> property) {
-		ObjectUtils.argumentNotNull(property, "Property must be not null");
-		defaultValues.remove(property);
+		return propertySet.stream().filter(p -> _propertyConfiguration(p).getInput().isPresent())
+				.map(p -> PropertyBinding.create(p, _propertyConfiguration(p).getInput().get()));
 	}
 
 	/*
@@ -317,10 +255,10 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.ValidatableValue#validateValue()
+	 * @see com.holonplatform.vaadin.components.Validatable#validate()
 	 */
 	@Override
-	public void validateValue() throws ValidationException {
+	public void validate() throws ValidationException {
 		// validate inputs
 		validateInputs();
 		// validate value
@@ -329,60 +267,24 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.core.Validator.Validatable#validate(java.lang.Object)
-	 */
-	@Override
-	public void validate(PropertyBox value) throws ValidationException {
-		validateValue(value);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.ValidatableValue#isValid(com.holonplatform.vaadin.components.
-	 * ValidationErrorHandler)
-	 */
-	@Override
-	public boolean isValid(ValidationErrorHandler handler) {
-		try {
-			validateValue();
-		} catch (ValidationException e) {
-			ValidationErrorHandler eh = (handler != null) ? handler : getDefaultValidationErrorHandler().orElse(null);
-			if (eh != null) {
-				eh.handleValidationError(e);
-			}
-			return false;
-		}
-		return true;
-	}
-
-	/*
-	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.PropertyInputGroup#getValue(boolean)
 	 */
 	@Override
 	public PropertyBox getValue(boolean validate) {
-		PropertyBox value = PropertyBox.builder(properties).build();
+		PropertyBox value = PropertyBox.builder(propertySet).build();
 		flush(value, validate);
 		return value;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.PropertyInputGroup#getValueIfValid(com.holonplatform.vaadin.components.
-	 * ValidationErrorHandler)
+	 * @see com.holonplatform.vaadin.components.PropertyInputGroup#getValueIfValid()
 	 */
 	@Override
-	public Optional<PropertyBox> getValueIfValid(final ValidationErrorHandler errorHandler) {
+	public Optional<PropertyBox> getValueIfValid() {
 		try {
 			return Optional.of(getValue(true));
-		} catch (ValidationException e) {
-			ValidationErrorHandler eh = (errorHandler != null) ? errorHandler
-					: getDefaultValidationErrorHandler().orElse(null);
-			if (eh != null) {
-				eh.handleValidationError(e);
-			} else {
-				e.printStackTrace();
-			}
+		} catch (@SuppressWarnings("unused") ValidationException e) {
 			return Optional.empty();
 		}
 	}
@@ -402,11 +304,12 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 			validateInputs();
 		}
 
-		properties.forEach(p -> {
-			if (isPropertyHidden(p)) {
-				propertyBox.setValue(p, hiddenProperties.get(p));
+		propertySet.forEach(p -> {
+			final PropertyConfiguration<?> cfg = getPropertyConfiguration(p);
+			if (cfg.isHidden()) {
+				propertyBox.setValue(p, cfg.getHiddenValue());
 			} else {
-				_input(p).ifPresent(i -> {
+				cfg.getInput().ifPresent(i -> {
 					propertyBox.setValue(p, i.getValue());
 				});
 			}
@@ -421,21 +324,31 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 	/**
 	 * Reset all the {@link Input}s values.
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes", "unused" })
 	protected void resetValues() {
-		try {
-			properties.forEach(p -> {
-				_input(p).ifPresent(i -> {
+		propertySet.forEach(p -> {
+			final PropertyConfiguration<?> cfg = _propertyConfiguration(p);
+			cfg.getInput().ifPresent(i -> {
+				try {
+					// clear input
 					i.clear();
+
 					// check default value
-					if (!p.isReadOnly() && defaultValues.containsKey(p)) {
-						i.setValue(defaultValues.get(p).getDefaultValue(p));
+					if (!cfg.isReadOnly()) {
+						cfg.getDefaultValueProvider().ifPresent(dvp -> ((Input) i).setValue(dvp.getDefaultValue(p)));
 					}
-				});
+				} catch (ValidationException | InvalidValueException ve) {
+					// ignore any validation error
+				}
+
+				// reset validation status
+				resetValidationStatus(i, p);
 			});
-		} catch (@SuppressWarnings("unused") ValidationException | InvalidValueException e) {
-			// ignore any validation error
-		}
+		});
+
+		// reset overall validation status
+		resetValidationStatus(getOverallValueComponent().orElse(null), null);
+
 	}
 
 	/*
@@ -446,15 +359,21 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 	@SuppressWarnings("unchecked")
 	@Override
 	public void setValue(final PropertyBox propertyBox, boolean validate) {
-		hiddenProperties.forEach((p, v) -> hiddenProperties.put(p, null));
-		if (propertyBox == null) {
-			resetValues();
-		} else {
-			properties.forEach(p -> {
-				if (isPropertyHidden(p)) {
-					hiddenProperties.put(p, getPropertyValue(propertyBox, p));
+
+		// reset
+		resetValues();
+
+		// clear hidden properties values
+		properties.values().forEach(cfg -> cfg.setHiddenValue(null)); // TODO
+
+		// load
+		if (propertyBox != null) {
+			propertySet.forEach(p -> {
+				final PropertyConfiguration<Object> cfg = getPropertyConfiguration(p);
+				if (cfg.isHidden() && propertyBox.containsValue(p)) {
+					cfg.setHiddenValue(propertyBox.getValue(p));
 				} else {
-					_input(p).ifPresent(i -> {
+					cfg.getInput().ifPresent(i -> {
 						Object value = getPropertyValue(propertyBox, p);
 						if (value != null) {
 							// ignore read-only
@@ -471,10 +390,12 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 				}
 			});
 		}
+
+		// check validation
 		if (validate) {
-			validateValue();
+			validate();
 		}
-		
+
 		// fire value change
 		fireValueChange(propertyBox);
 	}
@@ -497,17 +418,7 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 	public Registration addValueChangeListener(ValueChangeListener<PropertyBox> listener) {
 		ObjectUtils.argumentNotNull(listener, "ValueChangeListener must be not null");
 		valueChangeListeners.add(listener);
-		return () -> removeValueChangeListener(listener);
-	}
-
-	/**
-	 * Removes a {@link ValueChangeListener}.
-	 * @param listener the listener to remove
-	 */
-	public void removeValueChangeListener(ValueChangeListener<PropertyBox> listener) {
-		if (listener != null) {
-			valueChangeListeners.remove(listener);
-		}
+		return () -> valueChangeListeners.remove(listener);
 	}
 
 	/**
@@ -517,6 +428,22 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 	protected void fireValueChange(PropertyBox value) {
 		final ValueChangeEvent<PropertyBox> valueChangeEvent = new DefaultValueChangeEvent<>(this, value);
 		valueChangeListeners.forEach(l -> l.valueChange(valueChangeEvent));
+	}
+
+	/**
+	 * Get whether to validate inputs at value change.
+	 * @return <code>true</code> to validate inputs at value change
+	 */
+	protected boolean isValidateOnValueChange() {
+		return validateOnValueChange;
+	}
+
+	/**
+	 * Set whether to validate inputs at value change.
+	 * @param validateOnValueChange <code>true</code> to validate inputs at value change
+	 */
+	public void setValidateOnValueChange(boolean validateOnValueChange) {
+		this.validateOnValueChange = validateOnValueChange;
 	}
 
 	/*
@@ -534,90 +461,92 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 	 */
 	@Override
 	public void setReadOnly(boolean readOnly) {
-		properties.forEach(p -> {
-			_input(p).ifPresent(f -> {
-				if (!p.isReadOnly() && !readOnlyProperties.contains(p)
-				/* && (f.getPropertyDataSource() == null || !f.getPropertyDataSource().isReadOnly()) */) {
-					f.setReadOnly(readOnly);
-				} else {
-					f.setReadOnly(true);
-				}
+		propertySet.stream().filter(p -> !_propertyConfiguration(p).isReadOnly()).forEach(p -> {
+			_propertyConfiguration(p).getInput().ifPresent(i -> {
+				i.setReadOnly(readOnly);
 			});
 		});
 	}
 
 	/**
-	 * Check whether the given property was setted as read-only
-	 * @param property Property to check
-	 * @return <code>true</code> if read-only
+	 * Get the property configuration bound to given <code>property</code>.
+	 * @param property Property for which to obtain the configuration
+	 * @return The {@link PropertyConfiguration}
 	 */
-	@SuppressWarnings("rawtypes")
-	protected boolean isPropertyReadOnly(Property property) {
-		return property != null && (property.isReadOnly() || readOnlyProperties.contains(property));
+	protected PropertyConfiguration<?> _propertyConfiguration(Property<?> property) {
+		return getPropertyConfiguration(property);
 	}
 
 	/**
-	 * Set a property as read-only
-	 * @param property Property to set as read-only
+	 * Get the property configuration bound to given <code>property</code>.
+	 * @param property Property for which to obtain the configuration
+	 * @param <T> Property type
+	 * @return The {@link PropertyConfiguration}
 	 */
-	@SuppressWarnings("rawtypes")
-	public void setPropertyReadOnly(Property property) {
-		if (property != null && !readOnlyProperties.contains(property)) {
-			readOnlyProperties.add(property);
+	@SuppressWarnings("unchecked")
+	protected <T> PropertyConfiguration<T> getPropertyConfiguration(Property<T> property) {
+		properties.putIfAbsent(property, new PropertyConfiguration<>(property));
+		return properties.get(property);
+	}
+
+	/**
+	 * Add a property to the property set
+	 * @param property Property to add (not null)
+	 */
+	public void addProperty(Property<?> property) {
+		ObjectUtils.argumentNotNull(property, "Property must be not null");
+		if (!propertySet.contains(property)) {
+			propertySet.add(property);
 		}
 	}
 
 	/**
-	 * Check whether the given property was setted as required
-	 * @param property Property to check
-	 * @return <code>true</code> if required
+	 * Add an overall validator
+	 * @param validator the {@link Validator} to add (not null)
 	 */
-	@SuppressWarnings("rawtypes")
-	protected boolean isPropertyRequired(Property property) {
-		return property != null && requiredProperties.contains(property);
+	public void addValidator(Validator<PropertyBox> validator) {
+		ObjectUtils.argumentNotNull(validator, "Validator must be not null");
+		validators.add(validator);
 	}
 
 	/**
-	 * Set a property as required
-	 * @param property Property to set as required
+	 * Get the overall {@link Validator}s.
+	 * @return the overall validators
 	 */
-	@SuppressWarnings("rawtypes")
-	public void setPropertyRequired(Property property) {
-		if (property != null && !requiredProperties.contains(property)) {
-			requiredProperties.add(property);
-		}
+	protected List<Validator<PropertyBox>> getValidators() {
+		return validators;
 	}
 
 	/**
-	 * Set a property as hidden in UI
-	 * @param property Property to set as hidden
+	 * Set the overall {@link ValidationStatusHandler}.
+	 * @param the {@link ValidationStatusHandler} to set
 	 */
-	@SuppressWarnings("rawtypes")
-	public void setPropertyHidden(Property property) {
-		if (property != null && !hiddenProperties.containsKey(property)) {
-			hiddenProperties.put(property, null);
-		}
-	}
-
-	@SuppressWarnings("rawtypes")
-	protected boolean isPropertyHidden(Property property) {
-		return property != null && hiddenProperties.containsKey(property);
+	public void setValidationStatusHandler(ValidationStatusHandler validationStatusHandler) {
+		this.validationStatusHandler = validationStatusHandler;
 	}
 
 	/**
-	 * Get the default {@link ValidationErrorHandler} to use.
-	 * @return the default ValidationErrorHandler
+	 * Get the overall {@link ValidationStatusHandler}, if available.
+	 * @return the optional overall {@link ValidationStatusHandler}
 	 */
-	public Optional<ValidationErrorHandler> getDefaultValidationErrorHandler() {
-		return Optional.ofNullable(defaultValidationErrorHandler);
+	protected Optional<ValidationStatusHandler> getValidationStatusHandler() {
+		return Optional.ofNullable(validationStatusHandler);
 	}
 
 	/**
-	 * Set the default {@link ValidationErrorHandler} to use.
-	 * @param defaultValidationErrorHandler the default ValidationErrorHandler to set
+	 * Set the {@link ValidationStatusHandler} to use for all the properties.
+	 * @param propertiesValidationStatusHandler the {@link ValidationStatusHandler} to set
 	 */
-	public void setDefaultValidationErrorHandler(ValidationErrorHandler defaultValidationErrorHandler) {
-		this.defaultValidationErrorHandler = defaultValidationErrorHandler;
+	public void setPropertiesValidationStatusHandler(ValidationStatusHandler propertiesValidationStatusHandler) {
+		this.propertiesValidationStatusHandler = propertiesValidationStatusHandler;
+	}
+
+	/**
+	 * Get the {@link ValidationStatusHandler} to use for all the properties.
+	 * @return properties {@link ValidationStatusHandler}
+	 */
+	protected Optional<ValidationStatusHandler> getPropertiesValidationStatusHandler() {
+		return Optional.ofNullable(propertiesValidationStatusHandler);
 	}
 
 	/**
@@ -654,19 +583,19 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 	}
 
 	/**
-	 * Whether to ignore validation
-	 * @return <code>true</code> if validation must be ignored
+	 * Get whether to ignore {@link Property} validators.
+	 * @return <code>true</code> if {@link Property} validators must be ignored
 	 */
-	public boolean isIgnoreValidation() {
-		return ignoreValidation;
+	protected boolean isIgnorePropertyValidation() {
+		return ignorePropertyValidation;
 	}
 
 	/**
-	 * Set whether to ignore validation
-	 * @param ignoreValidation <code>true</code> to ignore validation
+	 * Set whether to ignore {@link Property} validators.
+	 * @param ignorePropertyValidation <code>true</code> to ignore {@link Property} validators
 	 */
-	public void setIgnoreValidation(boolean ignoreValidation) {
-		this.ignoreValidation = ignoreValidation;
+	public void setIgnorePropertyValidation(boolean ignorePropertyValidation) {
+		this.ignorePropertyValidation = ignorePropertyValidation;
 	}
 
 	/**
@@ -695,64 +624,45 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 	}
 
 	/**
-	 * Add a property validator
-	 * @param <T> Property type
-	 * @param property Property
-	 * @param validator Validator to add
+	 * Get the registered {@link Input} post processors.
+	 * @return the {@link Input} post processors
 	 */
-	@SuppressWarnings("rawtypes")
-	public <T> void addPropertyValidator(Property<T> property, Validator<T> validator) {
-		ObjectUtils.argumentNotNull(property, "Property must be not null");
-		ObjectUtils.argumentNotNull(validator, "Validator must be not null");
-		List<Validator> vs = propertyValidators.get(property);
-		if (vs == null) {
-			vs = new LinkedList<>();
-			propertyValidators.put(property, vs);
-		}
-		vs.add(validator);
-	}
-
-	/**
-	 * Set the {@link PropertyRenderer} to use with given property to obtain the property {@link Input} component.
-	 * @param <T> Property type
-	 * @param property Property (not null)
-	 * @param renderer Renderer
-	 */
-	public <T, F extends T> void setPropertyRenderer(Property<T> property, PropertyRenderer<Input<F>, T> renderer) {
-		ObjectUtils.argumentNotNull(property, "Property must be not null");
-		if (renderer != null) {
-			propertyRenderers.put(property, renderer);
-		} else {
-			propertyRenderers.remove(property);
-		}
+	protected List<PostProcessor<Input<?>>> getPostProcessors() {
+		return postProcessors;
 	}
 
 	/**
 	 * Build and bind {@link Input}s to the properties of the property set.
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void build() {
-		propertyInputs.clear();
 		// render and bind inputs
-		properties.forEach(p -> {
+		propertySet.forEach(p -> {
 			// exclude hidden properties
-			if (!isPropertyHidden(p)) {
-				final Optional<Input> input = render(p);
-				if (!input.isPresent() && !isIgnoreMissingInputs()) {
-					throw new NoSuitableRendererAvailableException(
-							"No Input renderer available to render the property [" + p.toString() + "]");
-				}
-				input.ifPresent(f -> {
-					if (isIgnoreValidation()) {
-						// TODO
-						// f.removeAllValidators();
-					}
-					// configure
-					configureInput(p, f);
-					// bind
-					propertyInputs.put(p, f);
-				});
+			PropertyConfiguration<?> configuration = _propertyConfiguration(p);
+			if (!configuration.isHidden()) {
+				renderAndBind(configuration);
 			}
+		});
+		// reset
+		resetValues();
+	}
+
+	/**
+	 * Render the {@link Input} and set it up in given property configuration.
+	 * @param <T> Property type
+	 * @param configuration Property configuration
+	 */
+	private <T> void renderAndBind(PropertyConfiguration<T> configuration) {
+		final Optional<Input<T>> input = render(configuration.getProperty());
+		if (!input.isPresent() && !isIgnoreMissingInputs()) {
+			throw new NoSuitableRendererAvailableException(
+					"No Input renderer available to render the property [" + configuration.getProperty() + "]");
+		}
+		input.ifPresent(i -> {
+			// configure
+			configureInput(configuration, i);
+			// bind
+			configuration.setInput(i);
 		});
 	}
 
@@ -762,48 +672,62 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 	 * @param property Property to render
 	 * @return Rendered input
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected <T> Optional<Input> render(Property<T> property) {
+	@SuppressWarnings("unchecked")
+	protected <T> Optional<Input<T>> render(Property<T> property) {
 		// check custom renderer
-		if (propertyRenderers.containsKey(property)) {
-			final PropertyRenderer r = propertyRenderers.get(property);
+		final PropertyConfiguration<T> cfg = getPropertyConfiguration(property);
+		if (cfg.getRenderer().isPresent()) {
+			final PropertyRenderer<Input<T>, T> r = cfg.getRenderer().get();
 			// check render type
 			if (!Input.class.isAssignableFrom(r.getRenderType())) {
 				throw new IllegalStateException(
 						"Renderer for property [" + property + "] is not of Input type: [" + r.getRenderType() + "]");
 			}
-			return Optional.ofNullable((Input) r.render(property));
+			return Optional.ofNullable(r.render(property));
 		}
 		// use registry
-		return property.renderIfAvailable(Input.class);
+		return property.renderIfAvailable(Input.class).map(i -> i);
 	}
 
 	/**
 	 * Configure {@link Input} component before binding it to a {@link Property}.
-	 * @param property Property
+	 * @param <T> Property type
+	 * @param configuration Property configuration (not null)
 	 * @param input {@link Input} component to configure
 	 */
-	@SuppressWarnings("unchecked")
-	protected void configureInput(final Property<?> property, @SuppressWarnings("rawtypes") final Input input) {
-		// Validators
-		if (!isIgnoreValidation()) {
-			// property validators
-			propertyValidators.getOrDefault(property, Collections.emptyList()).forEach(v -> input.addValidator(v));
-		}
+	protected <T> void configureInput(final PropertyConfiguration<T> configuration, final Input<T> input) {
 		// Read-only
-		if (property.isReadOnly() || readOnlyProperties.contains(property)) {
+		if (configuration.isReadOnly()) {
 			input.setReadOnly(true);
 		}
 		// Required
-		if (requiredProperties.contains(property)) {
-			input.setRequired(true);
+		if (configuration.isRequired()) {
+			if (input instanceof RequiredIndicatorSupport) {
+				((RequiredIndicatorSupport) input).setRequiredIndicatorVisible(true);
+			} else {
+				// fallback to default required setup
+				if (input instanceof Field) {
+					((Field<?>) input).setRequired(true);
+				} else if (input.getComponent() != null && input.getComponent() instanceof Field) {
+					((Field<?>) input.getComponent()).setRequired(true);
+				}
+			}
+			// add required validator
+			configuration
+					.addValidatorAsFirst(configuration.getRequiredValidator().orElse(new RequiredInputValidator<>(input,
+							configuration.getRequiredMessage().orElse(RequiredInputValidator.DEFAULT_REQUIRED_ERROR))));
+		}
+		// Check validation status handler
+		if (!configuration.getPropertyValidationStatusHandler().isPresent()) {
+			configuration.setPropertyValidationStatusHandler(
+					getPropertiesValidationStatusHandler().orElse(ValidationStatusHandler.getDefault()));
+		}
+		// Validate on value change
+		if (isValidateOnValueChange()) {
+			input.addValueChangeListener(e -> validateOnChange(configuration, e.getValue()));
 		}
 		// post processors
-		postProcessors.forEach(fc -> fc.process(property, input));
-		// check default value
-		if (!property.isReadOnly() && defaultValues.containsKey(property)) {
-			input.setValue(defaultValues.get(property).getDefaultValue(property));
-		}
+		getPostProcessors().forEach(fc -> fc.process(configuration.getProperty(), input));
 	}
 
 	/**
@@ -811,35 +735,36 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 	 * @param value Value to validate
 	 * @throws OverallValidationException If validation fails
 	 */
-	private void validateValue(PropertyBox value) throws OverallValidationException {
-		if (!isIgnoreValidation()) {
+	protected void validate(PropertyBox value) throws OverallValidationException {
 
-			LinkedList<ValidationException> failures = new LinkedList<>();
-			for (Validator<PropertyBox> validator : getValidators()) {
-				try {
-					validator.validate(value);
-				} catch (ValidationException ve) {
-					failures.add(ve);
-					if (isStopOverallValidationAtFirstFailure()) {
-						break;
-					}
+		LinkedList<ValidationException> failures = new LinkedList<>();
+		for (Validator<PropertyBox> validator : getValidators()) {
+			try {
+				validator.validate(value);
+			} catch (ValidationException ve) {
+				failures.add(ve);
+				if (isStopOverallValidationAtFirstFailure()) {
+					break;
 				}
 			}
-
-			OverallValidationException ve = null;
-			if (!failures.isEmpty()) {
-				if (failures.size() == 1) {
-					ve = new OverallValidationException(failures.getFirst().getMessage(),
-							failures.getFirst().getMessageCode(), failures.getFirst().getMessageArguments());
-				} else {
-					ve = new OverallValidationException(failures.toArray(new ValidationException[failures.size()]));
-				}
-			}
-			if (ve != null) {
-				throw ve;
-			}
-
 		}
+
+		// collect validation exceptions, if any
+		if (!failures.isEmpty()) {
+
+			OverallValidationException validationException = (failures.size() == 1)
+					? new OverallValidationException(failures.getFirst().getMessage(),
+							failures.getFirst().getMessageCode(), failures.getFirst().getMessageArguments())
+					: new OverallValidationException(failures.toArray(new ValidationException[failures.size()]));
+
+			// notify validation status
+			notifyInvalidValidationStatus(validationException, getOverallValueComponent().orElse(null), null);
+
+			throw validationException;
+		}
+
+		// notify validation status
+		notifyValidValidationStatus(getOverallValueComponent().orElse(null), null);
 	}
 
 	/**
@@ -847,41 +772,167 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 	 * @throws ValidationException If one or more input is not valid
 	 */
 	private void validateInputs() throws ValidationException {
-		final LinkedList<ValidationException> validationExceptions = new LinkedList<>();
 
-		propertyInputs.entrySet().forEach(e -> {
-			// exclude read-only properties
-			if (!isPropertyReadOnly(e.getKey())) {
+		LinkedList<ValidationException> failures = new LinkedList<>();
+
+		// get all property configurations
+		List<PropertyConfiguration<?>> configurations = propertySet.stream().map(p -> _propertyConfiguration(p))
+				.filter(cfg -> !cfg.isReadOnly() && cfg.getInput().isPresent()).collect(Collectors.toList());
+
+		if (configurations != null) {
+
+			if (isStopValidationAtFirstFailure()) {
+				// reset validation status
+				configurations.forEach(c -> resetValidationStatus(c.getInput().get(), c.getProperty()));
+			}
+
+			for (PropertyConfiguration<?> configuration : configurations) {
 				try {
-					// validate input
-					e.getValue().validateValue();
-				} catch (ValidationException ve) {
+					validateProperty(configuration);
+				} catch (ValidationException e) {
+					failures.add(e);
+
 					if (isStopValidationAtFirstFailure()) {
-						throw ve;
+						// break if stop validation at first failure
+						break;
 					}
-					validationExceptions.add(ve);
 				}
 			}
-		});
+		}
 
 		// collect validation exceptions, if any
-		if (!validationExceptions.isEmpty()) {
-			if (validationExceptions.size() == 1) {
-				throw validationExceptions.getFirst();
+		if (!failures.isEmpty()) {
+			if (failures.size() == 1) {
+				throw failures.getFirst();
 			} else {
-				throw new ValidationException(validationExceptions.toArray(new ValidationException[0]));
+				throw new ValidationException(failures.toArray(new ValidationException[0]));
 			}
 		}
 	}
 
 	/**
-	 * Get the {@link Input} bound to given property, if present
-	 * @param property Property
-	 * @return Property {@link Input}
+	 * Reset the validation status, if a {@link ValidationStatusHandler} is available.
+	 * @param source Source component
+	 * @param property Validation property, if <code>null</code> resets the overall validation status
 	 */
-	@SuppressWarnings("rawtypes")
-	private Optional<Input> _input(Property property) {
-		return Optional.ofNullable(propertyInputs.get(property));
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	protected void resetValidationStatus(ValueComponent<?> source, Property<?> property) {
+		if (property != null) {
+			getPropertyConfiguration(property).getPropertyValidationStatusHandler()
+					.ifPresent(vsh -> vsh.validationStatusChange(
+							new DefaultValidationStatusEvent(Status.UNRESOLVED, null, source, property)));
+		} else {
+			getValidationStatusHandler().ifPresent(vsh -> vsh
+					.validationStatusChange(new DefaultValidationStatusEvent<>(Status.UNRESOLVED, null, null, null)));
+		}
+	}
+
+	/**
+	 * Notify a valid validation status, if a {@link ValidationStatusHandler} is available.
+	 * @param <T> Property type
+	 * @param source Source component
+	 * @param property Validation property, if <code>null</code> notify the overall validation status
+	 */
+	protected <T> void notifyValidValidationStatus(ValueComponent<T> source, Property<T> property) {
+		if (property != null) {
+			getPropertyConfiguration(property).getPropertyValidationStatusHandler().ifPresent(vsh -> vsh
+					.validationStatusChange(new DefaultValidationStatusEvent<>(Status.VALID, null, source, property)));
+		} else {
+			getValidationStatusHandler().ifPresent(vsh -> vsh
+					.validationStatusChange(new DefaultValidationStatusEvent<>(Status.VALID, null, null, null)));
+		}
+	}
+
+	/**
+	 * Notify a invalid validation status, if a {@link ValidationStatusHandler} is available.
+	 * @param <T> Property type
+	 * @param e Validation exception
+	 * @param source Source component
+	 * @param property Validation property, if <code>null</code> notify the overall validation status
+	 */
+	protected <T> void notifyInvalidValidationStatus(ValidationException e, ValueComponent<T> source,
+			Property<T> property) {
+		if (property != null) {
+			getPropertyConfiguration(property).getPropertyValidationStatusHandler()
+					.ifPresent(vsh -> vsh.validationStatusChange(new DefaultValidationStatusEvent<>(Status.INVALID,
+							e.getValidationMessages(), source, property)));
+		} else {
+			getValidationStatusHandler().ifPresent(vsh -> vsh.validationStatusChange(
+					new DefaultValidationStatusEvent<>(Status.INVALID, e.getValidationMessages(), null, null)));
+		}
+	}
+
+	/**
+	 * Perform the validation of the input bound to given property configuration.
+	 * @param <T> Property type
+	 * @param configuration Property configuration
+	 * @throws ValidationException If a validation error occurred
+	 */
+	private <T> void validateProperty(PropertyConfiguration<T> configuration) throws ValidationException {
+		if (configuration.getInput().isPresent()) {
+			validateProperty(configuration, configuration.getInput().get().getValue());
+		}
+	}
+
+	/**
+	 * Validate the input bound to given property configuration, if available, swallowing any
+	 * {@link ValidationException}.
+	 * @param <T> Property type
+	 * @param configuration Property configuration
+	 * @param value Value to validate
+	 */
+	private <T> void validateOnChange(final PropertyConfiguration<T> configuration, final T value) {
+		try {
+			validateProperty(configuration, value);
+		} catch (@SuppressWarnings("unused") ValidationException e) {
+			// ignore
+		}
+	}
+
+	/**
+	 * Validate the input bound to given property configuration.
+	 * @param <T> Property type
+	 * @param configuration Property configuration
+	 * @param value Value to validate
+	 * @throws ValidationException If a validation error occurred
+	 */
+	private <T> void validateProperty(final PropertyConfiguration<T> configuration, final T value)
+			throws ValidationException {
+		if (configuration.getInput().isPresent()) {
+			// input
+			final Input<T> input = configuration.getInput().get();
+
+			final LinkedList<ValidationException> failures = new LinkedList<>();
+
+			try {
+				// property validators
+				if (!isIgnorePropertyValidation()) {
+					configuration.getProperty().getValidators().forEach(v -> {
+						v.validate(value);
+					});
+				}
+				// input validators
+				configuration.getValidators().forEach(v -> {
+					v.validate(value);
+				});
+			} catch (ValidationException ve) {
+				failures.add(ve);
+			}
+
+			if (!failures.isEmpty()) {
+
+				ValidationException ve = (failures.size() == 1) ? failures.getFirst()
+						: new ValidationException(failures.toArray(new ValidationException[0]));
+
+				// notify status
+				notifyInvalidValidationStatus(ve, input, configuration.getProperty());
+
+				throw ve;
+			}
+
+			// notify validation status
+			notifyValidValidationStatus(input, configuration.getProperty());
+		}
 	}
 
 	/**
@@ -890,7 +941,6 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 	 * @param property Property
 	 * @return Property value
 	 */
-	@SuppressWarnings("unchecked")
 	private <T> T getPropertyValue(PropertyBox propertyBox, Property<T> property) {
 		if (VirtualProperty.class.isAssignableFrom(property.getClass())) {
 			if (((VirtualProperty<T>) property).getValueProvider() != null) {
@@ -901,8 +951,8 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 		if (propertyBox.containsValue(property)) {
 			return propertyBox.getValue(property);
 		}
-		if (defaultValues.containsKey(property)) {
-			return (T) defaultValues.get(property).getDefaultValue(property);
+		if (getPropertyConfiguration(property).getDefaultValueProvider().isPresent()) {
+			return getPropertyConfiguration(property).getDefaultValueProvider().get().getDefaultValue(property);
 		}
 		return null;
 	}
@@ -1023,7 +1073,7 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 		@Override
 		public <T> B readOnly(Property<T> property) {
 			ObjectUtils.argumentNotNull(property, "Property must be not null");
-			instance.setPropertyReadOnly(property);
+			instance.getPropertyConfiguration(property).setReadOnly(true);
 			return builder();
 		}
 
@@ -1035,7 +1085,33 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 		@Override
 		public <T> B required(Property<T> property) {
 			ObjectUtils.argumentNotNull(property, "Property must be not null");
-			instance.setPropertyRequired(property);
+			instance.getPropertyConfiguration(property).setRequired(true);
+			return builder();
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#required(com.holonplatform.core.property.
+		 * Property, com.holonplatform.core.Validator)
+		 */
+		@Override
+		public <T> B required(Property<T> property, Validator<T> validator) {
+			ObjectUtils.argumentNotNull(property, "Property must be not null");
+			instance.getPropertyConfiguration(property).setRequired(true);
+			instance.getPropertyConfiguration(property).setRequiredValidator(validator);
+			return builder();
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#required(com.holonplatform.core.property.
+		 * Property, com.holonplatform.core.i18n.Localizable)
+		 */
+		@Override
+		public <T> B required(Property<T> property, Localizable message) {
+			ObjectUtils.argumentNotNull(property, "Property must be not null");
+			instance.getPropertyConfiguration(property).setRequired(true);
+			instance.getPropertyConfiguration(property).setRequiredMessage(message);
 			return builder();
 		}
 
@@ -1047,7 +1123,21 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 		@Override
 		public <T> B hidden(Property<T> property) {
 			ObjectUtils.argumentNotNull(property, "Property must be not null");
-			instance.setPropertyHidden(property);
+			instance.getPropertyConfiguration(property).setHidden(true);
+			return builder();
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * com.holonplatform.vaadin.components.PropertyInputGroup.Builder#bind(com.holonplatform.core.property.Property,
+		 * com.holonplatform.core.property.PropertyRenderer)
+		 */
+		@Override
+		public <T> B bind(Property<T> property, PropertyRenderer<Input<T>, T> renderer) {
+			ObjectUtils.argumentNotNull(property, "Property must be not null");
+			ObjectUtils.argumentNotNull(renderer, "Renderer must be not null");
+			instance.getPropertyConfiguration(property).setRenderer(renderer);
 			return builder();
 		}
 
@@ -1059,7 +1149,9 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 		 */
 		@Override
 		public <T> B defaultValue(Property<T> property, DefaultValueProvider<T> defaultValueProvider) {
-			instance.setDefaultValueProvider(property, defaultValueProvider);
+			ObjectUtils.argumentNotNull(property, "Property must be not null");
+			ObjectUtils.argumentNotNull(defaultValueProvider, "DefaultValueProvider must be not null");
+			instance.getPropertyConfiguration(property).setDefaultValueProvider(defaultValueProvider);
 			return builder();
 		}
 
@@ -1070,7 +1162,47 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 		 */
 		@Override
 		public <T> B withValidator(Property<T> property, Validator<T> validator) {
-			instance.addPropertyValidator(property, validator);
+			ObjectUtils.argumentNotNull(property, "Property must be not null");
+			ObjectUtils.argumentNotNull(validator, "Validator must be not null");
+			instance.getPropertyConfiguration(property).addValidator(validator);
+			return builder();
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * com.holonplatform.vaadin.components.PropertyInputGroup.Builder#validationStatusHandler(com.holonplatform.core
+		 * .property.Property, com.holonplatform.vaadin.components.ValidationStatusHandler)
+		 */
+		@Override
+		public <T> B validationStatusHandler(Property<T> property, ValidationStatusHandler validationStatusHandler) {
+			ObjectUtils.argumentNotNull(property, "Property must be not null");
+			ObjectUtils.argumentNotNull(validationStatusHandler, "ValidationStatusHandler must be not null");
+			instance.getPropertyConfiguration(property).setPropertyValidationStatusHandler(validationStatusHandler);
+			return builder();
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#propertiesValidationStatusHandler(com.
+		 * holonplatform.vaadin.components.ValidationStatusHandler)
+		 */
+		@Override
+		public B propertiesValidationStatusHandler(ValidationStatusHandler validationStatusHandler) {
+			ObjectUtils.argumentNotNull(validationStatusHandler, "ValidationStatusHandler must be not null");
+			instance.setPropertiesValidationStatusHandler(validationStatusHandler);
+			return builder();
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * com.holonplatform.vaadin.components.PropertyInputGroup.Builder#validationStatusHandler(com.holonplatform.
+		 * vaadin.components.ValidationStatusHandler)
+		 */
+		@Override
+		public B validationStatusHandler(ValidationStatusHandler validationStatusHandler) {
+			instance.setValidationStatusHandler(validationStatusHandler);
 			return builder();
 		}
 
@@ -1087,26 +1219,21 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 
 		/*
 		 * (non-Javadoc)
-		 * @see
-		 * com.holonplatform.vaadin.components.PropertyInputGroup.Builder#bind(com.holonplatform.core.property.Property,
-		 * com.holonplatform.core.property.PropertyRenderer)
+		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#validateOnValueChange(boolean)
 		 */
 		@Override
-		public <T, F extends T> B bind(Property<T> property, PropertyRenderer<Input<F>, T> renderer) {
-			ObjectUtils.argumentNotNull(property, "Property must be not null");
-			ObjectUtils.argumentNotNull(renderer, "Renderer must be not null");
-			instance.setPropertyRenderer(property, renderer);
+		public B validateOnValueChange(boolean validateOnValueChange) {
+			instance.setValidateOnValueChange(validateOnValueChange);
 			return builder();
 		}
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#defaultValidationErrorHandler(com.
-		 * holonframework.core.Validator.ValidationErrorHandler)
+		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#ignorePropertyValidation()
 		 */
 		@Override
-		public B defaultValidationErrorHandler(ValidationErrorHandler validationErrorHandler) {
-			instance.setDefaultValidationErrorHandler(validationErrorHandler);
+		public B ignorePropertyValidation() {
+			instance.setIgnorePropertyValidation(true);
 			return builder();
 		}
 
@@ -1133,16 +1260,6 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#ignoreValidation(boolean)
-		 */
-		@Override
-		public B ignoreValidation(boolean ignoreValidation) {
-			instance.setIgnoreValidation(ignoreValidation);
-			return builder();
-		}
-
-		/*
-		 * (non-Javadoc)
 		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#ignoreMissingInputs(boolean)
 		 */
 		@Override
@@ -1162,6 +1279,209 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 			ObjectUtils.argumentNotNull(postProcessor, "PostProcessor must be not null");
 			instance.addInputPostProcessor(postProcessor);
 			return builder();
+		}
+
+	}
+
+	// Internal
+
+	private class PropertyConfiguration<T> {
+
+		private final Property<T> property;
+		private boolean hidden;
+		private T hiddenValue;
+		private boolean required;
+		private boolean readOnly;
+		private PropertyRenderer<Input<T>, T> renderer;
+		private DefaultValueProvider<T> defaultValueProvider;
+		private List<Validator<T>> propertyValidators;
+		private Validator<T> requiredValidator;
+		private Localizable requiredMessage;
+		private ValidationStatusHandler propertyValidationStatusHandler;
+
+		private Input<T> input;
+
+		/**
+		 * Constructor
+		 * @param property The property (not null)
+		 */
+		public PropertyConfiguration(Property<T> property) {
+			super();
+			ObjectUtils.argumentNotNull(property, "Property must be not null");
+			this.property = property;
+		}
+
+		/**
+		 * Get the property
+		 * @return the property
+		 */
+		public Property<T> getProperty() {
+			return property;
+		}
+
+		/**
+		 * @return the hidden
+		 */
+		public boolean isHidden() {
+			return hidden;
+		}
+
+		/**
+		 * @return the hiddenValue
+		 */
+		public T getHiddenValue() {
+			return hiddenValue;
+		}
+
+		/**
+		 * @param hiddenValue the hiddenValue to set
+		 */
+		public void setHiddenValue(T hiddenValue) {
+			this.hiddenValue = hiddenValue;
+		}
+
+		/**
+		 * @param hidden the hidden to set
+		 */
+		public void setHidden(boolean hidden) {
+			this.hidden = hidden;
+		}
+
+		/**
+		 * @return the required
+		 */
+		public boolean isRequired() {
+			return required;
+		}
+
+		/**
+		 * @param required the required to set
+		 */
+		public void setRequired(boolean required) {
+			this.required = required;
+		}
+
+		/**
+		 * @return the requiredValidator
+		 */
+		public Optional<Validator<T>> getRequiredValidator() {
+			return Optional.ofNullable(requiredValidator);
+		}
+
+		/**
+		 * @param requiredValidator the requiredValidator to set
+		 */
+		public void setRequiredValidator(Validator<T> requiredValidator) {
+			this.requiredValidator = requiredValidator;
+		}
+
+		/**
+		 * @return the requiredMessage
+		 */
+		public Optional<Localizable> getRequiredMessage() {
+			return Optional.ofNullable(requiredMessage);
+		}
+
+		/**
+		 * @param requiredMessage the requiredMessage to set
+		 */
+		public void setRequiredMessage(Localizable requiredMessage) {
+			this.requiredMessage = requiredMessage;
+		}
+
+		/**
+		 * @return the readOnly
+		 */
+		public boolean isReadOnly() {
+			return property.isReadOnly() || readOnly;
+		}
+
+		/**
+		 * @param readOnly the readOnly to set
+		 */
+		public void setReadOnly(boolean readOnly) {
+			this.readOnly = readOnly;
+		}
+
+		/**
+		 * @return the renderer
+		 */
+		public Optional<PropertyRenderer<Input<T>, T>> getRenderer() {
+			return Optional.ofNullable(renderer);
+		}
+
+		/**
+		 * @param renderer the renderer to set
+		 */
+		public void setRenderer(PropertyRenderer<Input<T>, T> renderer) {
+			this.renderer = renderer;
+		}
+
+		/**
+		 * @return the defaultValueProvider
+		 */
+		public Optional<DefaultValueProvider<T>> getDefaultValueProvider() {
+			return Optional.ofNullable(defaultValueProvider);
+		}
+
+		/**
+		 * @param defaultValueProvider the defaultValueProvider to set
+		 */
+		public void setDefaultValueProvider(DefaultValueProvider<T> defaultValueProvider) {
+			this.defaultValueProvider = defaultValueProvider;
+		}
+
+		/**
+		 * @return the validators
+		 */
+		public List<Validator<T>> getValidators() {
+			return (propertyValidators != null) ? propertyValidators : Collections.emptyList();
+		}
+
+		public void addValidator(Validator<T> validator) {
+			if (validator != null) {
+				if (this.propertyValidators == null) {
+					this.propertyValidators = new LinkedList<>();
+				}
+				this.propertyValidators.add(validator);
+			}
+		}
+
+		public void addValidatorAsFirst(Validator<T> validator) {
+			if (validator != null) {
+				if (this.propertyValidators == null) {
+					this.propertyValidators = new LinkedList<>();
+				}
+				this.propertyValidators.add(0, validator);
+			}
+		}
+
+		/**
+		 * @return the propertyValidationStatusHandler
+		 */
+		public Optional<ValidationStatusHandler> getPropertyValidationStatusHandler() {
+			return Optional.ofNullable(propertyValidationStatusHandler);
+		}
+
+		/**
+		 * @param propertyValidationStatusHandler the propertyValidationStatusHandler to set
+		 */
+		public void setPropertyValidationStatusHandler(ValidationStatusHandler propertyValidationStatusHandler) {
+			this.propertyValidationStatusHandler = propertyValidationStatusHandler;
+		}
+
+		/**
+		 * @return the input
+		 */
+		public Optional<Input<T>> getInput() {
+			return Optional.ofNullable(input);
+		}
+
+		/**
+		 * @param input the input to set
+		 */
+		public void setInput(Input<T> input) {
+			this.input = input;
 		}
 
 	}

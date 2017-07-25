@@ -15,7 +15,6 @@
  */
 package com.holonplatform.vaadin.internal.components;
 
-import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -34,7 +33,7 @@ import com.holonplatform.vaadin.components.PropertyInputForm;
 import com.holonplatform.vaadin.components.PropertyInputGroup;
 import com.holonplatform.vaadin.components.PropertyValueComponentSource;
 import com.holonplatform.vaadin.components.Registration;
-import com.holonplatform.vaadin.components.ValidationErrorHandler;
+import com.holonplatform.vaadin.components.ValidationStatusHandler;
 import com.holonplatform.vaadin.internal.components.builders.AbstractComponentBuilder;
 import com.vaadin.ui.Component;
 
@@ -127,48 +126,6 @@ public class DefaultPropertyInputForm<C extends Component> extends
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.components.PropertyInputGroup#addValidator(com.holonplatform.core.property.Property,
-	 * com.holonplatform.core.Validator)
-	 */
-	@Override
-	public <T> void addValidator(Property<T> property, Validator<T> validator) {
-		getInputGroup().addValidator(property, validator);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.PropertyInputGroup#removeValidator(com.holonplatform.core.property.
-	 * Property, com.holonplatform.core.Validator)
-	 */
-	@Override
-	public <T> void removeValidator(Property<T> property, Validator<T> validator) {
-		getInputGroup().removeValidator(property, validator);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.components.PropertyInputGroup#setDefaultValueProvider(com.holonplatform.core.property.
-	 * Property, com.holonplatform.vaadin.components.PropertyInputGroup.DefaultValueProvider)
-	 */
-	@Override
-	public <T> void setDefaultValueProvider(Property<T> property, DefaultValueProvider<T> defaultValueProvider) {
-		getInputGroup().setDefaultValueProvider(property, defaultValueProvider);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.PropertyInputGroup#removeDefaultValueProvider(com.holonplatform.core.
-	 * property.Property)
-	 */
-	@Override
-	public <T> void removeDefaultValueProvider(Property<T> property) {
-		getInputGroup().removeDefaultValueProvider(property);
-	}
-
-	/*
-	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.PropertyInputGroup#clear()
 	 */
 	@Override
@@ -178,21 +135,20 @@ public class DefaultPropertyInputForm<C extends Component> extends
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.ValidatableValue#validateValue()
+	 * @see com.holonplatform.vaadin.components.PropertyInputGroup#getValueIfValid()
 	 */
 	@Override
-	public void validateValue() throws ValidationException {
-		getInputGroup().validateValue();
+	public Optional<PropertyBox> getValueIfValid() {
+		return getInputGroup().getValueIfValid();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.ValidatableValue#isValid(com.holonplatform.vaadin.components.
-	 * ValidationErrorHandler)
+	 * @see com.holonplatform.vaadin.components.Validatable#validate()
 	 */
 	@Override
-	public boolean isValid(ValidationErrorHandler handler) {
-		return getInputGroup().isValid(handler);
+	public void validate() throws ValidationException {
+		getInputGroup().validate();
 	}
 
 	/*
@@ -202,16 +158,6 @@ public class DefaultPropertyInputForm<C extends Component> extends
 	@Override
 	public PropertyBox getValue(boolean validate) {
 		return getInputGroup().getValue(validate);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.PropertyInputGroup#getValueIfValid(com.holonplatform.vaadin.components.
-	 * ValidationErrorHandler)
-	 */
-	@Override
-	public Optional<PropertyBox> getValueIfValid(ValidationErrorHandler errorHandler) {
-		return getInputGroup().getValueIfValid(errorHandler);
 	}
 
 	/*
@@ -299,33 +245,6 @@ public class DefaultPropertyInputForm<C extends Component> extends
 		return getInputGroup().stream();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.core.Validator.ValidatorSupport#addValidator(com.holonplatform.core.Validator)
-	 */
-	@Override
-	public void addValidator(Validator<PropertyBox> validator) {
-		getInputGroup().addValidator(validator);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.core.Validator.ValidatorSupport#removeValidator(com.holonplatform.core.Validator)
-	 */
-	@Override
-	public void removeValidator(Validator<PropertyBox> validator) {
-		getInputGroup().removeValidator(validator);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.core.Validator.Validatable#getValidators()
-	 */
-	@Override
-	public Collection<Validator<PropertyBox>> getValidators() {
-		return getInputGroup().getValidators();
-	}
-
 	// Builder
 
 	/**
@@ -395,6 +314,28 @@ public class DefaultPropertyInputForm<C extends Component> extends
 
 		/*
 		 * (non-Javadoc)
+		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#required(com.holonplatform.core.property.
+		 * Property, com.holonplatform.core.Validator)
+		 */
+		@Override
+		public <T> PropertyInputFormBuilder<C> required(Property<T> property, Validator<T> validator) {
+			inputGroupBuilder.required(property, validator);
+			return this;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#required(com.holonplatform.core.property.
+		 * Property, com.holonplatform.core.i18n.Localizable)
+		 */
+		@Override
+		public <T> PropertyInputFormBuilder<C> required(Property<T> property, Localizable message) {
+			inputGroupBuilder.required(property, message);
+			return this;
+		}
+
+		/*
+		 * (non-Javadoc)
 		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#hidden(com.holonplatform.core.property.
 		 * Property)
 		 */
@@ -430,12 +371,58 @@ public class DefaultPropertyInputForm<C extends Component> extends
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#withValidator(com.holonplatform.core.
-		 * Validator)
+		 * @see
+		 * com.holonplatform.vaadin.components.PropertyInputGroup.Builder#validationStatusHandler(com.holonplatform.core
+		 * .property.Property, com.holonplatform.vaadin.components.ValidationStatusHandler)
 		 */
 		@Override
-		public PropertyInputFormBuilder<C> withValidator(Validator<PropertyBox> validator) {
-			inputGroupBuilder.withValidator(validator);
+		public <T> PropertyInputFormBuilder<C> validationStatusHandler(Property<T> property,
+				ValidationStatusHandler validationStatusHandler) {
+			inputGroupBuilder.validationStatusHandler(property, validationStatusHandler);
+			return this;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#propertiesValidationStatusHandler(com.
+		 * holonplatform.vaadin.components.ValidationStatusHandler)
+		 */
+		@Override
+		public PropertyInputFormBuilder<C> propertiesValidationStatusHandler(
+				ValidationStatusHandler validationStatusHandler) {
+			inputGroupBuilder.propertiesValidationStatusHandler(validationStatusHandler);
+			return this;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see
+		 * com.holonplatform.vaadin.components.PropertyInputGroup.Builder#validationStatusHandler(com.holonplatform.
+		 * vaadin.components.ValidationStatusHandler)
+		 */
+		@Override
+		public PropertyInputFormBuilder<C> validationStatusHandler(ValidationStatusHandler validationStatusHandler) {
+			inputGroupBuilder.validationStatusHandler(validationStatusHandler);
+			return this;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#validateOnValueChange(boolean)
+		 */
+		@Override
+		public PropertyInputFormBuilder<C> validateOnValueChange(boolean validateOnValueChange) {
+			inputGroupBuilder.validateOnValueChange(validateOnValueChange);
+			return this;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#ignorePropertyValidation()
+		 */
+		@Override
+		public PropertyInputFormBuilder<C> ignorePropertyValidation() {
+			inputGroupBuilder.ignorePropertyValidation();
 			return this;
 		}
 
@@ -446,9 +433,19 @@ public class DefaultPropertyInputForm<C extends Component> extends
 		 * com.holonplatform.core.property.PropertyRenderer)
 		 */
 		@Override
-		public <T, F extends T> PropertyInputFormBuilder<C> bind(Property<T> property,
-				PropertyRenderer<Input<F>, T> renderer) {
+		public <T> PropertyInputFormBuilder<C> bind(Property<T> property, PropertyRenderer<Input<T>, T> renderer) {
 			inputGroupBuilder.bind(property, renderer);
+			return this;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#withValidator(com.holonplatform.core.
+		 * Validator)
+		 */
+		@Override
+		public PropertyInputFormBuilder<C> withValidator(Validator<PropertyBox> validator) {
+			inputGroupBuilder.withValidator(validator);
 			return this;
 		}
 
@@ -471,28 +468,6 @@ public class DefaultPropertyInputForm<C extends Component> extends
 		public PropertyInputFormBuilder<C> stopOverallValidationAtFirstFailure(
 				boolean stopOverallValidationAtFirstFailure) {
 			inputGroupBuilder.stopOverallValidationAtFirstFailure(stopOverallValidationAtFirstFailure);
-			return this;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#ignoreValidation(boolean)
-		 */
-		@Override
-		public PropertyInputFormBuilder<C> ignoreValidation(boolean ignoreValidation) {
-			inputGroupBuilder.ignoreValidation(ignoreValidation);
-			return this;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.PropertyInputGroup.Builder#defaultValidationErrorHandler(com.
-		 * holonframework.core.Validator.ValidationErrorHandler)
-		 */
-		@Override
-		public PropertyInputFormBuilder<C> defaultValidationErrorHandler(
-				ValidationErrorHandler validationErrorHandler) {
-			inputGroupBuilder.defaultValidationErrorHandler(validationErrorHandler);
 			return this;
 		}
 
@@ -624,7 +599,9 @@ public class DefaultPropertyInputForm<C extends Component> extends
 		 */
 		@Override
 		protected PropertyInputForm build(DefaultPropertyInputForm<C> instance) {
-			instance.setInputGroup(inputGroupBuilder.withPostProcessor(instance).build());
+			DefaultPropertyInputGroup inputGroup = inputGroupBuilder.withPostProcessor(instance).build();
+			inputGroup.setValueComponentSupplier(() -> instance);
+			instance.setInputGroup(inputGroup);
 			return instance;
 		}
 

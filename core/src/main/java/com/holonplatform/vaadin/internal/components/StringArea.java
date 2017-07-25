@@ -15,12 +15,8 @@
  */
 package com.holonplatform.vaadin.internal.components;
 
-import com.holonplatform.core.Validator;
-import com.holonplatform.core.Validator.ValidationException;
-import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.Registration;
-import com.holonplatform.vaadin.components.builders.InvalidInputNotificationMode;
 import com.holonplatform.vaadin.components.builders.StringInputBuilder;
 import com.holonplatform.vaadin.internal.components.builders.AbstractStringFieldBuilder;
 import com.vaadin.data.Property;
@@ -34,19 +30,14 @@ import com.vaadin.ui.TextArea;
  * 
  * @since 5.0.0
  */
-public class StringArea extends TextArea implements Input<String>, ValidatableField<String> {
+public class StringArea extends TextArea implements Input<String>, RequiredIndicatorSupport {
 
 	private static final long serialVersionUID = -4631138014420796152L;
 
 	/**
-	 * Invalid field notification mode
+	 * Required indicator
 	 */
-	private InvalidInputNotificationMode invalidFieldNotificationMode = InvalidInputNotificationMode.defaultMode();
-
-	/**
-	 * Flag to temporary suspend validation
-	 */
-	private boolean suspendValidationNotification = false;
+	private boolean requiredIndicatorOnly = false;
 
 	/**
 	 * Treat empty values as <code>null</code> values
@@ -111,11 +102,8 @@ public class StringArea extends TextArea implements Input<String>, ValidatableFi
 	 * Init field
 	 */
 	protected void init() {
-
 		addStyleName("h-field");
 		addStyleName("h-stringfield");
-
-		ValidationUtils.setupInvalidFieldNotificationMode(this);
 	}
 
 	/*
@@ -171,128 +159,43 @@ public class StringArea extends TextArea implements Input<String>, ValidatableFi
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.components.ValidatableField#addValidator(com.holonplatform.core.validator.Validator)
+	 * @see com.holonplatform.vaadin.internal.components.RequiredIndicatorSupport#setRequiredIndicatorVisible(boolean)
 	 */
 	@Override
-	public void addValidator(Validator<String> validator) {
-		addValidator(ValidationUtils.asVaadinValidator(validator));
+	public void setRequiredIndicatorVisible(boolean requiredIndicatorVisible) {
+		super.setRequired(requiredIndicatorVisible);
+		this.requiredIndicatorOnly = requiredIndicatorVisible;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.ValidatableField#removeValidator(com.holonplatform.core.validator.
-	 * Validator)
+	 * @see com.holonplatform.vaadin.internal.components.RequiredIndicatorSupport#isRequiredIndicatorVisible()
 	 */
 	@Override
-	public void removeValidator(Validator<String> validator) {
-		ValidationUtils.removeValidator(this, validator);
+	public boolean isRequiredIndicatorVisible() {
+		return isRequired() || requiredIndicatorOnly;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.ValidatableField#getInvalidFieldNotificationMode()
-	 */
-	@Override
-	public InvalidInputNotificationMode getInvalidFieldNotificationMode() {
-		return invalidFieldNotificationMode;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.components.ValidatableField#setInvalidFieldNotificationMode(com.holonplatform.vaadin.
-	 * components.ValidatableField.InvalidFieldNotificationMode)
-	 */
-	@Override
-	public void setInvalidFieldNotificationMode(InvalidInputNotificationMode invalidFieldNotificationMode) {
-		ObjectUtils.argumentNotNull(invalidFieldNotificationMode, "InvalidFieldNotificationMode must be not null");
-		this.invalidFieldNotificationMode = invalidFieldNotificationMode;
-
-		ValidationUtils.setupInvalidFieldNotificationMode(this);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.ValidatableField#isSuspendValidationNotification()
-	 */
-	@Override
-	public boolean isSuspendValidationNotification() {
-		return suspendValidationNotification;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.ValidatableField#setSuspendValidationNotification(boolean)
-	 */
-	@Override
-	public void setSuspendValidationNotification(boolean suspendValidationNotification) {
-		this.suspendValidationNotification = suspendValidationNotification;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.ValidatableField#changeValidationVisibility(boolean)
-	 */
-	@Override
-	public void changeValidationVisibility(boolean visible) {
-		super.setValidationVisible(visible);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.vaadin.ui.AbstractField#setValidationVisible(boolean)
-	 */
-	@Override
-	public void setValidationVisible(boolean validateAutomatically) {
-		super.setValidationVisible(validateAutomatically);
-		if (!validateAutomatically) {
-			setInvalidFieldNotificationMode(InvalidInputNotificationMode.NEVER);
-		} else {
-			setInvalidFieldNotificationMode(InvalidInputNotificationMode.defaultMode());
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.vaadin.ui.AbstractTextField#beforeClientResponse(boolean)
-	 */
-	@Override
-	public void beforeClientResponse(boolean initial) {
-		ValidationUtils.beforeClientResponse(this, initial, (i) -> super.beforeClientResponse(i));
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.ValidatableValue#validateValue()
-	 */
-	@Override
-	public void validateValue() throws ValidationException {
-		try {
-			validate();
-		} catch (InvalidValueException e) {
-			throw ValidationUtils.translateValidationException(e);
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.vaadin.ui.AbstractField#validate()
+	 * @see com.vaadin.ui.AbstractField#validateValue()
 	 */
 	@Override
 	public void validate() throws InvalidValueException {
-		ValidationUtils.preValidate(this);
-		super.validate();
+		if (requiredIndicatorOnly) {
+			super.validate(getValue());
+		} else {
+			super.validate();
+		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.vaadin.ui.AbstractTextField#setValue(java.lang.String)
+	 * @see com.holonplatform.vaadin.components.ValueHolder#getEmptyValue()
 	 */
 	@Override
-	public void setValue(String newValue) throws ReadOnlyException {
-		ValidationUtils.preValueSet(this);
-		super.setValue(sanitizeValue(newValue));
+	public String getEmptyValue() {
+		return (isBlankValuesAsNull() || isEmptyValuesAsNull()) ? null : "";
 	}
 
 	/*

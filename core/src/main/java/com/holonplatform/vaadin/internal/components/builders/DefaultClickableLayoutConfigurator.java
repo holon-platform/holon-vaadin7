@@ -42,8 +42,7 @@ public class DefaultClickableLayoutConfigurator<I extends AbstractLayout & Layou
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.components.builders.ClickableLayoutConfigurator#withLayoutClickListener(com.vaadin.
+	 * @see com.holonplatform.vaadin.components.builders.ClickableLayoutConfigurator#withLayoutClickListener(com.vaadin.
 	 * event.LayoutEvents.LayoutClickListener)
 	 */
 	@Override
