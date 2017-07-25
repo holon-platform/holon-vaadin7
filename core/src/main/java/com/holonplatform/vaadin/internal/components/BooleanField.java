@@ -28,8 +28,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
 
 /**
- * A {@link Boolean} type {@link Input} using a {@link CheckBox} as UI widget, supporting {@link ValidatableField}
- * features.
+ * A {@link Boolean} type {@link Input} field.
  *
  * @since 5.0.0
  */
