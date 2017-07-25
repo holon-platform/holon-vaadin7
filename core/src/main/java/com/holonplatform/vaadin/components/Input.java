@@ -71,6 +71,7 @@ public interface Input<V> extends ValueHolder<V>, ValueComponent<V> {
 
 	/**
 	 * Create a {@link Input} component type from given {@link Field} instance.
+	 * @param <T> Value type
 	 * @param field The field instance (not null)
 	 * @return A new {@link Input} component which wraps the given <code>field</code>
 	 */

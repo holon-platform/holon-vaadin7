@@ -318,7 +318,7 @@ public interface Components {
 	// Inputs
 
 	/**
-	 * {@link Input}, {@link InputGroup} and {@link PropertyInputForm} builders provider.
+	 * {@link Input}, {@link PropertyInputGroup} and {@link PropertyInputForm} builders provider.
 	 */
 	static interface input {
 

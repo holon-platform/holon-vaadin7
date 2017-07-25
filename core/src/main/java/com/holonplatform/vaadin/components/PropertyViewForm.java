@@ -28,8 +28,7 @@ import com.vaadin.ui.Component;
  * A {@link PropertyViewGroup} component to display the property {@link ViewComponent}s on a layout, using the
  * {@link ComposableComponent} composition strategy.
  * <p>
- * A {@link Composer} is used to draw the form UI, composing the {@link ViewComponent} components obtained from a
- * {@link PropertyViewSource} into the component setted as content.
+ * A {@link Composer} is used to draw the form UI.
  * </p>
  * 
  * @since 5.0.0

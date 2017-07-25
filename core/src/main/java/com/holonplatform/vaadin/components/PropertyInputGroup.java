@@ -33,8 +33,8 @@ import com.holonplatform.vaadin.internal.components.ValidationUtils;
 import com.vaadin.ui.Label;
 
 /**
- * A {@link InputGroup} to manage a group of {@link Input}s bound to a {@link Property} set, loading and obtaining
- * property values in and from {@link Input}s using the {@link PropertyBox} data container type.
+ * A class to manage a group of {@link Input}s bound to a {@link Property} set, loading and obtaining property values in
+ * and from {@link Input}s using the {@link PropertyBox} data container type.
  * <p>
  * Supports overall {@link Validator}s registration to validate all the {@link Input} values, allowing cross input
  * validation, using a {@link PropertyBox} to represent the inputs value set.
@@ -118,17 +118,12 @@ public interface PropertyInputGroup extends PropertySetBound, ValueHolder<Proper
 
 	/**
 	 * Get the current property values collected into a {@link PropertyBox}, using the group configured properties as
-	 * property set, only if the property bound {@link Input}s and this {@link PropertyInputGroup} are valid. If
-	 * validation fails, default {@link ValidationErrorHandler} is used to handle the validation errors.
+	 * property set, only if the property bound {@link Input}s and this {@link PropertyInputGroup} are valid
 	 * <p>
 	 * For each property with a bound {@link Input} component, the property value is obtained from the {@link Input}
 	 * component through the {@link Input#getValue()} method.
 	 * </p>
-	 * <p>
-	 * If a default error handler is not configured, the {@link ValidationException} stack trace is printed.
-	 * </p>
 	 * @return A {@link PropertyBox} containing the property values, or an empty Optional if validation failed
-	 * @see Builder#defaultValidationErrorHandler(ValidationErrorHandler)
 	 */
 	Optional<PropertyBox> getValueIfValid();
 
@@ -153,7 +148,7 @@ public interface PropertyInputGroup extends PropertySetBound, ValueHolder<Proper
 	 * <p>
 	 * Only the properties which belong to the group's property set are taken into account.
 	 * </p>
-	 * </p>
+	 * <p>
 	 * By default, no value validation is performed using this method.
 	 * </p>
 	 * @param propertyBox the {@link PropertyBox} which contains the property values to load. If <code>null</code>, all
@@ -364,13 +359,16 @@ public interface PropertyInputGroup extends PropertySetBound, ValueHolder<Proper
 		 * changes.
 		 * @param validationStatusHandler the {@link ValidationStatusHandler} to associate to given
 		 *        <code>property</code> (not null)
+		 * @return this
 		 */
 		<T> B validationStatusHandler(Property<T> property, ValidationStatusHandler validationStatusHandler);
 
 		/**
 		 * Set the {@link Label} to use to track given <code>property</code> validation status changes.
+		 * @param <T> Property type
 		 * @param statusLabel the status {@link Label} to use to track given <code>property</code> validation status
 		 *        (not null)
+		 * @return this
 		 */
 		default <T> B validationStatusHandler(Property<T> property, Label statusLabel) {
 			return validationStatusHandler(property, ValidationStatusHandler.label(statusLabel));

@@ -31,8 +31,6 @@ import com.vaadin.ui.Label;
 /**
  * Handler for validation status change events, typically bound to a {@link ValueComponent} source object.
  * 
- * @param <V> the value type for which the validation status changed
- *
  * @since 5.0.0
  */
 @FunctionalInterface

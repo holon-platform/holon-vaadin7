@@ -74,6 +74,7 @@ public interface ValidatableInput<V> extends Input<V>, Validatable {
 
 	/**
 	 * Create a {@link ValidatableInput} from given {@link Input} instance.
+	 * @param <T> Value type
 	 * @param input The {@link Input} instance (not null)
 	 * @return A new {@link ValidatableInput} component which wraps the given <code>input</code>
 	 */
@@ -87,6 +88,7 @@ public interface ValidatableInput<V> extends Input<V>, Validatable {
 	 * <p>
 	 * Any {@link Field} validator will be inherited from the returned {@link ValidatableInput} instance.
 	 * </p>
+	 * @param <T> Value type
 	 * @param field The field instance (not null)
 	 * @return A new {@link ValidatableInput} component which wraps the given <code>field</code>
 	 */
@@ -96,6 +98,7 @@ public interface ValidatableInput<V> extends Input<V>, Validatable {
 
 	/**
 	 * Create a {@link ValidatableInput} component type from given {@link Field} instance.
+	 * @param <T> Value type
 	 * @param field The field instance (not null)
 	 * @param inheritValidators Whether to inherit {@link Field} validators, if any
 	 * @return A new {@link ValidatableInput} component which wraps the given <code>field</code>
@@ -113,6 +116,7 @@ public interface ValidatableInput<V> extends Input<V>, Validatable {
 
 	/**
 	 * Get a fluent builder to create and setup a {@link ValidatableInput} from given {@link Input}.
+	 * @param <T> Value type
 	 * @param input Concrete input component (not null)
 	 * @return {@link ValidatableInput} builder
 	 */

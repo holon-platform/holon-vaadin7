@@ -34,8 +34,6 @@ public interface ValidatableInputBuilder<T, C extends ValidatableInput<T>> {
 
 	/**
 	 * Adds a {@link Validator} to the {@link Input} bound to given <code>property</code>.
-	 * @param <T> Property type
-	 * @param property Property (not null)
 	 * @param validator Validator to add (not null)
 	 * @return this
 	 */
@@ -43,8 +41,6 @@ public interface ValidatableInputBuilder<T, C extends ValidatableInput<T>> {
 
 	/**
 	 * Adds a {@link com.vaadin.data.Validator} to the {@link Input} bound to given <code>property</code>.
-	 * @param <T> Property type
-	 * @param property Property (not null)
 	 * @param validator Validator to add (not null)
 	 * @return this
 	 */

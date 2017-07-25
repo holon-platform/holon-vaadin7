@@ -44,6 +44,8 @@ public interface PropertyBinding<T, B> extends Serializable {
 
 	/**
 	 * Create a new {@link PropertyBinding} instance.
+	 * @param <T> Property type
+	 * @param <B> Bound type
 	 * @param property Property
 	 * @param component Bound component
 	 * @return A new {@link PropertyBinding} instance
@@ -54,6 +56,7 @@ public interface PropertyBinding<T, B> extends Serializable {
 
 	/**
 	 * Callback interface to perform configuration operations on a component bound to a {@link Property}.
+	 * @param <B> Bound component type
 	 */
 	@FunctionalInterface
 	public interface PostProcessor<B> {

@@ -24,7 +24,6 @@ import com.holonplatform.vaadin.data.ItemDataSource;
 /**
  * Base builder for components with {@link ItemDataSource} support.
  * 
- * @param <C> Concrete component type
  * @param <B> Concrete builder type
  *
  * @since 5.0.0
