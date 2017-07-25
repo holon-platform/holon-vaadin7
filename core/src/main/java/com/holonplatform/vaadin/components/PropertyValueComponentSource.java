@@ -32,14 +32,16 @@ public interface PropertyValueComponentSource extends PropertySetBound {
 	 * Gets all the {@link ValueComponent}s that have been bound to a property.
 	 * @return An {@link Iterable} on all property bound {@link ValueComponent}s
 	 */
-	Iterable<ValueComponent<?>> getValueComponents();
+	@SuppressWarnings("rawtypes")
+	Iterable<ValueComponent> getValueComponents();
 
 	/**
 	 * Get the {@link ValueComponent} bound to given <code>property</code>, if any.
+	 * @param <T> Component type
 	 * @param property Property for which to get the associated {@link ValueComponent} (not null)
 	 * @return Optional {@link ValueComponent} bound to given <code>property</code>
 	 */
-	Optional<ValueComponent<?>> getValueComponent(Property<?> property);
+	<T> Optional<ValueComponent<T>> getValueComponent(Property<T> property);
 
 	/**
 	 * Return a {@link Stream} of the available {@link Property} and {@link ValueComponent}s bindings.

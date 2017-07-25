@@ -36,7 +36,8 @@ public interface PropertyViewGroup extends PropertySetBound, ValueHolder<Propert
 	 * Gets all the {@link ViewComponent}s that have been bound to a property.
 	 * @return An {@link Iterable} on all bound ViewComponents
 	 */
-	Iterable<ViewComponent<?>> getViewComponents();
+	@SuppressWarnings("rawtypes")
+	Iterable<ViewComponent> getViewComponents();
 
 	/**
 	 * Get the {@link ViewComponent} bound to given <code>property</code>, if any.

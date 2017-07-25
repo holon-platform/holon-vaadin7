@@ -174,8 +174,9 @@ public class DefaultPropertyInputForm<C extends Component> extends
 	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.PropertyInputContainer#getProperties()
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
-	public Iterable<Property<?>> getProperties() {
+	public Iterable<Property> getProperties() {
 		return getInputGroup().getProperties();
 	}
 

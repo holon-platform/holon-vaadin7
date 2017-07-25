@@ -139,8 +139,9 @@ public class DefaultPropertyViewForm<C extends Component>
 	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.PropertyViewSource#getProperties()
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
-	public Iterable<Property<?>> getProperties() {
+	public Iterable<Property> getProperties() {
 		return getViewGroup().getProperties();
 	}
 
@@ -186,8 +187,9 @@ public class DefaultPropertyViewForm<C extends Component>
 	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.PropertyViewSource#getViewComponents()
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
-	public Iterable<ViewComponent<?>> getViewComponents() {
+	public Iterable<ViewComponent> getViewComponents() {
 		return getViewGroup().getViewComponents();
 	}
 

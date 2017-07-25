@@ -113,8 +113,9 @@ public class DefaultPropertyViewGroup implements PropertyViewGroup, PropertyValu
 	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.PropertySetBound#getProperties()
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
-	public Iterable<Property<?>> getProperties() {
+	public Iterable<Property> getProperties() {
 		return Collections.unmodifiableList(properties);
 	}
 
@@ -142,8 +143,9 @@ public class DefaultPropertyViewGroup implements PropertyViewGroup, PropertyValu
 	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.PropertyViewGroup#getViewComponents()
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
-	public Iterable<ViewComponent<?>> getViewComponents() {
+	public Iterable<ViewComponent> getViewComponents() {
 		return properties.stream().filter(p -> propertyViews.containsKey(p)).map(p -> propertyViews.get(p))
 				.collect(Collectors.toList());
 	}
@@ -174,8 +176,9 @@ public class DefaultPropertyViewGroup implements PropertyViewGroup, PropertyValu
 	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.PropertyValueComponentSource#getValueComponents()
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
-	public Iterable<ValueComponent<?>> getValueComponents() {
+	public Iterable<ValueComponent> getValueComponents() {
 		return properties.stream().filter(p -> propertyViews.containsKey(p)).map(p -> propertyViews.get(p))
 				.collect(Collectors.toList());
 	}
@@ -185,8 +188,9 @@ public class DefaultPropertyViewGroup implements PropertyViewGroup, PropertyValu
 	 * @see com.holonplatform.vaadin.components.PropertyValueComponentSource#getValueComponent(com.holonplatform.core.
 	 * property.Property)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
-	public Optional<ValueComponent<?>> getValueComponent(Property<?> property) {
+	public <T> Optional<ValueComponent<T>> getValueComponent(Property<T> property) {
 		ObjectUtils.argumentNotNull(property, "Property must be not null");
 		return Optional.ofNullable(propertyViews.get(property));
 	}

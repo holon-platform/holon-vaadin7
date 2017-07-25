@@ -30,7 +30,8 @@ public interface PropertySetBound {
 	 * Gets the set of {@link Property}s to which this component is bound.
 	 * @return An {@link Iterable} on the property set (never null)
 	 */
-	Iterable<Property<?>> getProperties();
+	@SuppressWarnings("rawtypes")
+	Iterable<Property> getProperties();
 
 	/**
 	 * Gets whether given <code>property</code> is part of the property set to which this component is bound.
