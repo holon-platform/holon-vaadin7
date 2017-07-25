@@ -61,7 +61,7 @@ public class RequiredInputValidator<T> implements Validator<T> {
 		super();
 		ObjectUtils.argumentNotNull(valueHolder, "ValueHolder must be not null");
 		this.valueHolder = valueHolder;
-		this.message = message;
+		this.message = (message != null) ? message : DEFAULT_REQUIRED_ERROR;
 	}
 
 	/*
@@ -71,7 +71,7 @@ public class RequiredInputValidator<T> implements Validator<T> {
 	@Override
 	public void validate(T value) throws com.holonplatform.core.Validator.ValidationException {
 		if (Objects.equals(valueHolder.getEmptyValue(), value)) {
-			throw new ValidationException((message != null) ? message : DEFAULT_REQUIRED_ERROR);
+			throw new ValidationException(message);
 		}
 	}
 
