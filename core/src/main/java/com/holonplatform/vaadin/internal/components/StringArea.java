@@ -26,7 +26,7 @@ import com.vaadin.ui.Field;
 import com.vaadin.ui.TextArea;
 
 /**
- * {@link TextArea} extension to handle {@link String} values, supporting {@link ValidatableField} features.
+ * A {@link String} type {@link Input} area field.
  * 
  * @since 5.0.0
  */

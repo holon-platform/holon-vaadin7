@@ -16,7 +16,6 @@
 package com.holonplatform.vaadin.internal.components;
 
 import com.holonplatform.core.internal.utils.ObjectUtils;
-import com.holonplatform.vaadin.components.Components;
 import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.Registration;
 import com.vaadin.data.Validator.InvalidValueException;
@@ -29,11 +28,6 @@ import com.vaadin.ui.Field;
 /**
  * Base class to build a custom {@link Field} wrapping another Field, maybe with a different value type, that acts as
  * presenter and inout handler in UI.
- * 
- * <p>
- * This field automatically adds {@link Components#DEFAULT_INVALID_FIELD_STYLE_CLASS} style name to the wrapped internal
- * field when it is in an invalid state, according to any registered validator.
- * </p>
  * 
  * <p>
  * Any style name added to this Field using {@link #addStyleName(String)} is reflected to internal field, to ensure

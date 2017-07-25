@@ -521,7 +521,7 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 
 	/**
 	 * Set the overall {@link ValidationStatusHandler}.
-	 * @param the {@link ValidationStatusHandler} to set
+	 * @param validationStatusHandler the {@link ValidationStatusHandler} to set
 	 */
 	public void setValidationStatusHandler(ValidationStatusHandler validationStatusHandler) {
 		this.validationStatusHandler = validationStatusHandler;

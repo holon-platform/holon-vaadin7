@@ -26,7 +26,7 @@ import com.vaadin.ui.Field;
 import com.vaadin.ui.TextField;
 
 /**
- * {@link TextField} extension to handle {@link String} values, supporting {@link ValidatableField} features.
+ * A {@link String} type {@link Input} field.
  * 
  * @since 5.0.0
  */

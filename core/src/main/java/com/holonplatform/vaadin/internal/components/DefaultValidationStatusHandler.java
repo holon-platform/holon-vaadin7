@@ -25,8 +25,6 @@ import com.vaadin.ui.Component;
  * Default {@link ValidationStatusHandler} implementation using
  * {@link AbstractComponent#setComponentError(com.vaadin.server.ErrorMessage)} to notify the validation status.
  * 
- * @param <T> Value type
- * 
  * @since 5.0.0
  */
 public class DefaultValidationStatusHandler implements ValidationStatusHandler {

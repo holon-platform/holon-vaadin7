@@ -51,6 +51,7 @@ public class ValueChangeNotifierRegistration implements Registration {
 	/**
 	 * Adapt a {@link ValueHolder} {@link com.holonplatform.vaadin.components.ValueHolder.ValueChangeListener} and
 	 * register it in given notifier.
+	 * @param <V> Value type
 	 * @param source Source {@link ValueHolder}
 	 * @param notifier Actual {@link ValueChangeNotifier}
 	 * @param listener Listener to adapt

@@ -21,8 +21,6 @@ import com.vaadin.ui.Label;
 
 /**
  * A {@link ValidationStatusHandler} which uses a {@link Label} to notify validation errors.
- * 
- * @param <T> Value type
  *
  * @since 5.0.0
  */

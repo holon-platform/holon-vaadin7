@@ -54,8 +54,8 @@ public class RequiredInputValidator<T> implements Validator<T> {
 	/**
 	 * Constructor
 	 * @param valueHolder the {@link ValueHolder} to which the validation refers (not null)
-	 * @param message Optional validation failed message. If <code>null</code>, the
-	 *        {@link ValidatableField#DEFAULT_REQUIRED_ERROR} message will be used.
+	 * @param message Optional validation failed message. If <code>null</code>, the {@link #DEFAULT_REQUIRED_ERROR}
+	 *        message will be used.
 	 */
 	public RequiredInputValidator(ValueHolder<T> valueHolder, Localizable message) {
 		super();

@@ -27,8 +27,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
 
 /**
- * {@link com.vaadin.ui.DateField} extension to handle {@link Date} values, supporting {@link ValidatableField}
- * features.
+ * A {@link Date} type {@link Input} field.
  * 
  * @since 5.0.0
  */

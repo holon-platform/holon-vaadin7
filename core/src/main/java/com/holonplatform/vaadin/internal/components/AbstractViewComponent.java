@@ -231,7 +231,7 @@ public abstract class AbstractViewComponent<T> extends CustomComponent
 	}
 
 	/**
-	 * Removes a {@link ValueChangeListener}.
+	 * Removes a {@link com.holonplatform.vaadin.components.Input.ValueChangeListener}.
 	 * @param listener the listener to remove
 	 */
 	public void removeValueChangeListener(com.holonplatform.vaadin.components.Input.ValueChangeListener<T> listener) {
