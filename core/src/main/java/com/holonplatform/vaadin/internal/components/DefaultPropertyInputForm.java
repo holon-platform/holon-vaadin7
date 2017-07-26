@@ -85,7 +85,7 @@ public class DefaultPropertyInputForm<C extends Component> extends
 	}
 
 	/**
-	 * Sets the backing input group
+	 * Sets the backing input group.
 	 * @param <G> Input group type
 	 * @param inputGroup the {@link PropertyInputGroup} to set
 	 */

@@ -195,13 +195,12 @@ public class DefaultPropertyViewGroup implements PropertyViewGroup, PropertyValu
 		return Optional.ofNullable(propertyViews.get(property));
 	}
 
-	/*
-	 * (non-Javadoc)
+	/* (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.PropertyValueComponentSource#streamOfValueComponents()
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> Stream<PropertyBinding<T, ValueComponent<T>>> streamOfValueComponents() {
+	public Stream<PropertyBinding<?, ValueComponent<?>>> streamOfValueComponents() {
 		return propertyViews.entrySet().stream().map(e -> PropertyBinding.create(e.getKey(), e.getValue()));
 	}
 

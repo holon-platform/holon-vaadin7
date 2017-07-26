@@ -240,13 +240,12 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 		return Optional.empty();
 	}
 
-	/*
-	 * (non-Javadoc)
+	/* (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.PropertyValueComponentSource#streamOfValueComponents()
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> Stream<PropertyBinding<T, ValueComponent<T>>> streamOfValueComponents() {
+	public Stream<PropertyBinding<?, ValueComponent<?>>> streamOfValueComponents() {
 		return propertySet.stream().filter(p -> _propertyConfiguration(p).getInput().isPresent())
 				.map(p -> PropertyBinding.create(p, _propertyConfiguration(p).getInput().get()));
 	}

@@ -45,8 +45,7 @@ public interface PropertyValueComponentSource extends PropertySetBound {
 
 	/**
 	 * Return a {@link Stream} of the available {@link Property} and {@link ValueComponent}s bindings.
-	 * @param <T> Property type
 	 * @return Property-ValueComponent {@link PropertyBinding} stream
 	 */
-	<T> Stream<PropertyBinding<T, ValueComponent<T>>> streamOfValueComponents();
+	Stream<PropertyBinding<?, ValueComponent<?>>> streamOfValueComponents();
 }

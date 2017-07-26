@@ -213,6 +213,9 @@ public interface Components {
 
 	/**
 	 * Gets a builder to create {@link Label}s.
+	 * <p>
+	 * The Label is of undefined size by default.
+	 * </p>
 	 * @return Label builder
 	 */
 	static LabelBuilder label() {
