@@ -240,7 +240,8 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 		return Optional.empty();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.PropertyValueComponentSource#streamOfValueComponents()
 	 */
 	@SuppressWarnings("unchecked")
@@ -331,9 +332,10 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 
 	/**
 	 * Reset all the {@link Input}s values.
+	 * @param setDefaultValue Whether to set the default value when available
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes", "unused" })
-	protected void resetValues() {
+	protected void resetValues(boolean setDefaultValue) {
 		propertySet.forEach(p -> {
 			final PropertyConfiguration<?> cfg = _propertyConfiguration(p);
 			cfg.getInput().ifPresent(i -> {
@@ -342,7 +344,7 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 					i.clear();
 
 					// check default value
-					if (!cfg.isReadOnly()) {
+					if (setDefaultValue && !cfg.isReadOnly()) {
 						cfg.getDefaultValueProvider().ifPresent(dvp -> ((Input) i).setValue(dvp.getDefaultValue(p)));
 					}
 				} catch (ValidationException | InvalidValueException ve) {
@@ -370,7 +372,7 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 		this.value = propertyBox;
 
 		// reset
-		resetValues();
+		resetValues(propertyBox == null);
 
 		// load
 		if (propertyBox != null) {
@@ -942,7 +944,7 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 	 * @param property Property
 	 * @return Property value
 	 */
-	private <T> T getPropertyValue(PropertyBox propertyBox, Property<T> property) {
+	protected <T> T getPropertyValue(PropertyBox propertyBox, Property<T> property) {
 		if (VirtualProperty.class.isAssignableFrom(property.getClass())) {
 			if (((VirtualProperty<T>) property).getValueProvider() != null) {
 				return ((VirtualProperty<T>) property).getValueProvider().getPropertyValue(propertyBox);
@@ -951,9 +953,6 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 		}
 		if (propertyBox.containsValue(property)) {
 			return propertyBox.getValue(property);
-		}
-		if (getPropertyConfiguration(property).getDefaultValueProvider().isPresent()) {
-			return getPropertyConfiguration(property).getDefaultValueProvider().get().getDefaultValue(property);
 		}
 		return null;
 	}
