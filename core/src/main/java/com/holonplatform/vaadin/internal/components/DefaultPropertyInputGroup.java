@@ -645,8 +645,6 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 				renderAndBind(configuration);
 			}
 		});
-		// reset
-		resetValues();
 	}
 
 	/**
