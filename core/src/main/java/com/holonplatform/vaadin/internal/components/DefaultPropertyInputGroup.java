@@ -85,7 +85,7 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 	/**
 	 * Overall validation status handler
 	 */
-	private ValidationStatusHandler validationStatusHandler = null;
+	private ValidationStatusHandler validationStatusHandler = ValidationStatusHandler.notification();
 
 	/**
 	 * Validation status handler for all the properties

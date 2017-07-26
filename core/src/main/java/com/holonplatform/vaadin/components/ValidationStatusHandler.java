@@ -25,8 +25,10 @@ import com.holonplatform.core.i18n.LocalizationContext;
 import com.holonplatform.core.property.Property;
 import com.holonplatform.vaadin.internal.components.DefaultValidationStatusHandler;
 import com.holonplatform.vaadin.internal.components.LabelValidationStatusHandler;
+import com.holonplatform.vaadin.internal.components.NotificationValidationStatusHandler;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
 
 /**
  * Handler for validation status change events, typically bound to a {@link ValueComponent} source object.
@@ -78,6 +80,52 @@ public interface ValidationStatusHandler {
 	 */
 	static ValidationStatusHandler label(Label statusLabel, boolean hideWhenValid) {
 		return new LabelValidationStatusHandler(statusLabel, hideWhenValid);
+	}
+
+	/**
+	 * Create a {@link ValidationStatusHandler} which shows a {@link Notification} of type
+	 * {@link Notification#TYPE_ERROR_MESSAGE} to notify validation errors.
+	 * <p>
+	 * This methods creates a notification validation status handler which displays only the first validation error.
+	 * </p>
+	 * @return A new notification validation status handler instance
+	 */
+	static ValidationStatusHandler notification() {
+		return new NotificationValidationStatusHandler(null, false);
+	}
+
+	/**
+	 * Create a {@link ValidationStatusHandler} which shows a {@link Notification} of type
+	 * {@link Notification#TYPE_ERROR_MESSAGE} to notify validation errors.
+	 * @param showAllErrors <code>true</code> to display all validation errors, <code>false</code> to show only the
+	 *        first
+	 * @return A new notification validation status handler instance
+	 */
+	static ValidationStatusHandler notification(boolean showAllErrors) {
+		return new NotificationValidationStatusHandler(null, showAllErrors);
+	}
+
+	/**
+	 * Create a {@link ValidationStatusHandler} which shows a {@link Notification} to notify validation errors.
+	 * <p>
+	 * This methods creates a notification validation status handler which displays only the first validation error.
+	 * </p>
+	 * @param notification The notification instance to use, <code>null</code> for default
+	 * @return A new notification validation status handler instance
+	 */
+	static ValidationStatusHandler notification(Notification notification) {
+		return new NotificationValidationStatusHandler(notification, false);
+	}
+
+	/**
+	 * Create a {@link ValidationStatusHandler} which shows a {@link Notification} to notify validation errors.
+	 * @param notification The notification instance to use, <code>null</code> for default
+	 * @param showAllErrors <code>true</code> to display all validation errors, <code>false</code> to show only the
+	 *        first
+	 * @return A new notification validation status handler instance
+	 */
+	static ValidationStatusHandler notification(Notification notification, boolean showAllErrors) {
+		return new NotificationValidationStatusHandler(notification, showAllErrors);
 	}
 
 	/**
