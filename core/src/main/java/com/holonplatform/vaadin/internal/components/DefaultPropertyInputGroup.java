@@ -56,6 +56,11 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 	private static final long serialVersionUID = -5441417959315472240L;
 
 	/**
+	 * Current value
+	 */
+	private PropertyBox value;
+
+	/**
 	 * Property set
 	 */
 	@SuppressWarnings("rawtypes")
@@ -309,7 +314,9 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 		propertySet.forEach(p -> {
 			final PropertyConfiguration<?> cfg = getPropertyConfiguration(p);
 			if (cfg.isHidden()) {
-				propertyBox.setValue(p, cfg.getHiddenValue());
+				getCurrentPropertyValue(p).ifPresent(v -> {
+					propertyBox.setValue(p, v);
+				});
 			} else {
 				cfg.getInput().ifPresent(i -> {
 					propertyBox.setValue(p, i.getValue());
@@ -361,35 +368,29 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 	@SuppressWarnings("unchecked")
 	@Override
 	public void setValue(final PropertyBox propertyBox, boolean validate) {
+		this.value = propertyBox;
 
 		// reset
 		resetValues();
-
-		// clear hidden properties values
-		properties.values().forEach(cfg -> cfg.setHiddenValue(null)); // TODO
 
 		// load
 		if (propertyBox != null) {
 			propertySet.forEach(p -> {
 				final PropertyConfiguration<Object> cfg = getPropertyConfiguration(p);
-				if (cfg.isHidden() && propertyBox.containsValue(p)) {
-					cfg.setHiddenValue(propertyBox.getValue(p));
-				} else {
-					cfg.getInput().ifPresent(i -> {
-						Object value = getPropertyValue(propertyBox, p);
-						if (value != null) {
-							// ignore read-only
-							boolean ro = i.isReadOnly();
-							if (ro)
-								i.setReadOnly(false);
-							i.setValue(value);
-							if (ro)
-								i.setReadOnly(true);
-						} else {
-							i.clear();
-						}
-					});
-				}
+				cfg.getInput().ifPresent(i -> {
+					Object value = getPropertyValue(propertyBox, p);
+					if (value != null) {
+						// ignore read-only
+						boolean ro = i.isReadOnly();
+						if (ro)
+							i.setReadOnly(false);
+						i.setValue(value);
+						if (ro)
+							i.setReadOnly(true);
+					} else {
+						i.clear();
+					}
+				});
 			});
 		}
 
@@ -939,6 +940,7 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 
 	/**
 	 * Get the value of given <code>property</code> using given <code>propertyBox</code>.
+	 * @param <T> Property type
 	 * @param propertyBox PropertyBox
 	 * @param property Property
 	 * @return Property value
@@ -957,6 +959,20 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 			return getPropertyConfiguration(property).getDefaultValueProvider().get().getDefaultValue(property);
 		}
 		return null;
+	}
+
+	/**
+	 * Get the value of given <code>property</code> using current value, if available.
+	 * @param <T> Property type
+	 * @param property Property for which to obtain the value
+	 * @return Property value, empty if current value is not available or the given property is not available in current
+	 *         value
+	 */
+	private <T> Optional<T> getCurrentPropertyValue(Property<T> property) {
+		if (value != null && value.contains(property)) {
+			return Optional.ofNullable(value.getValue(property));
+		}
+		return Optional.empty();
 	}
 
 	// Builder
@@ -1291,7 +1307,6 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 
 		private final Property<T> property;
 		private boolean hidden;
-		private T hiddenValue;
 		private boolean required;
 		private boolean readOnly;
 		private PropertyRenderer<Input<T>, T> renderer;
@@ -1322,124 +1337,129 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 		}
 
 		/**
-		 * @return the hidden
+		 * Get whether the property is hidden.
+		 * @return <code>true</code> if the property is hidden
 		 */
 		public boolean isHidden() {
 			return hidden;
 		}
 
 		/**
-		 * @return the hiddenValue
-		 */
-		public T getHiddenValue() {
-			return hiddenValue;
-		}
-
-		/**
-		 * @param hiddenValue the hiddenValue to set
-		 */
-		public void setHiddenValue(T hiddenValue) {
-			this.hiddenValue = hiddenValue;
-		}
-
-		/**
-		 * @param hidden the hidden to set
+		 * Set the property as hidden.
+		 * @param hidden <code>true</code> to set the property as hidden
 		 */
 		public void setHidden(boolean hidden) {
 			this.hidden = hidden;
 		}
 
 		/**
-		 * @return the required
+		 * Get whether the property is required.
+		 * @return <code>true</code> if the property is required
 		 */
 		public boolean isRequired() {
 			return required;
 		}
 
 		/**
-		 * @param required the required to set
+		 * Set the property as required.
+		 * @param required <code>true</code> to set the property as required
 		 */
 		public void setRequired(boolean required) {
 			this.required = required;
 		}
 
 		/**
-		 * @return the requiredValidator
+		 * Get the {@link Validator} to use to check a required property value.
+		 * @return Optional {@link Validator} to use to check a required property valu
 		 */
 		public Optional<Validator<T>> getRequiredValidator() {
 			return Optional.ofNullable(requiredValidator);
 		}
 
 		/**
-		 * @param requiredValidator the requiredValidator to set
+		 * Set the {@link Validator} to use to check a required property value.
+		 * @param requiredValidator the required {@link Validator} to set
 		 */
 		public void setRequiredValidator(Validator<T> requiredValidator) {
 			this.requiredValidator = requiredValidator;
 		}
 
 		/**
-		 * @return the requiredMessage
+		 * Get the required validation message to show when using the default required property validator.
+		 * @return the optional required validation message
 		 */
 		public Optional<Localizable> getRequiredMessage() {
 			return Optional.ofNullable(requiredMessage);
 		}
 
 		/**
-		 * @param requiredMessage the requiredMessage to set
+		 * Set the required validation message to show when using the default required property validator.
+		 * @param requiredMessage the required validation message to set
 		 */
 		public void setRequiredMessage(Localizable requiredMessage) {
 			this.requiredMessage = requiredMessage;
 		}
 
 		/**
-		 * @return the readOnly
+		 * Get whether the property is read-only.
+		 * @return <code>true</code> if the property is read-only
 		 */
 		public boolean isReadOnly() {
 			return property.isReadOnly() || readOnly;
 		}
 
 		/**
-		 * @param readOnly the readOnly to set
+		 * Set the property as read-only.
+		 * @param readOnly <code>true</code> to set the property as read-only
 		 */
 		public void setReadOnly(boolean readOnly) {
 			this.readOnly = readOnly;
 		}
 
 		/**
-		 * @return the renderer
+		 * Get the {@link PropertyRenderer} to use to create the bound {@link Input}.
+		 * @return the {@link PropertyRenderer} to use to create the bound {@link Input}
 		 */
 		public Optional<PropertyRenderer<Input<T>, T>> getRenderer() {
 			return Optional.ofNullable(renderer);
 		}
 
 		/**
-		 * @param renderer the renderer to set
+		 * Set the {@link PropertyRenderer} to use to create the bound {@link Input}.
+		 * @param renderer the {@link PropertyRenderer} to set
 		 */
 		public void setRenderer(PropertyRenderer<Input<T>, T> renderer) {
 			this.renderer = renderer;
 		}
 
 		/**
-		 * @return the defaultValueProvider
+		 * Get the property default value provider.
+		 * @return Optional property default value provider
 		 */
 		public Optional<DefaultValueProvider<T>> getDefaultValueProvider() {
 			return Optional.ofNullable(defaultValueProvider);
 		}
 
 		/**
-		 * @param defaultValueProvider the defaultValueProvider to set
+		 * Set the property default value provider.
+		 * @param defaultValueProvider the {@link DefaultValueProvider} to set
 		 */
 		public void setDefaultValueProvider(DefaultValueProvider<T> defaultValueProvider) {
 			this.defaultValueProvider = defaultValueProvider;
 		}
 
 		/**
-		 * @return the validators
+		 * Get the registered property {@link Validator}s.
+		 * @return the property validators, empty if none
 		 */
 		public List<Validator<T>> getValidators() {
 			return (propertyValidators != null) ? propertyValidators : Collections.emptyList();
 		}
 
+		/**
+		 * Add a property {@link Validator}s.
+		 * @param validator the {@link Validator} to add
+		 */
 		public void addValidator(Validator<T> validator) {
 			if (validator != null) {
 				if (this.propertyValidators == null) {
@@ -1449,6 +1469,10 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 			}
 		}
 
+		/**
+		 * Add a property {@link Validator}s as first.
+		 * @param validator the {@link Validator} to add
+		 */
 		public void addValidatorAsFirst(Validator<T> validator) {
 			if (validator != null) {
 				if (this.propertyValidators == null) {
@@ -1459,28 +1483,32 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 		}
 
 		/**
-		 * @return the propertyValidationStatusHandler
+		 * Get the property {@link ValidationStatusHandler}.
+		 * @return Optional property {@link ValidationStatusHandler}
 		 */
 		public Optional<ValidationStatusHandler> getPropertyValidationStatusHandler() {
 			return Optional.ofNullable(propertyValidationStatusHandler);
 		}
 
 		/**
-		 * @param propertyValidationStatusHandler the propertyValidationStatusHandler to set
+		 * Set the property {@link ValidationStatusHandler}.
+		 * @param propertyValidationStatusHandler the property {@link ValidationStatusHandler} to set
 		 */
 		public void setPropertyValidationStatusHandler(ValidationStatusHandler propertyValidationStatusHandler) {
 			this.propertyValidationStatusHandler = propertyValidationStatusHandler;
 		}
 
 		/**
-		 * @return the input
+		 * Get the {@link Input} bound to the property, if available.
+		 * @return the optional property input
 		 */
 		public Optional<Input<T>> getInput() {
 			return Optional.ofNullable(input);
 		}
 
 		/**
-		 * @param input the input to set
+		 * Set the {@link Input} bound to the property.
+		 * @param input the {@link Input} to set
 		 */
 		public void setInput(Input<T> input) {
 			this.input = input;
