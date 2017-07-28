@@ -533,7 +533,7 @@ public interface Components {
 		 * @return {@link PropertyInputForm} builder
 		 */
 		static PropertyInputFormBuilder<FormLayout> form() {
-			return PropertyInputForm.builder(formLayout().fullWidth().build())
+			return PropertyInputForm.builder(formLayout().fullWidth().spacing().build())
 					.composer(ComposableComponent.componentContainerComposer());
 		}
 

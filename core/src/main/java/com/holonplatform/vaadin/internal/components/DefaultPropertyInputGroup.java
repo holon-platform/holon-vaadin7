@@ -341,7 +341,12 @@ public class DefaultPropertyInputGroup implements PropertyInputGroup, PropertyVa
 			cfg.getInput().ifPresent(i -> {
 				try {
 					// clear input
+					boolean ro = i.isReadOnly();
+					if (ro)
+						i.setReadOnly(false);
 					i.clear();
+					if (ro)
+						i.setReadOnly(true);
 
 					// check default value
 					if (setDefaultValue && !cfg.isReadOnly()) {
