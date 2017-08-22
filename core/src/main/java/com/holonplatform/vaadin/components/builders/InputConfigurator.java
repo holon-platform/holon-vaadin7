@@ -31,6 +31,12 @@ import com.holonplatform.vaadin.components.ValueHolder.ValueChangeListener;
 public interface InputConfigurator<T, B extends InputConfigurator<T, B>> extends ComponentConfigurator<B> {
 
 	/**
+	 * Set the input component as read-only. The user can not change the value of a read-only input.
+	 * @return this
+	 */
+	B readOnly();
+
+	/**
 	 * Sets the <i>tabulator index</i> of the component. The tab index property is used to specify the order in which
 	 * the fields are focused when the user presses the Tab key. Components with a defined tab index are focused
 	 * sequentially first, and then the components with no tab index.

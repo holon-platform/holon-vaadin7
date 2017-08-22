@@ -178,12 +178,6 @@ public interface ComponentConfigurator<B extends ComponentConfigurator<B>> {
 	B hidden();
 
 	/**
-	 * Set the component as read-only. The user can not change the value of a read-only component.
-	 * @return this
-	 */
-	B readOnly();
-
-	/**
 	 * Sets the caption rendered as HTML.
 	 * <p>
 	 * When the captions are rendered in the browser as HTML, the developer is responsible for ensuring no harmful HTML

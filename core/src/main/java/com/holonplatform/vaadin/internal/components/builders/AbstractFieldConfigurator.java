@@ -45,7 +45,17 @@ public abstract class AbstractFieldConfigurator<T, C extends AbstractField<T>, B
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.FieldBuilder#tabIndex(int)
+	 * @see com.holonplatform.vaadin.components.builders.InputConfigurator#readOnly()
+	 */
+	@Override
+	public B readOnly() {
+		getInstance().setReadOnly(true);
+		return builder();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.builders.InputConfigurator#tabIndex(int)
 	 */
 	@Override
 	public B tabIndex(int tabIndex) {

@@ -229,16 +229,6 @@ public abstract class AbstractComponentConfigurator<I extends AbstractComponent,
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.ComponentBuilder#readOnly()
-	 */
-	@Override
-	public B readOnly() {
-		getInstance().setReadOnly(true);
-		return builder();
-	}
-
-	/*
-	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.builders.ComponentBuilder#captionAsHtml()
 	 */
 	@Override
