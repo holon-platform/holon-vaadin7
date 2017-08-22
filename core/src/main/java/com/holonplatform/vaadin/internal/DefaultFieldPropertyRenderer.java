@@ -102,7 +102,7 @@ public class DefaultFieldPropertyRenderer<T> implements PropertyRenderer<Field, 
 	 * @return Field instance
 	 */
 	protected Field<T> renderString(Property<T> property) {
-		return postProcessField(input.string().nullRepresentation("").emptyValuesAsNull(true).asField(), property);
+		return postProcessField(input.string().emptyValuesAsNull(true).asField(), property);
 	}
 
 	/**

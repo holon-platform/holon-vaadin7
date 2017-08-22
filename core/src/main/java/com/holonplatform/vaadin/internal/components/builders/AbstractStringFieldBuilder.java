@@ -165,26 +165,6 @@ public abstract class AbstractStringFieldBuilder<I extends AbstractTextField>
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.TextFieldBuilder#nullRepresentation(java.lang.String)
-	 */
-	@Override
-	public StringInputBuilder nullRepresentation(String nullRepresentation) {
-		getInstance().setNullRepresentation(nullRepresentation);
-		return builder();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.TextFieldBuilder#nullSettingAllowed(boolean)
-	 */
-	@Override
-	public StringInputBuilder nullSettingAllowed(boolean nullSettingAllowed) {
-		getInstance().setNullSettingAllowed(nullSettingAllowed);
-		return builder();
-	}
-
-	/*
-	 * (non-Javadoc)
 	 * @see
 	 * com.holonplatform.vaadin.internal.components.builders.AbstractFieldBuilder#localize(com.vaadin.ui.AbstractField)
 	 */

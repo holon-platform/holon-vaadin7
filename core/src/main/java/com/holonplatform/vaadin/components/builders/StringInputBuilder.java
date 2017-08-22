@@ -32,36 +32,6 @@ public interface StringInputBuilder extends TextInputBuilder<String, Input<Strin
 	StringInputBuilder rows(int rows);
 
 	/**
-	 * Sets the null-string representation.
-	 * <p>
-	 * The null-valued strings are represented on the user interface by replacing the null value with this string. If
-	 * the null representation is set null (not 'null' string), painting null value throws exception.
-	 * </p>
-	 * <p>
-	 * The default value is string 'null'
-	 * </p>
-	 * @param nullRepresentation Textual representation for null strings
-	 * @return this
-	 */
-	StringInputBuilder nullRepresentation(String nullRepresentation);
-
-	/**
-	 * Sets the null conversion mode.
-	 * <p>
-	 * If this property is true, writing null-representation string to text field always sets the field value to real
-	 * null. If this property is false, null setting is not made, but the null values are maintained. Maintenance of
-	 * null-values is made by only converting the textfield contents to real null, if the text field matches the
-	 * null-string representation and the current value of the field is null.
-	 * </p>
-	 * <p>
-	 * By default this setting is false.
-	 * </p>
-	 * @param nullSettingAllowed Should the null-string representation always be converted to null-values
-	 * @return this
-	 */
-	StringInputBuilder nullSettingAllowed(boolean nullSettingAllowed);
-
-	/**
 	 * Enable or disable treating empty String values as <code>null</code> values.
 	 * <p>
 	 * By default this behaviour is enabled.
