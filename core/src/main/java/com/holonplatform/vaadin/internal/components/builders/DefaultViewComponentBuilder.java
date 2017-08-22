@@ -21,8 +21,6 @@ import com.holonplatform.vaadin.components.ViewComponent;
 import com.holonplatform.vaadin.components.builders.ViewComponentBuilder;
 import com.holonplatform.vaadin.internal.components.LabelViewComponent;
 import com.holonplatform.vaadin.internal.components.LabelViewComponent.StringValueConverter;
-import com.vaadin.data.Property;
-import com.vaadin.data.util.converter.Converter;
 
 /**
  * Default {@link ViewComponentBuilder} implementation.
@@ -81,28 +79,6 @@ public class DefaultViewComponentBuilder<T>
 	public ViewComponentBuilder<T> forProperty(final com.holonplatform.core.property.Property<T> property) {
 		ObjectUtils.argumentNotNull(property, "Property must be not null");
 		getInstance().setStringConverter(v -> property.present(v));
-		return builder();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.ViewComponentBuilder#converter(com.vaadin.data.util.converter.
-	 * Converter)
-	 */
-	@Override
-	public ViewComponentBuilder<T> dataSourceValueConverter(Converter<T, Object> converter) {
-		getInstance().setConverter(converter);
-		return builder();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.ViewComponentBuilder#dataSource(com.vaadin.data.Property)
-	 */
-	@SuppressWarnings("rawtypes")
-	@Override
-	public ViewComponentBuilder<T> dataSource(Property dataSource) {
-		getInstance().setPropertyDataSource(dataSource);
 		return builder();
 	}
 

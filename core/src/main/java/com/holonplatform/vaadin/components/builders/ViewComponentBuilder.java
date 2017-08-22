@@ -18,8 +18,6 @@ package com.holonplatform.vaadin.components.builders;
 import com.holonplatform.vaadin.components.ValueHolder.ValueChangeListener;
 import com.holonplatform.vaadin.components.ViewComponent;
 import com.holonplatform.vaadin.internal.components.LabelViewComponent.StringValueConverter;
-import com.vaadin.data.Property;
-import com.vaadin.data.util.converter.Converter;
 
 /**
  * Builder to create {@link ViewComponent}s.
@@ -45,22 +43,6 @@ public interface ViewComponentBuilder<T> extends ComponentBuilder<ViewComponent<
 	 * @return this
 	 */
 	ViewComponentBuilder<T> valueDisplayConverter(StringValueConverter<T> stringConverter);
-
-	/**
-	 * Sets the converter used to convert the component value to the property data source type.
-	 * @param converter The converter to use
-	 * @return this
-	 */
-	ViewComponentBuilder<T> dataSourceValueConverter(Converter<T, Object> converter);
-
-	/**
-	 * Sets the specified Property as the data source for the component. All uncommitted changes are replaced with a
-	 * value from the new data source.
-	 * @param dataSource The data source Property
-	 * @return this
-	 */
-	@SuppressWarnings("rawtypes")
-	ViewComponentBuilder<T> dataSource(Property dataSource);
 
 	/**
 	 * Add a {@link ValueChangeListener} to the component.
