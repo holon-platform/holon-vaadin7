@@ -22,8 +22,6 @@ import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.i18n.LocalizationContext;
 import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.ValueHolder.ValueChangeListener;
-import com.vaadin.data.Buffered;
-import com.vaadin.data.Property;
 import com.vaadin.data.util.converter.Converter;
 
 /**
@@ -60,15 +58,6 @@ public interface InputConfigurator<T, B extends InputConfigurator<T, B>> extends
 	 * @return this
 	 */
 	B withValue(T value);
-
-	/**
-	 * Sets the value of the field using a value of the data source type. The value given is converted to the field type
-	 * and then assigned to the field. This will update the property data source in the same way as when
-	 * <code>setValue</code> is called.
-	 * @param value The value to set
-	 * @return this
-	 */
-	B withConvertedValue(Object value);
 
 	/**
 	 * Sets a converter for the field retrieving it from the converter factory defined for the application.
@@ -125,43 +114,6 @@ public interface InputConfigurator<T, B extends InputConfigurator<T, B>> extends
 	 * @return this
 	 */
 	B conversionError(Localizable conversionError);
-
-	/**
-	 * Disallow invalid value to be accepted by th field.
-	 * @return this
-	 */
-	B invalidNotAllowed();
-
-	/**
-	 * Allow invalid data to be committed to datasource.
-	 * @return this
-	 */
-	B invalidCommitted();
-
-	/**
-	 * Sets the field in buffered mode.
-	 * <p>
-	 * When in buffered mode, an internal buffer will be used to store changes until {@link Buffered#commit()} is
-	 * called. Calling {@link Buffered#discard()} will revert the internal buffer to the value of the data source.
-	 * <p>
-	 * @return this
-	 */
-	B buffered();
-
-	/**
-	 * Sets the specified Property as the data source for the field. All uncommitted changes are replaced with a value
-	 * from the new data source.
-	 * <p>
-	 * If the datasource has any validators, the same validators are added to the field. Because the default behavior of
-	 * the field is to allow invalid values, but not to allow committing them, this only adds visual error messages to
-	 * fields and do not allow committing them as long as the value is invalid. After the value is valid, the error
-	 * message is not shown and the commit can be done normally.
-	 * </p>
-	 * @param dataSource The data source Property
-	 * @return this
-	 */
-	@SuppressWarnings("rawtypes")
-	B dataSource(Property dataSource);
 
 	/**
 	 * Add a {@link ValueChangeListener} to be notified when the input value changes.

@@ -22,7 +22,6 @@ import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.ValueHolder;
 import com.holonplatform.vaadin.components.builders.InputConfigurator;
 import com.holonplatform.vaadin.internal.components.ValueChangeNotifierRegistration;
-import com.vaadin.data.Property;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.ui.AbstractField;
 
@@ -68,16 +67,6 @@ public abstract class AbstractFieldConfigurator<T, C extends AbstractField<T>, B
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.FieldBuilder#withConvertedValue(java.lang.Object)
-	 */
-	@Override
-	public B withConvertedValue(Object value) {
-		getInstance().setConvertedValue(value);
-		return builder();
-	}
-
-	/*
-	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.builders.FieldBuilder#converter(java.lang.Class)
 	 */
 	@Override
@@ -105,47 +94,6 @@ public abstract class AbstractFieldConfigurator<T, C extends AbstractField<T>, B
 	@Override
 	public B conversionError(Localizable conversionError) {
 		getInstance().setConversionError(localizeMessage(conversionError));
-		return builder();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.FieldBuilder#invalidNotAllowed()
-	 */
-	@Override
-	public B invalidNotAllowed() {
-		getInstance().setInvalidAllowed(false);
-		return builder();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.FieldBuilder#invalidCommitted()
-	 */
-	@Override
-	public B invalidCommitted() {
-		getInstance().setInvalidCommitted(true);
-		return builder();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.FieldBuilder#buffered()
-	 */
-	@Override
-	public B buffered() {
-		getInstance().setBuffered(true);
-		return builder();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.FieldBuilder#dataSource(com.vaadin.data.Property)
-	 */
-	@SuppressWarnings("rawtypes")
-	@Override
-	public B dataSource(Property dataSource) {
-		getInstance().setPropertyDataSource(dataSource);
 		return builder();
 	}
 
