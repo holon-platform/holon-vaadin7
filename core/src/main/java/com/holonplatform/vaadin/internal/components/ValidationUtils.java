@@ -36,52 +36,10 @@ public final class ValidationUtils implements Serializable {
 
 	private static final long serialVersionUID = -5381766757295971122L;
 
-	/**
-	 * <p>
-	 * For internal use.
-	 * </p>
-	 */
-	@FunctionalInterface
-	public interface ClientSynchAction {
-
-		/**
-		 * Called before the shared state and RPC invocations are sent to the client
-		 * @param initial Connector creation phase
-		 */
-		void beforeClientResponse(boolean initial);
-
-	}
-
 	/*
 	 * Empty private constructor: this class is intended only to provide constants ad utility methods.
 	 */
 	private ValidationUtils() {
-	}
-
-	/**
-	 * Convert and register all <code>fromValidatable</code> {@link Validator}s into <code>toValidatable</code> Vaadin
-	 * {@link com.vaadin.data.Validatable}.
-	 * @param <T> Validatable type
-	 * @param fromValidatable Source validatable (not null)
-	 * @param toValidatable Destination validatable (not null)
-	 */
-	public static <T> void registerValidators(Validatable<T> fromValidatable,
-			com.vaadin.data.Validatable toValidatable) {
-		ObjectUtils.argumentNotNull(fromValidatable, "Source Validatable must not be null");
-		ObjectUtils.argumentNotNull(toValidatable, "Destination Validatable must not be null");
-		for (Validator<T> validator : fromValidatable.getValidators()) {
-			toValidatable.addValidator(asVaadinValidator(validator));
-		}
-	}
-
-	/**
-	 * Convert a {@link Validator} into a Vaadin {@link com.vaadin.data.Validator}.
-	 * @param <T> Validator type
-	 * @param validator Validator to convert (not null)
-	 * @return Converted validator
-	 */
-	public static <T> com.vaadin.data.Validator asVaadinValidator(final Validator<T> validator) {
-		return new ValidatorWrapper<>(validator);
 	}
 
 	/**
