@@ -18,8 +18,6 @@ package com.holonplatform.vaadin.internal.components.builders;
 import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.i18n.LocalizationContext;
 import com.holonplatform.vaadin.components.builders.LabelBuilder;
-import com.vaadin.data.Property;
-import com.vaadin.data.util.converter.Converter;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Label;
 
@@ -120,28 +118,6 @@ public class DefaultLabelBuilder extends AbstractComponentBuilder<Label, Label, 
 	@Override
 	public LabelBuilder html() {
 		getInstance().setContentMode(ContentMode.HTML);
-		return builder();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.components.builders.LabelBuilder#converter(com.vaadin.data.util.converter.Converter)
-	 */
-	@Override
-	public LabelBuilder converter(Converter<String, ?> converter) {
-		getInstance().setConverter(converter);
-		return builder();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.LabelBuilder#dataSource(com.vaadin.data.Property)
-	 */
-	@SuppressWarnings("rawtypes")
-	@Override
-	public LabelBuilder dataSource(Property dataSource) {
-		getInstance().setPropertyDataSource(dataSource);
 		return builder();
 	}
 

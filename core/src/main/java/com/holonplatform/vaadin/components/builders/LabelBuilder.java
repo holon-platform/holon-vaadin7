@@ -18,8 +18,6 @@ package com.holonplatform.vaadin.components.builders;
 import com.holonplatform.core.Context;
 import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.i18n.LocalizationContext;
-import com.vaadin.data.Property;
-import com.vaadin.data.util.converter.Converter;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Label;
 
@@ -81,22 +79,5 @@ public interface LabelBuilder extends ComponentBuilder<Label, LabelBuilder> {
 	 * @return this
 	 */
 	LabelBuilder html();
-
-	/**
-	 * Sets the converter used to convert the label value to the property data source type. The converter must have a
-	 * presentation type of String.
-	 * @param converter The converter to use
-	 * @return this
-	 */
-	LabelBuilder converter(Converter<String, ?> converter);
-
-	/**
-	 * Sets the specified Property as the data source for the Label. All uncommitted changes are replaced with a value
-	 * from the new data source.
-	 * @param dataSource The data source Property
-	 * @return this
-	 */
-	@SuppressWarnings("rawtypes")
-	LabelBuilder dataSource(Property dataSource);
 
 }
