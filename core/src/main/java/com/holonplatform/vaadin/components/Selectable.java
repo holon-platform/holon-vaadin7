@@ -19,6 +19,8 @@ import java.io.Serializable;
 import java.util.Optional;
 import java.util.Set;
 
+import com.holonplatform.vaadin.Registration;
+
 /**
  * Represents a component which supports items selection.
  *
@@ -81,14 +83,9 @@ public interface Selectable<T> {
 	/**
 	 * Adds a {@link SelectionListener} to listener to selection changes.
 	 * @param selectionListener The listener to add
+	 * @return the listener {@link Registration}
 	 */
-	void addSelectionListener(SelectionListener<T> selectionListener);
-
-	/**
-	 * Removes a {@link SelectionListener}.
-	 * @param selectionListener The listener to remove
-	 */
-	void removeSelectionListener(SelectionListener<T> selectionListener);
+	Registration addSelectionListener(SelectionListener<T> selectionListener);
 
 	/**
 	 * Selection modes enumeration.

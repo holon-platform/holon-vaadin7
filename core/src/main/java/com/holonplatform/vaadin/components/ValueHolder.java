@@ -19,6 +19,8 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.holonplatform.vaadin.Registration;
+
 /**
  * Represents an object which holds a value and provide methods to handle such value.
  * 

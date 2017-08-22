@@ -15,8 +15,8 @@
  */
 package com.holonplatform.vaadin.internal.components;
 
+import com.holonplatform.vaadin.Registration;
 import com.holonplatform.vaadin.components.Input;
-import com.holonplatform.vaadin.components.Registration;
 import com.holonplatform.vaadin.components.builders.StringInputBuilder;
 import com.holonplatform.vaadin.internal.components.builders.AbstractStringFieldBuilder;
 import com.vaadin.data.Property;

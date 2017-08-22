@@ -30,11 +30,11 @@ import com.holonplatform.core.property.PropertyBox;
 import com.holonplatform.core.property.PropertyRenderer;
 import com.holonplatform.core.property.PropertyRendererRegistry.NoSuitableRendererAvailableException;
 import com.holonplatform.core.property.VirtualProperty;
+import com.holonplatform.vaadin.Registration;
 import com.holonplatform.vaadin.components.PropertyBinding;
 import com.holonplatform.vaadin.components.PropertyBinding.PostProcessor;
 import com.holonplatform.vaadin.components.PropertyValueComponentSource;
 import com.holonplatform.vaadin.components.PropertyViewGroup;
-import com.holonplatform.vaadin.components.Registration;
 import com.holonplatform.vaadin.components.ValueComponent;
 import com.holonplatform.vaadin.components.ViewComponent;
 

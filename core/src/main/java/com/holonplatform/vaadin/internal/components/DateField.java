@@ -17,8 +17,8 @@ package com.holonplatform.vaadin.internal.components;
 
 import java.util.Date;
 
+import com.holonplatform.vaadin.Registration;
 import com.holonplatform.vaadin.components.Input;
-import com.holonplatform.vaadin.components.Registration;
 import com.holonplatform.vaadin.components.builders.DateInputBuilder;
 import com.holonplatform.vaadin.internal.components.builders.AbstractDateFieldBuilder;
 import com.vaadin.data.Property;

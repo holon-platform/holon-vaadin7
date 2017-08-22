@@ -35,6 +35,7 @@ import com.holonplatform.core.property.PropertyBox;
 import com.holonplatform.core.property.PropertyRenderer;
 import com.holonplatform.core.property.PropertyValueProvider;
 import com.holonplatform.core.property.VirtualProperty;
+import com.holonplatform.vaadin.Registration;
 import com.holonplatform.vaadin.components.ItemListing;
 import com.holonplatform.vaadin.components.Selectable;
 import com.holonplatform.vaadin.data.ItemDataSource;
@@ -602,20 +603,10 @@ public class DefaultItemListing<T, P> extends CustomComponent
 	 * Selectable.SelectionListener)
 	 */
 	@Override
-	public void addSelectionListener(SelectionListener<T> selectionListener) {
+	public Registration addSelectionListener(SelectionListener<T> selectionListener) {
 		ObjectUtils.argumentNotNull(selectionListener, "SelectionListener must be not null");
 		selectionListeners.add(selectionListener);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.Selectable#removeSelectionListener(com.holonplatform.vaadin.components.
-	 * Selectable.SelectionListener)
-	 */
-	@Override
-	public void removeSelectionListener(SelectionListener<T> selectionListener) {
-		ObjectUtils.argumentNotNull(selectionListener, "SelectionListener must be not null");
-		selectionListeners.remove(selectionListener);
+		return () -> selectionListeners.remove(selectionListener);
 	}
 
 	/**

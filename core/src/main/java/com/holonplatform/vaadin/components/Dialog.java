@@ -18,8 +18,9 @@ package com.holonplatform.vaadin.components;
 import com.holonplatform.core.Context;
 import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.i18n.LocalizationContext;
-import com.holonplatform.vaadin.components.builders.ComponentBuilder;
 import com.holonplatform.vaadin.components.builders.ButtonConfigurator.BaseButtonConfigurator;
+import com.holonplatform.vaadin.Registration;
+import com.holonplatform.vaadin.components.builders.ComponentBuilder;
 import com.holonplatform.vaadin.internal.components.DefaultDialog;
 import com.holonplatform.vaadin.internal.components.QuestionDialog;
 import com.vaadin.ui.Component;
@@ -75,14 +76,9 @@ public interface Dialog extends Component {
 	/**
 	 * Adds a {@link CloseListener} for dialog closing events.
 	 * @param listener The listener to add (not null)
+	 * @return the listener {@link Registration}
 	 */
-	void addCloseListener(CloseListener listener);
-
-	/**
-	 * Removes dialog a {@link CloseListener}.
-	 * @param listener The listener to remove (not null)
-	 */
-	void removeCloseListener(CloseListener listener);
+	Registration addCloseListener(CloseListener listener);
 
 	/**
 	 * Listener for dialog closing event

@@ -21,6 +21,7 @@ import java.util.List;
 import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.i18n.LocalizationContext;
 import com.holonplatform.core.internal.utils.ObjectUtils;
+import com.holonplatform.vaadin.Registration;
 import com.holonplatform.vaadin.components.Dialog;
 import com.holonplatform.vaadin.internal.components.builders.AbstractComponentBuilder;
 import com.vaadin.shared.ui.label.ContentMode;
@@ -303,20 +304,10 @@ public abstract class AbstractDialog extends Window implements Dialog, CloseList
 	 * CloseListener)
 	 */
 	@Override
-	public void addCloseListener(com.holonplatform.vaadin.components.Dialog.CloseListener listener) {
+	public Registration addCloseListener(com.holonplatform.vaadin.components.Dialog.CloseListener listener) {
 		ObjectUtils.argumentNotNull(listener, "CloseListener must be not null");
 		closeListeners.add(listener);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.Dialog#removeCloseListener(com.holonplatform.vaadin.components.Dialog.
-	 * CloseListener)
-	 */
-	@Override
-	public void removeCloseListener(com.holonplatform.vaadin.components.Dialog.CloseListener listener) {
-		ObjectUtils.argumentNotNull(listener, "CloseListener must be not null");
-		closeListeners.remove(listener);
+		return () -> closeListeners.remove(listener);
 	}
 
 	/*

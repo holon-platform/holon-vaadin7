@@ -16,7 +16,7 @@
 package com.holonplatform.vaadin.internal.components;
 
 import com.holonplatform.core.internal.utils.ObjectUtils;
-import com.holonplatform.vaadin.components.Registration;
+import com.holonplatform.vaadin.Registration;
 import com.holonplatform.vaadin.components.ValueHolder;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.Property.ValueChangeNotifier;

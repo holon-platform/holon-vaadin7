@@ -49,6 +49,7 @@ import com.holonplatform.core.query.QueryFilter;
 import com.holonplatform.core.query.QuerySort;
 import com.holonplatform.datastore.jdbc.spring.EnableJdbcDatastore;
 import com.holonplatform.jdbc.spring.EnableDataSource;
+import com.holonplatform.vaadin.Registration;
 import com.holonplatform.vaadin.data.ItemDataProvider;
 import com.holonplatform.vaadin.data.container.ItemDataSourceContainer;
 import com.holonplatform.vaadin.internal.data.DatastoreItemDataProvider;
@@ -131,7 +132,7 @@ public class TestPropertyQueryContainer {
 			}
 		};
 
-		container.addQueryConfigurationProvider(qcp);
+		Registration reg = container.addQueryConfigurationProvider(qcp);
 
 		size = container.size();
 		assertEquals(20, size);
@@ -142,7 +143,7 @@ public class TestPropertyQueryContainer {
 
 		assertEquals("c20", container.firstItemId());
 
-		container.removeQueryConfigurationProvider(qcp);
+		reg.remove();
 
 		size = container.size();
 		assertEquals(22, size);

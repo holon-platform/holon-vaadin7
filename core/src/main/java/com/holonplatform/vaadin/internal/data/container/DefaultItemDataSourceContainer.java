@@ -37,6 +37,7 @@ import com.holonplatform.core.query.QueryConfigurationProvider;
 import com.holonplatform.core.query.QueryFilter;
 import com.holonplatform.core.query.QuerySort;
 import com.holonplatform.core.query.QuerySort.SortDirection;
+import com.holonplatform.vaadin.Registration;
 import com.holonplatform.vaadin.data.ItemDataProvider;
 import com.holonplatform.vaadin.data.ItemDataSource.Configuration;
 import com.holonplatform.vaadin.data.ItemIdentifierProvider;
@@ -704,27 +705,28 @@ public class DefaultItemDataSourceContainer<ITEM, PROPERTY>
 		this.commitHandler = commitHandler;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.holonplatform.vaadin.data.container.ItemDataSourceContainer#addQueryConfigurationProvider(com.holonplatform.
+	 * core.query.QueryConfigurationProvider)
+	 */
 	@Override
-	public void addQueryConfigurationProvider(QueryConfigurationProvider queryConfigurationProvider) {
-		if (queryConfigurationProvider != null) {
-			if (queryConfigurationProviders == null) {
-				queryConfigurationProviders = new LinkedList<>();
-			}
-			if (!queryConfigurationProviders.contains(queryConfigurationProvider)) {
-				queryConfigurationProviders.add(queryConfigurationProvider);
-				// reset store
-				resetStorePreservingFreezeState();
-			}
+	public Registration addQueryConfigurationProvider(QueryConfigurationProvider queryConfigurationProvider) {
+		ObjectUtils.argumentNotNull(queryConfigurationProvider, "QueryConfigurationProvider must be not null");
+		if (queryConfigurationProviders == null) {
+			queryConfigurationProviders = new LinkedList<>();
 		}
-	}
-
-	@Override
-	public void removeQueryConfigurationProvider(QueryConfigurationProvider queryConfigurationProvider) {
-		if (queryConfigurationProvider != null && queryConfigurationProviders != null) {
-			queryConfigurationProviders.remove(queryConfigurationProvider);
+		if (!queryConfigurationProviders.contains(queryConfigurationProvider)) {
+			queryConfigurationProviders.add(queryConfigurationProvider);
 			// reset store
 			resetStorePreservingFreezeState();
 		}
+		return () -> {
+			queryConfigurationProviders.remove(queryConfigurationProvider);
+			// reset store
+			resetStorePreservingFreezeState();
+		};
 	}
 
 	/*

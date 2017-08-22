@@ -21,7 +21,7 @@ import java.util.Optional;
 
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.internal.utils.TypeUtils;
-import com.holonplatform.vaadin.components.Registration;
+import com.holonplatform.vaadin.Registration;
 import com.holonplatform.vaadin.components.ViewComponent;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.converter.Converter;

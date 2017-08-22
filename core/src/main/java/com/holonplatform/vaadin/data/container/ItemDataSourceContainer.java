@@ -18,6 +18,7 @@ package com.holonplatform.vaadin.data.container;
 import com.holonplatform.core.query.QueryConfigurationProvider;
 import com.holonplatform.core.query.QueryFilter;
 import com.holonplatform.core.query.QuerySort;
+import com.holonplatform.vaadin.Registration;
 import com.holonplatform.vaadin.data.ItemDataProvider;
 import com.holonplatform.vaadin.data.ItemDataSource;
 import com.holonplatform.vaadin.data.container.ItemDataSourceContainerBuilder.BaseItemDataSourceContainerBuilder;
@@ -129,14 +130,9 @@ public interface ItemDataSourceContainer<ITEM, PROPERTY> extends ItemDataSource<
 	/**
 	 * Add an external {@link QueryConfigurationProvider} for additional query configuration
 	 * @param queryConfigurationProvider QueryConfigurationProvider to add
+	 * @return the configuration provider {@link Registration}
 	 */
-	void addQueryConfigurationProvider(QueryConfigurationProvider queryConfigurationProvider);
-
-	/**
-	 * Remove a previously added QueryConfigurationProvider
-	 * @param queryConfigurationProvider QueryConfigurationProvider to remove
-	 */
-	void removeQueryConfigurationProvider(QueryConfigurationProvider queryConfigurationProvider);
+	Registration addQueryConfigurationProvider(QueryConfigurationProvider queryConfigurationProvider);
 
 	/**
 	 * Set query fixed filter (always added to query predicates)

@@ -27,6 +27,7 @@ import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.i18n.LocalizationContext;
 import com.holonplatform.core.internal.utils.AnnotationUtils;
 import com.holonplatform.core.internal.utils.ObjectUtils;
+import com.holonplatform.vaadin.Registration;
 import com.holonplatform.vaadin.components.ItemSet;
 import com.holonplatform.vaadin.components.Selectable;
 import com.holonplatform.vaadin.components.builders.BaseSelectInputBuilder.RenderingMode;
@@ -492,20 +493,10 @@ public abstract class AbstractSelectField<T, S, ITEM> extends AbstractCustomFiel
 	 * Selectable.SelectionListener)
 	 */
 	@Override
-	public void addSelectionListener(SelectionListener<S> selectionListener) {
+	public Registration addSelectionListener(SelectionListener<S> selectionListener) {
 		ObjectUtils.argumentNotNull(selectionListener, "SelectionListener must be not null");
 		selectionListeners.add(selectionListener);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.Selectable#removeSelectionListener(com.holonplatform.vaadin.components.
-	 * Selectable.SelectionListener)
-	 */
-	@Override
-	public void removeSelectionListener(SelectionListener<S> selectionListener) {
-		ObjectUtils.argumentNotNull(selectionListener, "SelectionListener must be not null");
-		selectionListeners.remove(selectionListener);
+		return () -> selectionListeners.remove(selectionListener);
 	}
 
 	/**
