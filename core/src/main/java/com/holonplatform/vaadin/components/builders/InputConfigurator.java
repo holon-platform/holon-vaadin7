@@ -17,12 +17,8 @@ package com.holonplatform.vaadin.components.builders;
 
 import java.util.Locale;
 
-import com.holonplatform.core.Context;
-import com.holonplatform.core.i18n.Localizable;
-import com.holonplatform.core.i18n.LocalizationContext;
 import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.ValueHolder.ValueChangeListener;
-import com.vaadin.data.util.converter.Converter;
 
 /**
  * Interface to configure a {@link Input} component.
@@ -58,62 +54,6 @@ public interface InputConfigurator<T, B extends InputConfigurator<T, B>> extends
 	 * @return this
 	 */
 	B withValue(T value);
-
-	/**
-	 * Sets a converter for the field retrieving it from the converter factory defined for the application.
-	 * @param datamodelType The type of the data model that we want to be able to convert from
-	 * @return this
-	 */
-	B converter(Class<?> datamodelType);
-
-	/**
-	 * Sets the converter used to convert the field value to property data source type. The converter must have a
-	 * presentation type that matches the field type.
-	 * @param converter The converter to use
-	 * @return this
-	 */
-	B converter(Converter<T, ?> converter);
-
-	/**
-	 * Sets the error that is shown if the field value cannot be converted to the data source type. If {0} is present in
-	 * the message, it will be replaced by the simple name of the data source type. If {1} is present in the message, it
-	 * will be replaced by the ConversionException message.
-	 * @param conversionError Message to be shown when conversion of the value fails
-	 * @return this
-	 */
-	default B conversionError(String conversionError) {
-		return conversionError(Localizable.builder().message(conversionError).build());
-	}
-
-	/**
-	 * Sets the error that is shown if the field value cannot be converted to the data source type, using a localizable
-	 * <code>messageCode</code>.
-	 * <p>
-	 * For description localization, a {@link LocalizationContext} must be available and localized as {@link Context}
-	 * resource when component is built.
-	 * </p>
-	 * @param defaultConversionError Default message if no translation is available for given <code>messageCode</code>
-	 *        for current Locale.
-	 * @param messageCode Conversion error translation message key
-	 * @param arguments Optional translation arguments
-	 * @return this
-	 */
-	default B conversionError(String defaultConversionError, String messageCode, Object... arguments) {
-		return conversionError(Localizable.builder().message(defaultConversionError).messageCode(messageCode)
-				.messageArguments(arguments).build());
-	}
-
-	/**
-	 * Sets the error that is shown if the field value cannot be converted to the data source type, using a
-	 * {@link Localizable} message.
-	 * <p>
-	 * For description localization, a {@link LocalizationContext} must be available and localized as {@link Context}
-	 * resource when component is built.
-	 * </p>
-	 * @param conversionError Conversion error message
-	 * @return this
-	 */
-	B conversionError(Localizable conversionError);
 
 	/**
 	 * Add a {@link ValueChangeListener} to be notified when the input value changes.

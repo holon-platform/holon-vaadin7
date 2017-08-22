@@ -17,12 +17,10 @@ package com.holonplatform.vaadin.internal.components.builders;
 
 import java.util.Locale;
 
-import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.ValueHolder;
 import com.holonplatform.vaadin.components.builders.InputConfigurator;
 import com.holonplatform.vaadin.internal.components.ValueChangeNotifierRegistration;
-import com.vaadin.data.util.converter.Converter;
 import com.vaadin.ui.AbstractField;
 
 /**
@@ -62,38 +60,6 @@ public abstract class AbstractFieldConfigurator<T, C extends AbstractField<T>, B
 	@Override
 	public B withValue(T value) {
 		getInstance().setValue(value);
-		return builder();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.FieldBuilder#converter(java.lang.Class)
-	 */
-	@Override
-	public B converter(Class<?> datamodelType) {
-		getInstance().setConverter(datamodelType);
-		return builder();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.components.builders.FieldBuilder#converter(com.vaadin.data.util.converter.Converter)
-	 */
-	@Override
-	public B converter(Converter<T, ?> converter) {
-		getInstance().setConverter(converter);
-		return builder();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.FieldBuilder#conversionError(com.holonplatform.core.i18n.
-	 * Localizable)
-	 */
-	@Override
-	public B conversionError(Localizable conversionError) {
-		getInstance().setConversionError(localizeMessage(conversionError));
 		return builder();
 	}
 

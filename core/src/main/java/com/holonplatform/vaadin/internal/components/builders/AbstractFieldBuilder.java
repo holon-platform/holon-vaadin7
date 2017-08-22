@@ -17,8 +17,6 @@ package com.holonplatform.vaadin.internal.components.builders;
 
 import java.util.Locale;
 
-import com.holonplatform.core.i18n.Localizable;
-import com.holonplatform.core.i18n.LocalizationContext;
 import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.ValidatableInput;
 import com.holonplatform.vaadin.components.ValueHolder;
@@ -26,7 +24,6 @@ import com.holonplatform.vaadin.components.ValueHolder.ValueChangeListener;
 import com.holonplatform.vaadin.components.builders.InputBuilder;
 import com.holonplatform.vaadin.components.builders.ValidatableInputBuilder;
 import com.holonplatform.vaadin.internal.components.ValueChangeNotifierRegistration;
-import com.vaadin.data.util.converter.Converter;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.Field;
 
@@ -41,8 +38,6 @@ import com.vaadin.ui.Field;
  */
 public abstract class AbstractFieldBuilder<T, C extends Input<T>, I extends AbstractField<T>, B extends InputBuilder<T, C, B>>
 		extends AbstractLocalizableComponentConfigurator<I, B> implements InputBuilder<T, C, B> {
-
-	protected Localizable conversionError;
 
 	public AbstractFieldBuilder(I instance) {
 		super(instance);
@@ -64,20 +59,6 @@ public abstract class AbstractFieldBuilder<T, C extends Input<T>, I extends Abst
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.internal.components.builders.AbstractComponentBuilder#localize(com.vaadin.ui.
-	 * AbstractComponent)
-	 */
-	@Override
-	protected void localize(I instance) {
-		super.localize(instance);
-
-		if (conversionError != null) {
-			instance.setConversionError(LocalizationContext.translate(conversionError, true));
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.builders.FieldBuilder#tabIndex(int)
 	 */
 	@Override
@@ -93,38 +74,6 @@ public abstract class AbstractFieldBuilder<T, C extends Input<T>, I extends Abst
 	@Override
 	public B withValue(T value) {
 		getInstance().setValue(value);
-		return builder();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.FieldBuilder#converter(java.lang.Class)
-	 */
-	@Override
-	public B converter(Class<?> datamodelType) {
-		getInstance().setConverter(datamodelType);
-		return builder();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.components.builders.FieldBuilder#converter(com.vaadin.data.util.converter.Converter)
-	 */
-	@Override
-	public B converter(Converter<T, ?> converter) {
-		getInstance().setConverter(converter);
-		return builder();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.FieldBuilder#conversionError(com.holonplatform.core.i18n.
-	 * Localizable)
-	 */
-	@Override
-	public B conversionError(Localizable conversionError) {
-		this.conversionError = conversionError;
 		return builder();
 	}
 
