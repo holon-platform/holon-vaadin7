@@ -133,6 +133,11 @@ public class DefaultPropertyInputForm<C extends Component> extends
 	public void clear() {
 		getInputGroup().clear();
 	}
+	
+	@Override
+	public void setReadOnly(boolean readOnly) {
+		getInputGroup().setReadOnly(readOnly);
+	}
 
 	/*
 	 * (non-Javadoc)
