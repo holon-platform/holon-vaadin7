@@ -55,16 +55,6 @@ public abstract class AbstractStringFieldBuilder<I extends AbstractTextField>
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.TextInputFieldBuilder#columns(int)
-	 */
-	@Override
-	public StringInputBuilder columns(int columns) {
-		getInstance().setColumns(columns);
-		return builder();
-	}
-
-	/*
-	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.builders.TextInputFieldBuilder#inputPrompt(java.lang.String)
 	 */
 	@Override

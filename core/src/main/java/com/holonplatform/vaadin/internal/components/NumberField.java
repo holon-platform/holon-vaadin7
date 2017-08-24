@@ -439,16 +439,6 @@ public class NumberField<T extends Number> extends AbstractCustomField<T, Numeri
 
 		/*
 		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.components.builders.TextInputFieldBuilder#columns(int)
-		 */
-		@Override
-		public NumberInputBuilder<T> columns(int columns) {
-			getInstance().setColumns(columns);
-			return builder();
-		}
-
-		/*
-		 * (non-Javadoc)
 		 * @see com.holonplatform.vaadin.components.builders.TextInputFieldBuilder#inputPrompt(java.lang.String)
 		 */
 		@Override

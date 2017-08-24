@@ -44,14 +44,6 @@ public interface TextInputBuilder<T, C extends Input<T>, B extends TextInputBuil
 	B maxLength(int maxLength);
 
 	/**
-	 * Sets the number of columns in the editor. If the number of columns is set 0, the actual number of displayed
-	 * columns is determined implicitly by the adapter.
-	 * @param columns the number of columns to set
-	 * @return this
-	 */
-	B columns(int columns);
-
-	/**
 	 * Sets the input prompt - a textual prompt that is displayed when the field would otherwise be empty, to prompt the
 	 * user for input.
 	 * @param inputPrompt the input prompt to set, <code>null</code> for none
