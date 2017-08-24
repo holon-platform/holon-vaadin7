@@ -18,7 +18,6 @@ package com.holonplatform.vaadin.components.builders;
 import java.util.Date;
 
 import com.holonplatform.vaadin.components.Input;
-import com.vaadin.shared.ui.datefield.Resolution;
 
 /**
  * A {@link CalendarInputBuilder} for {@link Date} type {@link Input}s.
@@ -26,15 +25,5 @@ import com.vaadin.shared.ui.datefield.Resolution;
  * @since 5.0.0
  */
 public interface DateInputBuilder extends CalendarInputBuilder<Date, DateInputBuilder> {
-
-	/**
-	 * Sets the field resolution.
-	 * <p>
-	 * The default resolution is {@link Resolution#DAY}.
-	 * </p>
-	 * @param resolution The resolution to set
-	 * @return this
-	 */
-	DateInputBuilder resolution(Resolution resolution);
 
 }

@@ -23,6 +23,7 @@ import com.holonplatform.vaadin.components.builders.DateInputBuilder;
 import com.holonplatform.vaadin.internal.components.builders.AbstractDateFieldBuilder;
 import com.vaadin.data.Property;
 import com.vaadin.data.Validator.InvalidValueException;
+import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
 
@@ -166,8 +167,11 @@ public class DateField extends com.vaadin.ui.DateField implements Input<Date>, R
 	 */
 	public static class Builder extends AbstractDateFieldBuilder<DateField> {
 
-		public Builder() {
+		public Builder(Resolution resolution) {
 			super(new DateField());
+			if (resolution != null) {
+				getInstance().setResolution(resolution);
+			}
 		}
 
 		/*

@@ -90,6 +90,7 @@ import com.holonplatform.vaadin.internal.components.builders.DefaultPanelBuilder
 import com.holonplatform.vaadin.internal.components.builders.DefaultTableItemListingBuilder;
 import com.holonplatform.vaadin.internal.components.builders.DefaultTablePropertyListingBuilder;
 import com.holonplatform.vaadin.internal.components.builders.DefaultVerticalLayoutBuilder;
+import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.AbstractComponent;
 import com.vaadin.ui.AbstractField;
@@ -369,6 +370,25 @@ public interface Components {
 		static BooleanInputBuilder boolean_() {
 			return new BooleanField.Builder();
 		}
+		
+		/**
+		 * Gets a builder to create {@link Date} type {@link Input}s.
+		 * @param resolution field Resolution
+		 * @param inline <code>true</code> to render the input component using an inline calendar
+		 * @return Input builder
+		 */
+		static DateInputBuilder date(Resolution resolution, boolean inline) {
+			return inline ? new InlineDateField.Builder(resolution) : new DateField.Builder(resolution);
+		}
+
+		/**
+		 * Gets a builder to create {@link Date} type {@link Input}s.
+		 * @param resolution field Resolution
+		 * @return Input builder
+		 */
+		static DateInputBuilder date(Resolution resolution) {
+			return date(resolution, false);
+		}
 
 		/**
 		 * Gets a builder to create {@link Date} type {@link Input}s.
@@ -376,7 +396,7 @@ public interface Components {
 		 * @return Input builder
 		 */
 		static DateInputBuilder date(boolean inline) {
-			return inline ? new InlineDateField.Builder() : new DateField.Builder();
+			return date(Resolution.DAY, inline);
 		}
 
 		/**
@@ -384,7 +404,7 @@ public interface Components {
 		 * @return Input builder
 		 */
 		static DateInputBuilder date() {
-			return date(false);
+			return date(Resolution.DAY, false);
 		}
 
 		/**

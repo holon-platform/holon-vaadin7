@@ -23,7 +23,6 @@ import com.holonplatform.core.i18n.LocalizationContext;
 import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.builders.CalendarInputBuilder;
 import com.holonplatform.vaadin.components.builders.DateInputBuilder;
-import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.DateField;
 
 /**
@@ -189,17 +188,6 @@ public abstract class AbstractDateFieldBuilder<I extends DateField>
 	@Override
 	public DateInputBuilder dateOutOfRangeMessage(Localizable dateOutOfRangeMessage) {
 		this.outOfRangeMessage = dateOutOfRangeMessage;
-		return builder();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.DateFieldBuilder#resolution(com.vaadin.shared.ui.datefield.
-	 * Resolution)
-	 */
-	@Override
-	public DateInputBuilder resolution(Resolution resolution) {
-		getInstance().setResolution(resolution);
 		return builder();
 	}
 

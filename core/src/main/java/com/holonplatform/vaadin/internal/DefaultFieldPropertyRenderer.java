@@ -160,8 +160,9 @@ public class DefaultFieldPropertyRenderer<T> implements PropertyRenderer<Field, 
 	 */
 	protected Field<T> renderDate(Property<T> property) {
 		final TemporalType type = property.getConfiguration().getTemporalType().orElse(TemporalType.DATE);
-		return postProcessField(input.date(false)
-				.resolution((type == TemporalType.DATE_TIME) ? Resolution.MINUTE : Resolution.DAY).asField(), property);
+		return postProcessField(
+				input.date((type == TemporalType.DATE_TIME) ? Resolution.MINUTE : Resolution.DAY, false).asField(),
+				property);
 	}
 
 	/**
