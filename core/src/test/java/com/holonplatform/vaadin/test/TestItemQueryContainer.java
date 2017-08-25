@@ -30,7 +30,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.junit.Test;
@@ -45,8 +44,13 @@ import com.holonplatform.core.property.PathProperty;
 import com.holonplatform.core.property.Property;
 import com.holonplatform.core.property.PropertyBox;
 import com.holonplatform.core.property.PropertySet;
+import com.holonplatform.core.query.QueryConfigurationProvider;
 import com.holonplatform.core.query.QueryExpression;
 import com.holonplatform.core.query.QueryFilter;
+import com.holonplatform.core.query.QuerySort;
+import com.holonplatform.core.query.QuerySort.CompositeQuerySort;
+import com.holonplatform.core.query.QuerySort.PathQuerySort;
+import com.holonplatform.core.query.QuerySort.SortDirection;
 import com.holonplatform.vaadin.data.ItemDataProvider;
 import com.holonplatform.vaadin.data.ItemDataSource.CommitHandler;
 import com.holonplatform.vaadin.data.ItemDataSource.Configuration;
@@ -208,7 +212,7 @@ public class TestItemQueryContainer {
 
 		ItemDataSourceContainer<TestDataDomain, String> container = ItemDataSourceContainer
 				.<TestDataDomain, String>builder().dataSource(new TestItemDataProvider()).itemAdapter(ADAPTER)
-				.autoRefresh(true).batchSize(10).maxSize(1000).maxCacheSize(100).itemIdentifier(i -> i.getCode())
+				.autoRefresh(true).batchSize(10).maxCacheSize(100).itemIdentifier(i -> i.getCode())
 				.withProperty("code", String.class).withSortableProperty("description", String.class)
 				.withSortableProperty("sequence", Integer.class).withProperty("obsolete", int.class)
 				.sortable("code", true).sortable("obsolete", false).defaultValue("obsolete", 0)
@@ -221,10 +225,6 @@ public class TestItemQueryContainer {
 						isc.incrementAndGet();
 					}
 				}).build();
-
-		assertTrue(container.getConfiguration().isAutoRefresh());
-		assertEquals(10, container.getConfiguration().getBatchSize());
-		assertEquals(1000, container.getConfiguration().getMaxSize());
 
 		Collection<String> pids = ConversionUtils.iterableAsList(container.getConfiguration().getProperties());
 		assertNotNull(pids);
@@ -328,7 +328,7 @@ public class TestItemQueryContainer {
 		final TestItemDataProvider q2 = new TestItemDataProvider() {
 
 			@Override
-			public TestDataDomain refresh(Configuration<?> configuration, TestDataDomain item)
+			public TestDataDomain refresh(TestDataDomain item)
 					throws UnsupportedOperationException, DataAccessException {
 				gic.incrementAndGet();
 				TestDataDomain d = new TestDataDomain();
@@ -437,7 +437,7 @@ public class TestItemQueryContainer {
 		 * ItemDataSource.Configuration)
 		 */
 		@Override
-		public long size(Configuration<?> configuration) throws DataAccessException {
+		public long size(QueryConfigurationProvider configuration) throws DataAccessException {
 			StringBuilder sb = new StringBuilder();
 			sb.append("select count(*) from testdata");
 			setupQuery(configuration, sb, false);
@@ -458,7 +458,7 @@ public class TestItemQueryContainer {
 		 * ItemDataSource.Configuration, int, int)
 		 */
 		@Override
-		public Stream<TestDataDomain> load(Configuration<?> configuration, int offset, int limit)
+		public Stream<TestDataDomain> load(QueryConfigurationProvider configuration, int offset, int limit)
 				throws DataAccessException {
 			StringBuilder sb = new StringBuilder();
 			sb.append("select * from testdata");
@@ -494,7 +494,7 @@ public class TestItemQueryContainer {
 		}
 
 		@SuppressWarnings("rawtypes")
-		private void setupQuery(Configuration<?> configuration, StringBuilder sb, boolean applySorts) {
+		private void setupQuery(QueryConfigurationProvider configuration, StringBuilder sb, boolean applySorts) {
 			QueryFilter filter = configuration.getQueryFilter();
 			if (filter != null) {
 				if (filter instanceof EqualFilter) {
@@ -506,12 +506,36 @@ public class TestItemQueryContainer {
 					sb.append("'");
 				}
 			}
+			
+			if (applySorts) {
+				QuerySort sort = configuration.getQuerySort();
+				if (sort != null) {
+					sb.append(" order by ");
+					if (sort instanceof CompositeQuerySort) {
+						List<QuerySort> sorts = ((CompositeQuerySort)sort).getComposition();
+						sorts.forEach(s -> {
+							if (s instanceof PathQuerySort) {
+								sb.append(((PathQuerySort)s).getPath().getName());
+								sb.append(" ");
+								sb.append(((PathQuerySort)s).getDirection() == SortDirection.ASCENDING ? "asc" : "desc");
+								sb.append(" ");
+							}
+						});
+					} else {
+						if (sort instanceof PathQuerySort) {
+							sb.append(((PathQuerySort)sort).getPath().getName());
+							sb.append(" ");
+							sb.append(((PathQuerySort)sort).getDirection() == SortDirection.ASCENDING ? "asc" : "desc");
+						}
+					}
+				}
+			}
 
-			if (applySorts && !configuration.getItemSorts().isEmpty()) {
+			/*if (applySorts && !configuration.getItemSorts().isEmpty()) {
 				sb.append(configuration.getItemSorts().stream()
 						.map(s -> s.getProperty() + " " + (s.isAscending() ? "asc" : "desc"))
 						.collect(Collectors.joining(",", " order by ", "")));
-			}
+			}*/
 		}
 
 		private Connection getConnection() throws DataAccessException {

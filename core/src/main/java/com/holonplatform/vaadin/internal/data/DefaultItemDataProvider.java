@@ -19,11 +19,11 @@ import java.util.stream.Stream;
 
 import com.holonplatform.core.exceptions.DataAccessException;
 import com.holonplatform.core.internal.utils.ObjectUtils;
+import com.holonplatform.core.query.QueryConfigurationProvider;
 import com.holonplatform.vaadin.data.ItemDataProvider;
-import com.holonplatform.vaadin.data.ItemDataSource.Configuration;
-import com.holonplatform.vaadin.data.ItemDataSource.ItemRefresher;
-import com.holonplatform.vaadin.data.ItemDataSource.ItemSetCounter;
-import com.holonplatform.vaadin.data.ItemDataSource.ItemSetLoader;
+import com.holonplatform.vaadin.data.ItemRefresher;
+import com.holonplatform.vaadin.data.ItemSetCounter;
+import com.holonplatform.vaadin.data.ItemSetLoader;
 
 /**
  * Default {@link ItemDataProvider} implementation.
@@ -66,38 +66,34 @@ public class DefaultItemDataProvider<ITEM> implements ItemDataProvider<ITEM> {
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.data.ItemDataSource.ItemSetCounter#size(com.holonplatform.vaadin.data.ItemDataSource.
-	 * Configuration)
+	 * @see com.holonplatform.vaadin.data.ItemSetCounter#size(com.holonplatform.core.query.QueryConfigurationProvider)
 	 */
 	@Override
-	public long size(Configuration<?> configuration) throws DataAccessException {
+	public long size(QueryConfigurationProvider configuration) throws DataAccessException {
 		return counter.size(configuration);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.data.ItemDataSource.ItemSetLoader#load(com.holonplatform.vaadin.data.ItemDataSource.
-	 * Configuration, int, int)
+	 * @see com.holonplatform.vaadin.data.ItemSetLoader#load(com.holonplatform.core.query.QueryConfigurationProvider,
+	 * int, int)
 	 */
 	@Override
-	public Stream<ITEM> load(Configuration<?> configuration, int offset, int limit) throws DataAccessException {
+	public Stream<ITEM> load(QueryConfigurationProvider configuration, int offset, int limit)
+			throws DataAccessException {
 		return loader.load(configuration, offset, limit);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.data.ItemDataProvider#refresh(com.holonplatform.vaadin.data.ItemDataSource.
-	 * Configuration, java.lang.Object)
+	 * @see com.holonplatform.vaadin.data.ItemDataProvider#refresh(java.lang.Object)
 	 */
 	@Override
-	public ITEM refresh(Configuration<?> configuration, ITEM item)
-			throws UnsupportedOperationException, DataAccessException {
+	public ITEM refresh(ITEM item) throws UnsupportedOperationException, DataAccessException {
 		if (refresher == null) {
 			throw new UnsupportedOperationException();
 		}
-		return refresher.refresh(configuration, item);
+		return refresher.refresh(item);
 	}
 
 }

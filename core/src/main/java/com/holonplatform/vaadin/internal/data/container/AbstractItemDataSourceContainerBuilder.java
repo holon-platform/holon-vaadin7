@@ -19,9 +19,9 @@ import com.holonplatform.core.query.QueryConfigurationProvider;
 import com.holonplatform.core.query.QueryFilter;
 import com.holonplatform.core.query.QuerySort;
 import com.holonplatform.vaadin.data.ItemDataProvider;
-import com.holonplatform.vaadin.data.ItemIdentifierProvider;
 import com.holonplatform.vaadin.data.ItemDataSource.CommitHandler;
 import com.holonplatform.vaadin.data.ItemDataSource.PropertySortGenerator;
+import com.holonplatform.vaadin.data.ItemIdentifierProvider;
 import com.holonplatform.vaadin.data.container.ItemAdapter;
 import com.holonplatform.vaadin.data.container.ItemDataSourceContainer;
 import com.holonplatform.vaadin.data.container.ItemDataSourceContainerBuilder;
@@ -45,6 +45,11 @@ public abstract class AbstractItemDataSourceContainerBuilder<ITEM, PROPERTY, B e
 	protected final DefaultItemDataSourceContainer<ITEM, PROPERTY> container = new DefaultItemDataSourceContainer<>();
 
 	/**
+	 * Container batch size
+	 */
+	protected int batchSize = ItemDataSourceContainer.DEFAULT_BATCH_SIZE;
+
+	/**
 	 * Actual builder
 	 * @return Builder
 	 */
@@ -55,6 +60,10 @@ public abstract class AbstractItemDataSourceContainerBuilder<ITEM, PROPERTY, B e
 	 */
 	public AbstractItemDataSourceContainerBuilder() {
 		super();
+	}
+
+	protected DefaultItemDataSourceContainer<ITEM, PROPERTY> getContainer() {
+		return container;
 	}
 
 	/*
@@ -108,17 +117,7 @@ public abstract class AbstractItemDataSourceContainerBuilder<ITEM, PROPERTY, B e
 	 */
 	@Override
 	public B batchSize(int batchSize) {
-		container.setBatchSize(batchSize);
-		return builder();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.data.QueryContainerBuilder#maxSize(int)
-	 */
-	@Override
-	public B maxSize(int maxSize) {
-		container.setMaxSize(maxSize);
+		this.batchSize = batchSize;
 		return builder();
 	}
 
@@ -318,7 +317,7 @@ public abstract class AbstractItemDataSourceContainerBuilder<ITEM, PROPERTY, B e
 	@Override
 	public ItemDataSourceContainer<ITEM, PROPERTY> build() {
 		// init container
-		container.init();
+		container.init(batchSize);
 		return container;
 	}
 

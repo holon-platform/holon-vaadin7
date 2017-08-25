@@ -20,7 +20,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -29,11 +28,11 @@ import java.util.stream.Stream;
 import org.junit.Test;
 
 import com.holonplatform.core.exceptions.DataAccessException;
+import com.holonplatform.core.query.QueryConfigurationProvider;
 import com.holonplatform.core.query.QueryFilter;
 import com.holonplatform.vaadin.data.ItemDataProvider;
-import com.holonplatform.vaadin.data.ItemIdentifierProvider;
 import com.holonplatform.vaadin.data.ItemDataSource.Configuration;
-import com.holonplatform.vaadin.data.ItemDataSource.ItemSort;
+import com.holonplatform.vaadin.data.ItemIdentifierProvider;
 import com.holonplatform.vaadin.internal.data.DefaultItemStore;
 import com.holonplatform.vaadin.internal.data.ItemStore;
 import com.holonplatform.vaadin.test.data.TestData;
@@ -48,8 +47,8 @@ public class TestItemStore {
 	@Test
 	public void testStore() {
 
-		ItemStore<String> store = new DefaultItemStore<>(new TestConfiguration(0), new TestDataProvider(),
-				ItemIdentifierProvider.identity(), 4);
+		ItemStore<String> store = new DefaultItemStore<>(new TestConfiguration(), new TestDataProvider(),
+				ItemIdentifierProvider.identity(), 20, 4);
 
 		assertEquals(4, store.getMaxCacheSize());
 
@@ -62,16 +61,16 @@ public class TestItemStore {
 
 		assertEquals(1, scount.get());
 		assertEquals(0, qcount.get());
-
-		String itm = store.getItem(1);
+		
+		String itm = store.getItem(0);
 		assertNotNull(itm);
-		assertEquals("b", itm);
+		assertEquals("a", itm);
 
 		assertEquals(1, qcount.get());
 
-		itm = store.getItem(0);
+		itm = store.getItem(1);
 		assertNotNull(itm);
-		assertEquals("a", itm);
+		assertEquals("b", itm);
 
 		assertEquals(1, qcount.get());
 
@@ -79,7 +78,7 @@ public class TestItemStore {
 		assertNotNull(itm);
 		assertEquals("c", itm);
 
-		assertEquals(2, qcount.get());
+		assertEquals(1, qcount.get());
 
 		itm = store.getItem(0);
 		assertNotNull(itm);
@@ -91,19 +90,19 @@ public class TestItemStore {
 		assertNotNull(itm);
 		assertEquals("e", itm);
 
-		assertEquals(3, qcount.get());
+		assertEquals(2, qcount.get());
 
 		itm = store.getItem(3);
 		assertNotNull(itm);
 		assertEquals("d", itm);
 
-		assertEquals(3, qcount.get());
+		assertEquals(2, qcount.get());
 
 		itm = store.getItem(1);
 		assertNotNull(itm);
 		assertEquals("b", itm);
 
-		assertEquals(4, qcount.get());
+		assertEquals(2, qcount.get());
 
 		store.reset(false, false);
 
@@ -111,7 +110,7 @@ public class TestItemStore {
 		assertNotNull(itm);
 		assertEquals("b", itm);
 
-		assertEquals(5, qcount.get());
+		assertEquals(3, qcount.get());
 
 		assertFalse(store.isModified());
 		assertEquals(0, store.getAddedItems().size());
@@ -123,44 +122,35 @@ public class TestItemStore {
 		assertTrue(store.isModified());
 		assertEquals(1, store.getModifiedItems().size());
 
-		assertEquals(5, qcount.get());
+		assertEquals(3, qcount.get());
 
 		store.removeItem(2);
 		assertEquals(1, store.getRemovedItems().size());
 
-		assertEquals(6, qcount.get());
+		assertEquals(3, qcount.get());
 
 		store.addItem("f");
 		assertEquals(1, store.getAddedItems().size());
 
-		assertEquals(6, qcount.get());
+		assertEquals(3, qcount.get());
 
 		itm = store.getItem(0);
 		assertNotNull(itm);
 		assertEquals("f", itm);
 
-		assertEquals(6, qcount.get());
+		assertEquals(3, qcount.get());
 
 		assertTrue(store.containsItem("f"));
 
 		store.refreshItem("a");
 
-		assertEquals(6, qcount.get());
+		assertEquals(4, qcount.get());
 
 		store.refreshItem("f");
 
-		assertEquals(6, qcount.get());
+		assertEquals(4, qcount.get());
 
 		assertEquals(2, rcount.get());
-	}
-
-	@Test
-	public void testStoreMaxSize() {
-
-		ItemStore<String> store = new DefaultItemStore<>(new TestConfiguration(2), new TestDataProvider(), null, 100);
-
-		assertEquals(2, store.size());
-
 	}
 
 	@SuppressWarnings("serial")
@@ -183,7 +173,7 @@ public class TestItemStore {
 		 * ItemDataSource.Configuration)
 		 */
 		@Override
-		public long size(Configuration<?> configuration) throws DataAccessException {
+		public long size(QueryConfigurationProvider configuration) throws DataAccessException {
 			scount.incrementAndGet();
 			return data.size();
 		}
@@ -194,7 +184,7 @@ public class TestItemStore {
 		 * ItemDataSource.Configuration, int, int)
 		 */
 		@Override
-		public Stream<String> load(Configuration<?> configuration, int offset, int limit) throws DataAccessException {
+		public Stream<String> load(QueryConfigurationProvider configuration, int offset, int limit) throws DataAccessException {
 			qcount.incrementAndGet();
 			return data.stream().skip(offset).limit(limit);
 		}
@@ -205,7 +195,7 @@ public class TestItemStore {
 		 * Configuration, java.lang.Object)
 		 */
 		@Override
-		public String refresh(Configuration<?> configuration, String item)
+		public String refresh(String item)
 				throws UnsupportedOperationException, DataAccessException {
 			rcount.incrementAndGet();
 			return item;
@@ -215,13 +205,7 @@ public class TestItemStore {
 
 	@SuppressWarnings("serial")
 	private final class TestConfiguration implements Configuration<Property<?>> {
-
-		private final int maxSize;
-
-		public TestConfiguration(int maxSize) {
-			this.maxSize = maxSize;
-		}
-
+		
 		/*
 		 * (non-Javadoc)
 		 * @see com.holonplatform.core.query.QueryConfigurationProvider#getQueryFilter()
@@ -275,42 +259,6 @@ public class TestItemStore {
 		@Override
 		public Object getPropertyDefaultValue(Property<?> property) {
 			return null;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.data.ItemDataSource.Configuration#isAutoRefresh()
-		 */
-		@Override
-		public boolean isAutoRefresh() {
-			return true;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.data.ItemDataSource.Configuration#getItemSorts()
-		 */
-		@Override
-		public List<ItemSort<Property<?>>> getItemSorts() {
-			return Collections.emptyList();
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.data.querycontainer.ItemQueryDefinition#getBatchSize()
-		 */
-		@Override
-		public int getBatchSize() {
-			return 2;
-		}
-
-		/*
-		 * (non-Javadoc)
-		 * @see com.holonplatform.vaadin.data.querycontainer.ItemQueryDefinition#getMaxSize()
-		 */
-		@Override
-		public int getMaxSize() {
-			return maxSize;
 		}
 
 	}

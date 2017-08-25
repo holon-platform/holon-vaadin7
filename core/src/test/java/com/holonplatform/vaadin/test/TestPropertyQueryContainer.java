@@ -236,7 +236,7 @@ public class TestPropertyQueryContainer {
 	public void testPropertyContainerDatastore() {
 
 		ItemDataSourceContainer<PropertyBox, Property> container = ItemDataSourceContainer
-				.<PropertyBox, Property>builder().dataSource(new DatastoreItemDataProvider(datastore, TARGET))
+				.<PropertyBox, Property>builder().dataSource(new DatastoreItemDataProvider(datastore, TARGET, TestData.PROPERTIES))
 				.itemAdapter(new PropertyBoxItemAdapter()).withProperty(TestData.ID, TestData.ID.getType())
 				.withProperty(TestData.DESCRIPTION, TestData.DESCRIPTION.getType())
 				.withProperty(TestData.SEQUENCE, TestData.SEQUENCE.getType())
@@ -306,7 +306,7 @@ public class TestPropertyQueryContainer {
 		 * ItemDataSource.Configuration, int, int)
 		 */
 		@Override
-		public Stream<PropertyBox> load(com.holonplatform.vaadin.data.ItemDataSource.Configuration<?> configuration,
+		public Stream<PropertyBox> load(QueryConfigurationProvider configuration,
 				int offset, int limit) throws DataAccessException {
 			Query q = datastore.query().target(TARGET);
 
@@ -330,7 +330,7 @@ public class TestPropertyQueryContainer {
 		 * ItemDataSource.Configuration)
 		 */
 		@Override
-		public long size(com.holonplatform.vaadin.data.ItemDataSource.Configuration<?> configuration)
+		public long size(QueryConfigurationProvider configuration)
 				throws DataAccessException {
 			Query q = datastore.query().target(TARGET);
 			if (configuration.getQueryFilter() != null) {
@@ -345,8 +345,7 @@ public class TestPropertyQueryContainer {
 		 * Configuration, java.lang.Object)
 		 */
 		@Override
-		public PropertyBox refresh(com.holonplatform.vaadin.data.ItemDataSource.Configuration<?> configuration,
-				PropertyBox item) throws UnsupportedOperationException, DataAccessException {
+		public PropertyBox refresh(PropertyBox item) throws UnsupportedOperationException, DataAccessException {
 			return datastore.refresh(TARGET, item);
 		}
 

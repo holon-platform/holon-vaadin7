@@ -17,9 +17,12 @@ package com.holonplatform.vaadin.internal.components;
 
 import java.util.Optional;
 
+import com.holonplatform.core.datastore.DataTarget;
+import com.holonplatform.core.datastore.Datastore;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.property.Property;
 import com.holonplatform.core.property.PropertyBox;
+import com.holonplatform.core.property.PropertySet;
 import com.holonplatform.vaadin.components.SingleSelect;
 import com.holonplatform.vaadin.components.builders.BaseSelectInputBuilder.RenderingMode;
 import com.holonplatform.vaadin.components.builders.SelectInputBuilder;
@@ -30,6 +33,7 @@ import com.holonplatform.vaadin.data.ItemIdentifierProvider;
 import com.holonplatform.vaadin.data.container.ItemAdapter;
 import com.holonplatform.vaadin.data.container.PropertyBoxItem;
 import com.holonplatform.vaadin.internal.components.builders.AbstractSelectFieldBuilder;
+import com.holonplatform.vaadin.internal.data.DatastoreItemDataProvider;
 import com.holonplatform.vaadin.internal.data.PropertyItemIdentifier;
 import com.holonplatform.vaadin.internal.data.container.PropertyBoxItemAdapter;
 import com.vaadin.shared.ui.combobox.FilteringMode;
@@ -338,6 +342,9 @@ public class SingleSelectField<T, ITEM> extends AbstractSelectField<T, T, ITEM> 
 			extends AbstractSingleSelectFieldBuilder<T, PropertyBox, SinglePropertySelectInputBuilder<T>>
 			implements SinglePropertySelectInputBuilder<T> {
 
+		private Datastore datastore;
+		private DataTarget<?> dataTarget;
+
 		/**
 		 * Constructor
 		 * @param selectProperty Selection (and identifier) property
@@ -380,6 +387,19 @@ public class SingleSelectField<T, ITEM> extends AbstractSelectField<T, T, ITEM> 
 
 		/*
 		 * (non-Javadoc)
+		 * @see
+		 * com.holonplatform.vaadin.components.builders.PropertySelectInputBuilder#dataSource(com.holonplatform.core.
+		 * datastore.Datastore, com.holonplatform.core.datastore.DataTarget)
+		 */
+		@Override
+		public SinglePropertySelectInputBuilder<T> dataSource(Datastore datastore, DataTarget<?> dataTarget) {
+			this.datastore = datastore;
+			this.dataTarget = dataTarget;
+			return builder();
+		}
+
+		/*
+		 * (non-Javadoc)
 		 * @see com.holonplatform.vaadin.components.builders.PropertySelectFieldBuilder#itemAdapter(com.holonplatform.
 		 * vaadin.data.container.ItemAdapter)
 		 */
@@ -399,8 +419,13 @@ public class SingleSelectField<T, ITEM> extends AbstractSelectField<T, T, ITEM> 
 		 * com.holonplatform.vaadin.internal.components.builders.AbstractSelectFieldBuilder#configureDataSource(com.
 		 * holonplatform.vaadin.internal.components.AbstractSelectField)
 		 */
+		@SuppressWarnings("unchecked")
 		@Override
 		protected void configureDataSource(SingleSelectField<T, PropertyBox> instance) {
+			if (datastore != null) {
+				dataSource(new DatastoreItemDataProvider(datastore, dataTarget,
+						PropertySet.of(dataSourceBuilder.getProperties())));
+			}
 			super.configureDataSource(instance);
 			if (!instance.getItemDataExtractor().isPresent()) {
 				// default extractor

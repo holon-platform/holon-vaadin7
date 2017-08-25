@@ -15,8 +15,6 @@
  */
 package com.holonplatform.vaadin.internal.data;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.stream.Stream;
 
 import com.holonplatform.core.ParameterSet;
@@ -28,10 +26,10 @@ import com.holonplatform.core.property.Property;
 import com.holonplatform.core.property.PropertyBox;
 import com.holonplatform.core.property.PropertySet;
 import com.holonplatform.core.query.Query;
+import com.holonplatform.core.query.QueryConfigurationProvider;
 import com.holonplatform.core.query.QueryFilter;
 import com.holonplatform.core.query.QuerySort;
 import com.holonplatform.vaadin.data.ItemDataProvider;
-import com.holonplatform.vaadin.data.ItemDataSource.Configuration;
 
 /**
  * An {@link ItemDataProvider} using a {@link Datastore} to perform item set count and load operations, using
@@ -39,11 +37,10 @@ import com.holonplatform.vaadin.data.ItemDataSource.Configuration;
  * 
  * @since 5.0.0
  */
-@SuppressWarnings("rawtypes")
 public class DatastoreItemDataProvider implements ItemDataProvider<PropertyBox> {
 
 	private static final long serialVersionUID = -3647676181555142846L;
-
+	
 	/**
 	 * Datastore
 	 */
@@ -55,19 +52,9 @@ public class DatastoreItemDataProvider implements ItemDataProvider<PropertyBox> 
 	private final DataTarget<?> target;
 
 	/**
-	 * Property set
+	 * Property set provider
 	 */
 	private final PropertySet<?> propertySet;
-
-	/**
-	 * Construct a new DatastoreItemDataProvider. Property set is not provided, and will be obtained from data source
-	 * {@link Configuration} properties.
-	 * @param datastore Datastore to use (not null)
-	 * @param target Data target (not null)
-	 */
-	public DatastoreItemDataProvider(Datastore datastore, DataTarget<?> target) {
-		this(datastore, target, null);
-	}
 
 	/**
 	 * Construct a new DatastoreItemDataProvider.
@@ -79,6 +66,7 @@ public class DatastoreItemDataProvider implements ItemDataProvider<PropertyBox> 
 		super();
 		ObjectUtils.argumentNotNull(datastore, "Datastore must be not null");
 		ObjectUtils.argumentNotNull(target, "DataTarget must be not null");
+		ObjectUtils.argumentNotNull(propertySet, "PropertySet supplier must be not null");
 		this.datastore = datastore;
 		this.target = target;
 		this.propertySet = propertySet;
@@ -102,12 +90,10 @@ public class DatastoreItemDataProvider implements ItemDataProvider<PropertyBox> 
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.data.ItemDataSource.ItemSetCounter#size(com.holonplatform.vaadin.data.ItemDataSource.
-	 * Configuration)
+	 * @see com.holonplatform.vaadin.data.ItemSetCounter#size(com.holonplatform.core.query.QueryConfigurationProvider)
 	 */
 	@Override
-	public long size(Configuration<?> configuration) throws DataAccessException {
+	public long size(QueryConfigurationProvider configuration) throws DataAccessException {
 		try {
 			return buildQuery(configuration, false).count();
 		} catch (Exception e) {
@@ -117,56 +103,38 @@ public class DatastoreItemDataProvider implements ItemDataProvider<PropertyBox> 
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.data.ItemDataSource.ItemSetLoader#load(com.holonplatform.vaadin.data.ItemDataSource.
-	 * Configuration, int, int)
+	 * @see com.holonplatform.vaadin.data.ItemSetLoader#load(com.holonplatform.core.query.QueryConfigurationProvider,
+	 * int, int)
 	 */
 	@Override
-	public Stream<PropertyBox> load(Configuration<?> configuration, int offset, int limit) throws DataAccessException {
+	public Stream<PropertyBox> load(QueryConfigurationProvider configuration, int offset, int limit)
+			throws DataAccessException {
 		Query q = buildQuery(configuration, true);
 		// paging
 		if (limit > 0) {
 			q.limit(limit);
 			q.offset(offset);
 		}
-		// property set
-		PropertySet<?> projection = propertySet;
-		if (projection == null) {
-			// build from properties
-			List<Property> ps = new LinkedList<>();
-			configuration.getProperties().forEach(p -> {
-				if (Property.class.isAssignableFrom(p.getClass())) {
-					ps.add((Property) p);
-				}
-			});
-			if (ps.isEmpty()) {
-				throw new DataAccessException("Cannot load PropertyBox items, no explicit property set provided and"
-						+ " data source properties are not of [" + Property.class.getName() + "] type");
-			}
-			projection = PropertySet.of(ps);
-		}
 		// execute
-		return q.stream(projection);
+		return q.stream(propertySet);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.data.ItemDataProvider#refresh(com.holonplatform.vaadin.data.ItemDataSource.
-	 * Configuration, java.lang.Object)
+	 * @see com.holonplatform.vaadin.data.ItemDataProvider#refresh(java.lang.Object)
 	 */
 	@Override
-	public PropertyBox refresh(Configuration<?> configuration, PropertyBox item)
-			throws UnsupportedOperationException, DataAccessException {
+	public PropertyBox refresh(PropertyBox item) throws UnsupportedOperationException, DataAccessException {
 		return getDatastore().refresh(getTarget(), item);
 	}
 
 	/**
 	 * Build a {@link Query} using the Datastore and configuring query filters and sorts.
-	 * @param configuration Data source configuration
+	 * @param configuration Query configuration
 	 * @param withSorts Whether to apply sorts, if any, to query
 	 * @return Query instance
 	 */
-	protected Query buildQuery(Configuration<?> configuration, boolean withSorts) {
+	protected Query buildQuery(QueryConfigurationProvider configuration, boolean withSorts) {
 		Query q = getDatastore().query();
 		// target
 		if (getTarget() != null) {

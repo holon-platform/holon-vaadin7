@@ -23,10 +23,10 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import com.holonplatform.core.internal.utils.ObjectUtils;
+import com.holonplatform.core.query.QueryConfigurationProvider;
 import com.holonplatform.vaadin.data.ItemDataProvider;
-import com.holonplatform.vaadin.data.ItemIdentifierProvider;
-import com.holonplatform.vaadin.data.ItemDataSource.Configuration;
 import com.holonplatform.vaadin.data.ItemDataSource.ItemAction;
+import com.holonplatform.vaadin.data.ItemIdentifierProvider;
 
 /**
  * Default {@link ItemStore} implementation using {@link ItemDataProvider} to load items on demand.
@@ -40,7 +40,7 @@ public class DefaultItemStore<ITEM> implements ItemStore<ITEM> {
 	/**
 	 * Data source configuration
 	 */
-	private final Configuration<?> configuration;
+	private final QueryConfigurationProvider configuration;
 
 	/**
 	 * {@link ItemDataProvider} factory
@@ -94,6 +94,11 @@ public class DefaultItemStore<ITEM> implements ItemStore<ITEM> {
 	 * Freezed state
 	 */
 	private boolean freezed;
+	
+	/**
+	 * Batch size
+	 */
+	private final int batchSize;
 
 	/**
 	 * Constructor
@@ -102,14 +107,15 @@ public class DefaultItemStore<ITEM> implements ItemStore<ITEM> {
 	 * @param itemIdentifierProvider Item identifier provider
 	 * @param maxCacheSize Max cache size
 	 */
-	public DefaultItemStore(Configuration<?> configuration, ItemDataProvider<ITEM> dataProvider,
-			ItemIdentifierProvider<ITEM, ?> itemIdentifierProvider, int maxCacheSize) {
+	public DefaultItemStore(QueryConfigurationProvider configuration, ItemDataProvider<ITEM> dataProvider,
+			ItemIdentifierProvider<ITEM, ?> itemIdentifierProvider, int batchSize, int maxCacheSize) {
 		super();
 		ObjectUtils.argumentNotNull(configuration, "Configuration must be not null");
 		ObjectUtils.argumentNotNull(dataProvider, "ItemDataProvider must be not null");
 		this.configuration = configuration;
 		this.dataProviderFactory = () -> dataProvider;
 		this.itemIdentifierProvider = itemIdentifierProvider;
+		this.batchSize = batchSize;
 		this.itemCache = new ItemCacheMap<>(maxCacheSize);
 	}
 
@@ -117,8 +123,16 @@ public class DefaultItemStore<ITEM> implements ItemStore<ITEM> {
 	 * Get the data source configuration
 	 * @return Data source configuration
 	 */
-	protected Configuration<?> getConfiguration() {
+	protected QueryConfigurationProvider getConfiguration() {
 		return configuration;
+	}
+
+	/**
+	 * Get the batch size
+	 * @return the batch size
+	 */
+	public int getBatchSize() {
+		return batchSize;
 	}
 
 	/**
@@ -289,7 +303,7 @@ public class DefaultItemStore<ITEM> implements ItemStore<ITEM> {
 		ObjectUtils.argumentNotNull(item, "Item to refresh must be not null");
 		int index = indexOfItem(getItemId(item));
 		if (index > -1) {
-			ITEM refreshed = getItemQuery().refresh(getConfiguration(), item);
+			ITEM refreshed = getItemQuery().refresh(item);
 			if (refreshed != null) {
 				refreshItem(refreshed, index);
 			}
@@ -500,11 +514,6 @@ public class DefaultItemStore<ITEM> implements ItemStore<ITEM> {
 			query = dataProviderFactory.get();
 			// size
 			querySize = (int) query.size(getConfiguration());
-			// check max size
-			int maxSize = getConfiguration().getMaxSize();
-			if (maxSize > 0 && maxSize < querySize) {
-				querySize = maxSize;
-			}
 		}
 		return query;
 	}
@@ -518,7 +527,7 @@ public class DefaultItemStore<ITEM> implements ItemStore<ITEM> {
 
 		ITEM requestedItem = null;
 
-		final int batchSize = getConfiguration().getBatchSize();
+		final int batchSize = getBatchSize();
 		final int startIndex = index - index % batchSize;
 		final int count = Math.min(batchSize, getItemQuerySize() - startIndex);
 

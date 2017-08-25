@@ -16,14 +16,19 @@
 package com.holonplatform.vaadin.internal.components.builders;
 
 import com.holonplatform.core.Path;
+import com.holonplatform.core.datastore.DataTarget;
+import com.holonplatform.core.datastore.Datastore;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.property.Property;
 import com.holonplatform.core.property.PropertyBox;
+import com.holonplatform.core.property.PropertySet;
 import com.holonplatform.vaadin.components.PropertyListing;
 import com.holonplatform.vaadin.components.builders.PropertyListingBuilder.GridPropertyListingBuilder;
 import com.holonplatform.vaadin.data.ItemDataProvider;
-import com.holonplatform.vaadin.internal.components.DefaultPropertyListing;
 import com.holonplatform.vaadin.internal.components.DefaultItemListing.RenderingMode;
+import com.holonplatform.vaadin.internal.components.DefaultPropertyListing;
+import com.holonplatform.vaadin.internal.data.DatastoreCommitHandler;
+import com.holonplatform.vaadin.internal.data.DatastoreItemDataProvider;
 import com.holonplatform.vaadin.internal.data.PropertiesItemIdentifier;
 import com.holonplatform.vaadin.internal.data.container.PropertyBoxItemAdapter;
 import com.vaadin.data.util.converter.Converter;
@@ -38,6 +43,10 @@ import com.vaadin.ui.renderers.Renderer;
 public class DefaultGridPropertyListingBuilder extends
 		AbstractGridItemListingBuilder<PropertyBox, Property, PropertyListing, DefaultPropertyListing, GridPropertyListingBuilder>
 		implements GridPropertyListingBuilder {
+
+	private Datastore datastore;
+	private DataTarget<?> dataTarget;
+	private Property[] identifierProperties;
 
 	public DefaultGridPropertyListingBuilder() {
 		super(new DefaultPropertyListing(RenderingMode.GRID));
@@ -83,6 +92,21 @@ public class DefaultGridPropertyListingBuilder extends
 	/*
 	 * (non-Javadoc)
 	 * @see
+	 * com.holonplatform.vaadin.components.builders.PropertyListingBuilder#dataSource(com.holonplatform.core.datastore.
+	 * Datastore, com.holonplatform.core.datastore.DataTarget, com.holonplatform.core.property.Property[])
+	 */
+	@Override
+	public GridPropertyListingBuilder dataSource(Datastore datastore, DataTarget<?> dataTarget,
+			Property... identifierProperties) {
+		this.datastore = datastore;
+		this.dataTarget = dataTarget;
+		this.identifierProperties = identifierProperties;
+		return builder();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
 	 * com.holonplatform.vaadin.components.builders.PropertyListingBuilder.GridPropertyListingBuilder#converter(com.
 	 * holonframework.core.property.Property, com.vaadin.data.util.converter.Converter)
 	 */
@@ -122,6 +146,22 @@ public class DefaultGridPropertyListingBuilder extends
 	@Override
 	protected GridPropertyListingBuilder builder() {
 		return this;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.holonplatform.vaadin.internal.components.builders.AbstractItemListingBuilder#buildAndConfigure(java.lang.
+	 * Iterable)
+	 */
+	@Override
+	protected PropertyListing buildAndConfigure(Iterable<Property> visibleColumns) {
+		if (datastore != null) {
+			commitHandler(new DatastoreCommitHandler(datastore, dataTarget));
+			dataSource(new DatastoreItemDataProvider(datastore, dataTarget,
+					PropertySet.of(dataSourceBuilder.getProperties())), identifierProperties);
+		}
+		return super.buildAndConfigure(visibleColumns);
 	}
 
 }

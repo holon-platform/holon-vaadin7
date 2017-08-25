@@ -25,7 +25,6 @@ import com.holonplatform.core.property.PropertyBox;
 import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.data.ItemDataProvider;
 import com.holonplatform.vaadin.data.container.ItemAdapter;
-import com.holonplatform.vaadin.internal.data.DatastoreItemDataProvider;
 
 /**
  * Builder to create selection {@link Input}s with {@link Property} data source support.
@@ -76,9 +75,7 @@ public interface PropertySelectInputBuilder<T, C extends Input<T>, S, B extends 
 	 * @param dataTarget Data target to use to load items (not null)
 	 * @return this
 	 */
-	default B dataSource(Datastore datastore, DataTarget<?> dataTarget) {
-		return dataSource(new DatastoreItemDataProvider(datastore, dataTarget));
-	}
+	B dataSource(Datastore datastore, DataTarget<?> dataTarget);
 
 	/**
 	 * Set the item adapter to use to convert data source items into container items and back.

@@ -54,13 +54,6 @@ public interface BaseItemDataSourceComponentBuilder<B extends BaseItemDataSource
 	B batchSize(int batchSize);
 
 	/**
-	 * Set max container size (number of items), i.e. max results admitted from {@link ItemDataProvider}.
-	 * @param maxSize Max container size
-	 * @return this
-	 */
-	B maxSize(int maxSize);
-
-	/**
 	 * Set max items cache size
 	 * @param maxCacheSize Max cache size to set
 	 * @return this

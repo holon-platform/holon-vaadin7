@@ -16,10 +16,6 @@
 package com.holonplatform.vaadin.data;
 
 import com.holonplatform.core.exceptions.DataAccessException;
-import com.holonplatform.vaadin.data.ItemDataSource.Configuration;
-import com.holonplatform.vaadin.data.ItemDataSource.ItemRefresher;
-import com.holonplatform.vaadin.data.ItemDataSource.ItemSetCounter;
-import com.holonplatform.vaadin.data.ItemDataSource.ItemSetLoader;
 import com.holonplatform.vaadin.internal.data.DefaultItemDataProvider;
 
 /**
@@ -31,15 +27,11 @@ import com.holonplatform.vaadin.internal.data.DefaultItemDataProvider;
  */
 public interface ItemDataProvider<ITEM> extends ItemSetCounter, ItemSetLoader<ITEM>, ItemRefresher<ITEM> {
 
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.data.ItemDataSource.ItemRefresher#refresh(com.holonplatform.vaadin.data.ItemDataSource
-	 * .Configuration, java.lang.Object)
+	/* (non-Javadoc)
+	 * @see com.holonplatform.vaadin.data.ItemRefresher#refresh(java.lang.Object)
 	 */
 	@Override
-	default ITEM refresh(Configuration<?> configuration, ITEM item)
-			throws UnsupportedOperationException, DataAccessException {
+	default ITEM refresh(ITEM item) throws UnsupportedOperationException, DataAccessException {
 		throw new UnsupportedOperationException();
 	}
 

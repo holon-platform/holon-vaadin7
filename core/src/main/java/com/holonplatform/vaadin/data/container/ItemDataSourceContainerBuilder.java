@@ -115,13 +115,6 @@ public interface ItemDataSourceContainerBuilder<ITEM, PROPERTY, B extends ItemDa
 	B batchSize(int batchSize);
 
 	/**
-	 * Set max container size (number of items), i.e. max results admitted from {@link ItemDataProvider}.
-	 * @param maxSize Max container size
-	 * @return this
-	 */
-	B maxSize(int maxSize);
-
-	/**
 	 * Set max items cache size
 	 * @param maxCacheSize Max cache size to set
 	 * @return this
@@ -244,6 +237,12 @@ public interface ItemDataSourceContainerBuilder<ITEM, PROPERTY, B extends ItemDa
 	public interface BaseItemDataSourceContainerBuilder<ITEM, PROPERTY>
 			extends ItemDataSourceContainerBuilder<ITEM, PROPERTY, BaseItemDataSourceContainerBuilder<ITEM, PROPERTY>> {
 
+		/**
+		 * Get the current data source properties.
+		 * @return data source properties
+		 */
+		Iterable<PROPERTY> getProperties();
+		
 	}
 
 }

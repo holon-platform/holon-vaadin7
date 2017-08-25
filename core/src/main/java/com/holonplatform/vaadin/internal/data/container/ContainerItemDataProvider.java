@@ -19,6 +19,7 @@ import java.util.stream.Stream;
 
 import com.holonplatform.core.exceptions.DataAccessException;
 import com.holonplatform.core.internal.utils.ObjectUtils;
+import com.holonplatform.core.query.QueryConfigurationProvider;
 import com.holonplatform.vaadin.data.ItemDataProvider;
 import com.holonplatform.vaadin.data.ItemDataSource.Configuration;
 import com.holonplatform.vaadin.data.container.ItemAdapter;
@@ -36,52 +37,55 @@ public class ContainerItemDataProvider<ITEM> implements ItemDataProvider<Item> {
 	private static final long serialVersionUID = 6805081577415808950L;
 
 	private final ItemDataProvider<ITEM> provider;
+	private final Configuration<?> configuration;
 	private final ItemAdapter<ITEM> adapter;
 
 	/**
 	 * Constructor
 	 * @param provider Concrete item data provider (not null)
+	 * @param configuration Data source configuration
 	 * @param adapter Item adapter (not null)
 	 */
-	public ContainerItemDataProvider(ItemDataProvider<ITEM> provider, ItemAdapter<ITEM> adapter) {
+	public ContainerItemDataProvider(ItemDataProvider<ITEM> provider, Configuration<?> configuration, ItemAdapter<ITEM> adapter) {
 		super();
 		ObjectUtils.argumentNotNull(provider, "ItemDataProvider must be not null");
 		ObjectUtils.argumentNotNull(adapter, "ItemAdapter must be not null");
 		this.provider = provider;
+		this.configuration = configuration;
 		this.adapter = adapter;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.data.ItemDataSource.ItemSetCounter#size(com.holonplatform.vaadin.data.ItemDataSource.
-	 * Configuration)
+	/**
+	 * Get the data source configuration
+	 * @return the configuration
+	 */
+	protected Configuration<?> getConfiguration() {
+		return configuration;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.holonplatform.vaadin.data.ItemSetCounter#size(com.holonplatform.core.query.QueryConfigurationProvider)
 	 */
 	@Override
-	public long size(Configuration<?> configuration) throws DataAccessException {
+	public long size(QueryConfigurationProvider configuration) throws DataAccessException {
 		return provider.size(configuration);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.data.ItemDataSource.ItemSetLoader#load(com.holonplatform.vaadin.data.ItemDataSource.
-	 * Configuration, int, int)
+	/* (non-Javadoc)
+	 * @see com.holonplatform.vaadin.data.ItemSetLoader#load(com.holonplatform.core.query.QueryConfigurationProvider, int, int)
 	 */
 	@Override
-	public Stream<Item> load(Configuration<?> configuration, int offset, int limit) throws DataAccessException {
-		return provider.load(configuration, offset, limit).map(i -> adapter.adapt(configuration, i));
+	public Stream<Item> load(QueryConfigurationProvider configuration, int offset, int limit)
+			throws DataAccessException {
+		return provider.load(configuration, offset, limit).map(i -> adapter.adapt(getConfiguration(), i));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.data.ItemDataProvider#refresh(com.holonplatform.vaadin.data.ItemDataSource.
-	 * Configuration, java.lang.Object)
+	/* (non-Javadoc)
+	 * @see com.holonplatform.vaadin.data.ItemDataProvider#refresh(java.lang.Object)
 	 */
 	@Override
-	public Item refresh(Configuration<?> configuration, Item item)
-			throws UnsupportedOperationException, DataAccessException {
-		ITEM itm = provider.refresh(configuration, adapter.restore(configuration, item));
+	public Item refresh(Item item) throws UnsupportedOperationException, DataAccessException {
+		ITEM itm = provider.refresh(adapter.restore(configuration, item));
 		if (itm != null) {
 			return adapter.adapt(configuration, itm);
 		}

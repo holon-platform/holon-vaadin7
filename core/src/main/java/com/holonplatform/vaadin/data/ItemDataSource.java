@@ -17,9 +17,7 @@ package com.holonplatform.vaadin.data;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import com.holonplatform.core.exceptions.DataAccessException;
 import com.holonplatform.core.internal.utils.ObjectUtils;
@@ -209,40 +207,6 @@ public interface ItemDataSource<ITEM, PROPERTY> extends Serializable {
 		 */
 		Object getPropertyDefaultValue(PROPERTY property);
 
-		/**
-		 * Get batch (page) size for items loading.
-		 * <p>
-		 * A value <code>&lt;=0</code> means no paging.
-		 * </p>
-		 * @return Batch (page) size for items loading
-		 */
-		int getBatchSize();
-
-		/**
-		 * Get max data source item set size (number of items), i.e. max results admitted when loading items.
-		 * @return Max data source size. <code>&lt;=0</code> means no max size.
-		 */
-		int getMaxSize();
-
-		/**
-		 * Returns whether auto-refresh is enabled for this data source, i.e. items are loaded when one of the data
-		 * source methods which involve operations on item set is called.
-		 * <p>
-		 * If auto-refresh is not enabled, {@link #refresh()} method must be called to load items.
-		 * </p>
-		 * <p>
-		 * Default is <code>true</code>.
-		 * </p>
-		 * @return Whether auto-refresh is enabled for this data source
-		 */
-		boolean isAutoRefresh();
-
-		/**
-		 * Get current data source items sorting directives properties, providing item property to sort and direction.
-		 * @return Data source items sorting directives, or an empty list if none
-		 */
-		List<ItemSort<PROPERTY>> getItemSorts();
-
 	}
 
 	/**
@@ -310,63 +274,6 @@ public interface ItemDataSource<ITEM, PROPERTY> extends Serializable {
 		 * @return QuerySort
 		 */
 		QuerySort getQuerySort(PROPERTY property, boolean ascending);
-
-	}
-
-	// Data providers
-
-	/**
-	 * Counts an item set.
-	 */
-	@FunctionalInterface
-	public interface ItemSetCounter extends Serializable {
-
-		/**
-		 * Get the data source item set size (number of items) according to given <code>configuration</code>.
-		 * @param configuration Data source configuration
-		 * @return Item set size (number of items), or <code>0</code> if no item available
-		 * @throws DataAccessException Error accessing underlying data store
-		 */
-		long size(Configuration<?> configuration) throws DataAccessException;
-
-	}
-
-	/**
-	 * Loads an item set.
-	 * @param <ITEM> Item type
-	 */
-	@FunctionalInterface
-	public interface ItemSetLoader<ITEM> extends Serializable {
-
-		/**
-		 * Load items according to given data source <code>configuration</code>.
-		 * @param configuration Data source configuration
-		 * @param offset Starts the query results at given zero-based offset
-		 * @param limit Limit the fetched result set to given max value
-		 * @return Items stream
-		 * @throws DataAccessException Error accessing underlying data store
-		 */
-		Stream<ITEM> load(Configuration<?> configuration, int offset, int limit) throws DataAccessException;
-
-	}
-
-	/**
-	 * Refresh a single item.
-	 * @param <ITEM> Item type
-	 */
-	@FunctionalInterface
-	public interface ItemRefresher<ITEM> extends Serializable {
-
-		/**
-		 * Refresh given item from concrete data store.
-		 * @param configuration Data source configuration
-		 * @param item Item to refresh (not null)
-		 * @return Refreshed item
-		 * @throws UnsupportedOperationException If the refresh operation is not supported by concrete implementation
-		 * @throws DataAccessException Error accessing underlying data store
-		 */
-		ITEM refresh(Configuration<?> configuration, ITEM item)
-				throws UnsupportedOperationException, DataAccessException;
 
 	}
 

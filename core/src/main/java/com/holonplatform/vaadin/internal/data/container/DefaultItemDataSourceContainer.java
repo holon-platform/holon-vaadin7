@@ -68,15 +68,6 @@ public class DefaultItemDataSourceContainer<ITEM, PROPERTY>
 	private static final long serialVersionUID = 5690427592609021861L;
 
 	/**
-	 * Batch size (&lt;=0 means no paging)
-	 */
-	private int batchSize = DEFAULT_BATCH_SIZE;
-	/**
-	 * Max results (&lt;=0 means no limit)
-	 */
-	private int maxSize = 0;
-
-	/**
 	 * Auto refresh
 	 */
 	private boolean autoRefresh = true;
@@ -193,14 +184,15 @@ public class DefaultItemDataSourceContainer<ITEM, PROPERTY>
 	 * @param dataProvider {@link ItemDataProvider} to be used as items data source
 	 * @param itemIdentifierProvider Item identifier provider
 	 * @param itemAdapter Item adapter
+	 * @param batchSize Batch size
 	 */
 	public DefaultItemDataSourceContainer(ItemDataProvider<ITEM> dataProvider,
-			ItemIdentifierProvider<ITEM, Object> itemIdentifierProvider, ItemAdapter<ITEM> itemAdapter) {
+			ItemIdentifierProvider<ITEM, Object> itemIdentifierProvider, ItemAdapter<ITEM> itemAdapter, int batchSize) {
 		this();
 		this.dataProvider = dataProvider;
 		this.itemIdentifierProvider = itemIdentifierProvider;
 		this.itemAdapter = itemAdapter;
-		init();
+		init(batchSize);
 	}
 
 	/**
@@ -223,17 +215,18 @@ public class DefaultItemDataSourceContainer<ITEM, PROPERTY>
 	/**
 	 * Init the data source container, configuring the internal {@link ItemStore}.
 	 */
-	protected void init() {
+	protected void init(int batchSize) {
 		this.itemStore = new DefaultItemStore<>(this, new ContainerItemDataProvider<>(
 				getDataProvider().orElseThrow(
 						() -> new IllegalStateException("Invalid data source configuration: missing ItemDataProvider")),
+				this,
 				getItemAdapter().orElseThrow(
 						() -> new IllegalStateException("Invalid data source configuration: missing ItemAdapter"))),
 				getItemIdentifierProvider().map(i -> new ContainerItemIdentifierProvider<>(i,
 						getItemAdapter().orElseThrow(() -> new IllegalStateException(
 								"Invalid data source configuration: missing ItemAdapter")),
 						this)).orElse(null),
-				determineMaxCacheSize(getBatchSize()));
+				batchSize, determineMaxCacheSize(batchSize));
 		this.itemStore.setFreezed(!isAutoRefresh());
 		this.itemStore.addItemActionListener(this);
 	}
@@ -324,26 +317,6 @@ public class DefaultItemDataSourceContainer<ITEM, PROPERTY>
 		return this;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.querycontainer.ItemQueryDefinition#getBatchSize()
-	 */
-	@Override
-	public int getBatchSize() {
-		return batchSize;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.querycontainer.ItemQueryContainer#setBatchSize( int)
-	 */
-	@Override
-	public void setBatchSize(int batchSize) {
-		this.batchSize = batchSize;
-		// setup cache size
-		setMaxCacheSize(determineMaxCacheSize(batchSize));
-	}
-
 	/**
 	 * Calculate max item store cache size using batch size, if positive or default
 	 * 
@@ -360,24 +333,6 @@ public class DefaultItemDataSourceContainer<ITEM, PROPERTY>
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.querycontainer.ItemQueryDefinition#getMaxSize()
-	 */
-	@Override
-	public int getMaxSize() {
-		return maxSize;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.querycontainer.ItemQueryContainer#setMaxSize(int)
-	 */
-	@Override
-	public void setMaxSize(int maxSize) {
-		this.maxSize = maxSize;
-	}
-
-	/*
-	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.data.querycontainer.ItemQueryContainer# setMaxCacheSize(int)
 	 */
 	@Override
@@ -387,12 +342,11 @@ public class DefaultItemDataSourceContainer<ITEM, PROPERTY>
 		});
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.querycontainer.ItemQueryContainer#isAutoRefresh()
+	/**
+	 * Gets whether auto refresh is enabled.
+	 * @return whether auto refresh is enabled
 	 */
-	@Override
-	public boolean isAutoRefresh() {
+	protected boolean isAutoRefresh() {
 		return autoRefresh;
 	}
 
@@ -836,12 +790,11 @@ public class DefaultItemDataSourceContainer<ITEM, PROPERTY>
 		refresh();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.data.ItemDataSource.Configuration#getItemSorts()
+	/**
+	 * Get current item sorts.
+	 * @return current item sorts
 	 */
-	@Override
-	public List<ItemSort<PROPERTY>> getItemSorts() {
+	protected List<ItemSort<PROPERTY>> getItemSorts() {
 		return itemSorts;
 	}
 
@@ -1726,6 +1679,9 @@ public class DefaultItemDataSourceContainer<ITEM, PROPERTY>
 	private static Path<?> getPathByName(String propertyName, Iterable<?> properties) {
 		if (propertyName != null && properties != null) {
 			for (Object property : properties) {
+				if (String.class.isAssignableFrom(property.getClass()) && propertyName.equals(property)) {
+					return Path.of(propertyName, Object.class);
+				}
 				if (property instanceof Path && propertyName.equals(((Path<?>) property).getName())) {
 					return (Path<?>) property;
 				}

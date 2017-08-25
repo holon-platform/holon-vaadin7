@@ -59,23 +59,6 @@ public interface ItemDataSourceContainer<ITEM, PROPERTY> extends ItemDataSource<
 	void setAutoRefresh(boolean autoRefresh);
 
 	/**
-	 * Set batch (page) size for items loading using {@link ItemDataProvider}.
-	 * <p>
-	 * A value <code>&lt;=0</code> means no paging, and {@link ItemDataProvider} should behave in a consistent manner.
-	 * <p>
-	 * Default is {@link #DEFAULT_BATCH_SIZE}
-	 * </p>
-	 * @param batchSize Batch (page) size for items loading
-	 */
-	void setBatchSize(int batchSize);
-
-	/**
-	 * Set max container size (number of items), i.e. max results admitted from {@link ItemDataProvider}.
-	 * @param maxSize Max container size
-	 */
-	void setMaxSize(int maxSize);
-
-	/**
 	 * Set max items cache size
 	 * @param maxCacheSize Max cache size to set
 	 */

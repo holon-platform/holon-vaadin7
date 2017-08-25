@@ -25,8 +25,6 @@ import com.holonplatform.core.property.PropertyBox;
 import com.holonplatform.vaadin.components.PropertyListing;
 import com.holonplatform.vaadin.data.ItemDataProvider;
 import com.holonplatform.vaadin.data.ItemDataSource.CommitHandler;
-import com.holonplatform.vaadin.internal.data.DatastoreCommitHandler;
-import com.holonplatform.vaadin.internal.data.DatastoreItemDataProvider;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
@@ -81,10 +79,7 @@ public interface PropertyListingBuilder<B extends PropertyListingBuilder<B, X>, 
 	 * @param identifierProperties Properties wich act as item identifier
 	 * @return this
 	 */
-	default B dataSource(Datastore datastore, DataTarget<?> dataTarget, Property... identifierProperties) {
-		commitHandler(new DatastoreCommitHandler(datastore, dataTarget));
-		return dataSource(new DatastoreItemDataProvider(datastore, dataTarget), identifierProperties);
-	}
+	B dataSource(Datastore datastore, DataTarget<?> dataTarget, Property... identifierProperties);
 
 	/**
 	 * Builder to create {@link PropertyListing} components using a {@link Grid} as backing component.

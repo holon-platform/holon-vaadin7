@@ -192,16 +192,6 @@ public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, 
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.BaseItemDataSourceComponentBuilder#maxSize(int)
-	 */
-	@Override
-	public B maxSize(int maxSize) {
-		dataSourceBuilder.maxSize(maxSize);
-		return builder();
-	}
-
-	/*
-	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.builders.BaseItemDataSourceComponentBuilder#maxCacheSize(int)
 	 */
 	@Override

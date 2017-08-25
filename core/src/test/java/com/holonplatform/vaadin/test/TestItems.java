@@ -47,7 +47,6 @@ import com.holonplatform.core.query.QueryFilter;
 import com.holonplatform.core.query.QueryFilter.CompositeQueryFilter;
 import com.holonplatform.core.query.QueryFilter.OperationQueryFilter;
 import com.holonplatform.vaadin.data.ItemDataSource.Configuration;
-import com.holonplatform.vaadin.data.ItemDataSource.ItemSort;
 import com.holonplatform.vaadin.data.container.PropertyBoxItem;
 import com.holonplatform.vaadin.internal.data.ItemCacheMap;
 import com.holonplatform.vaadin.internal.data.NaturalNumberIdsList;
@@ -101,26 +100,6 @@ public class TestItems {
 		@Override
 		public Object getPropertyDefaultValue(PathProperty property) {
 			return null;
-		}
-
-		@Override
-		public int getBatchSize() {
-			return 10;
-		}
-
-		@Override
-		public int getMaxSize() {
-			return 100;
-		}
-
-		@Override
-		public boolean isAutoRefresh() {
-			return true;
-		}
-
-		@Override
-		public List<ItemSort<PathProperty>> getItemSorts() {
-			return Collections.emptyList();
 		}
 
 	};

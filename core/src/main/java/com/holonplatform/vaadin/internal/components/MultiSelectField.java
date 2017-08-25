@@ -19,9 +19,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
+import com.holonplatform.core.datastore.DataTarget;
+import com.holonplatform.core.datastore.Datastore;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.property.Property;
 import com.holonplatform.core.property.PropertyBox;
+import com.holonplatform.core.property.PropertySet;
 import com.holonplatform.vaadin.components.MultiSelect;
 import com.holonplatform.vaadin.components.builders.BaseSelectInputBuilder.RenderingMode;
 import com.holonplatform.vaadin.components.builders.MultiPropertySelectInputBuilder;
@@ -31,6 +34,7 @@ import com.holonplatform.vaadin.data.ItemIdentifierProvider;
 import com.holonplatform.vaadin.data.container.ItemAdapter;
 import com.holonplatform.vaadin.data.container.PropertyBoxItem;
 import com.holonplatform.vaadin.internal.components.builders.AbstractSelectFieldBuilder;
+import com.holonplatform.vaadin.internal.data.DatastoreItemDataProvider;
 import com.holonplatform.vaadin.internal.data.PropertyItemIdentifier;
 import com.holonplatform.vaadin.internal.data.container.PropertyBoxItemAdapter;
 import com.vaadin.ui.Field;
@@ -239,6 +243,9 @@ public class MultiSelectField<T, ITEM> extends AbstractSelectField<Set<T>, T, IT
 			AbstractSelectFieldBuilder<Set<T>, MultiSelect<T>, T, PropertyBox, MultiSelectField<T, PropertyBox>, MultiPropertySelectInputBuilder<T>>
 			implements MultiPropertySelectInputBuilder<T> {
 
+		private Datastore datastore;
+		private DataTarget<?> dataTarget;
+
 		/**
 		 * Constructor
 		 * @param selectProperty Selection (and identifier) property
@@ -282,6 +289,19 @@ public class MultiSelectField<T, ITEM> extends AbstractSelectField<Set<T>, T, IT
 
 		/*
 		 * (non-Javadoc)
+		 * @see
+		 * com.holonplatform.vaadin.components.builders.PropertySelectInputBuilder#dataSource(com.holonplatform.core.
+		 * datastore.Datastore, com.holonplatform.core.datastore.DataTarget)
+		 */
+		@Override
+		public MultiPropertySelectInputBuilder<T> dataSource(Datastore datastore, DataTarget<?> dataTarget) {
+			this.datastore = datastore;
+			this.dataTarget = dataTarget;
+			return builder();
+		}
+
+		/*
+		 * (non-Javadoc)
 		 * @see com.holonplatform.vaadin.components.builders.PropertySelectFieldBuilder#itemAdapter(com.holonplatform.
 		 * vaadin.data.container.ItemAdapter)
 		 */
@@ -301,8 +321,13 @@ public class MultiSelectField<T, ITEM> extends AbstractSelectField<Set<T>, T, IT
 		 * com.holonplatform.vaadin.internal.components.builders.AbstractSelectFieldBuilder#configureDataSource(com.
 		 * holonplatform.vaadin.internal.components.AbstractSelectField)
 		 */
+		@SuppressWarnings("unchecked")
 		@Override
 		protected void configureDataSource(MultiSelectField<T, PropertyBox> instance) {
+			if (datastore != null) {
+				dataSource(new DatastoreItemDataProvider(datastore, dataTarget,
+						PropertySet.of(dataSourceBuilder.getProperties())));
+			}
 			super.configureDataSource(instance);
 			if (!instance.getItemDataExtractor().isPresent()) {
 				// default extractor

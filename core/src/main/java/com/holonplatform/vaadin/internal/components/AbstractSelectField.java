@@ -249,7 +249,7 @@ public abstract class AbstractSelectField<T, S, ITEM> extends AbstractCustomFiel
 	 * Get data source configuration
 	 * @return data source configuration
 	 */
-	protected Configuration<?> getDataSourceConfiguration() {
+	public Configuration<?> getDataSourceConfiguration() {
 		if (getContainerDataSource() instanceof ItemDataSource) {
 			return ((ItemDataSource<?, ?>) getContainerDataSource()).getConfiguration();
 		}
