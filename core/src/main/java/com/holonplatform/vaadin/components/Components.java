@@ -19,6 +19,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+import com.holonplatform.core.property.Property;
+import com.holonplatform.core.property.PropertyBox;
 import com.holonplatform.vaadin.components.ComposableComponent.Composer;
 import com.holonplatform.vaadin.components.Dialog.DialogBuilder;
 import com.holonplatform.vaadin.components.Dialog.QuestionDialogBuilder;
@@ -47,6 +49,7 @@ import com.holonplatform.vaadin.components.builders.ItemListingBuilder.TableItem
 import com.holonplatform.vaadin.components.builders.LabelBuilder;
 import com.holonplatform.vaadin.components.builders.LayoutConfigurator;
 import com.holonplatform.vaadin.components.builders.LayoutConfigurator.BaseLayoutConfigurator;
+import com.holonplatform.vaadin.components.builders.MultiPropertySelectInputBuilder;
 import com.holonplatform.vaadin.components.builders.MultiSelectInputBuilder;
 import com.holonplatform.vaadin.components.builders.NumberInputBuilder;
 import com.holonplatform.vaadin.components.builders.OrderedLayoutConfigurator;
@@ -55,6 +58,7 @@ import com.holonplatform.vaadin.components.builders.PanelBuilder;
 import com.holonplatform.vaadin.components.builders.PropertyListingBuilder.GridPropertyListingBuilder;
 import com.holonplatform.vaadin.components.builders.PropertyListingBuilder.TablePropertyListingBuilder;
 import com.holonplatform.vaadin.components.builders.SecretInputBuilder;
+import com.holonplatform.vaadin.components.builders.SinglePropertySelectInputBuilder;
 import com.holonplatform.vaadin.components.builders.SingleSelectInputBuilder;
 import com.holonplatform.vaadin.components.builders.StringInputBuilder;
 import com.holonplatform.vaadin.components.builders.TemporalInputBuilder.TemporalWithTimeFieldBuilder;
@@ -370,7 +374,7 @@ public interface Components {
 		static BooleanInputBuilder boolean_() {
 			return new BooleanField.Builder();
 		}
-		
+
 		/**
 		 * Gets a builder to create {@link Date} type {@link Input}s.
 		 * @param resolution field Resolution
@@ -463,6 +467,30 @@ public interface Components {
 		}
 
 		/**
+		 * Gets a builder to create a {@link SingleSelect} with a {@link PropertyBox} items data source with
+		 * {@link Property} as item properties.
+		 * @param <T> Selection value type
+		 * @param selectProperty Property to select (not null)
+		 * @param renderingMode Rendering mode
+		 * @return {@link SingleSelect} builder
+		 */
+		static <T> SinglePropertySelectInputBuilder<T> singleSelect(Property<T> selectProperty,
+				RenderingMode renderingMode) {
+			return SingleSelect.property(selectProperty, renderingMode);
+		}
+
+		/**
+		 * Gets a builder to create a {@link SingleSelect} with a {@link PropertyBox} items data source with
+		 * {@link Property} as item properties. Default {@link RenderingMode#SELECT} is assumed.
+		 * @param <T> Selection value type
+		 * @param selectProperty Property to select (not null)
+		 * @return {@link SingleSelect} builder
+		 */
+		static <T> SinglePropertySelectInputBuilder<T> singleSelect(Property<T> selectProperty) {
+			return SingleSelect.property(selectProperty, RenderingMode.SELECT);
+		}
+
+		/**
 		 * Gets a builder to create a multiple selection {@link Input}.
 		 * @param <T> Selection value type
 		 * @param type Selection value type
@@ -481,6 +509,30 @@ public interface Components {
 		 */
 		static <T> MultiSelectInputBuilder<T> multiSelect(Class<? extends T> type) {
 			return MultiSelect.builder(type);
+		}
+
+		/**
+		 * Gets a builder to create a {@link MultiSelect} with a {@link PropertyBox} items data source with
+		 * {@link Property} as item properties.
+		 * @param <T> Selection value type
+		 * @param selectProperty Property to select (not null)
+		 * @param renderingMode Rendering mode
+		 * @return {@link MultiSelect} builder
+		 */
+		static <T> MultiPropertySelectInputBuilder<T> multiSelect(Property<T> selectProperty,
+				RenderingMode renderingMode) {
+			return MultiSelect.property(selectProperty, renderingMode);
+		}
+
+		/**
+		 * Gets a builder to create a {@link MultiSelect} with a {@link PropertyBox} items data source with
+		 * {@link Property} as item properties. Default {@link RenderingMode#SELECT} is assumed.
+		 * @param <T> Selection value type
+		 * @param selectProperty Property to select (not null)
+		 * @return {@link MultiSelect} builder
+		 */
+		static <T> MultiPropertySelectInputBuilder<T> multiSelect(Property<T> selectProperty) {
+			return MultiSelect.property(selectProperty, RenderingMode.OPTIONS);
 		}
 
 		/**
