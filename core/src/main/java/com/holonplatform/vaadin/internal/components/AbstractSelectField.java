@@ -348,15 +348,6 @@ public abstract class AbstractSelectField<T, S, ITEM> extends AbstractCustomFiel
 	}
 
 	/**
-	 * Gets the number of visible Items in the Container.
-	 * @return number of Items in the Container
-	 */
-	@Override
-	public int size() {
-		return getInternalField().size();
-	}
-
-	/**
 	 * Gets the item Id collection from the container.
 	 * @return the Collection of item ids.
 	 */

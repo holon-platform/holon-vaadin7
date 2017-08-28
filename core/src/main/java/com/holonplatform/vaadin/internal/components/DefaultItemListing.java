@@ -390,15 +390,6 @@ public class DefaultItemListing<T, P> extends CustomComponent
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.ItemSetComponent#size()
-	 */
-	@Override
-	public int size() {
-		return requireDataSource().size();
-	}
-
-	/*
-	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.ItemSetComponent#refresh()
 	 */
 	@Override

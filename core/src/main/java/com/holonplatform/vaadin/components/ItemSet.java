@@ -27,12 +27,6 @@ import com.vaadin.server.Resource;
 public interface ItemSet {
 
 	/**
-	 * Returns the total number of available items.
-	 * @return the total number of available items
-	 */
-	int size();
-
-	/**
 	 * Refresh items set.
 	 * <p>
 	 * If a item data loader is not supported by concrete implementation, this method has no effect.
