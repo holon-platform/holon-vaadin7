@@ -75,26 +75,6 @@ public abstract class AbstractSelectFieldBuilder<T, C extends Input<T>, S, ITEM,
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.SelectFieldBuilder#emptySelectionAllowed(boolean)
-	 */
-	@Override
-	public B emptySelectionAllowed(boolean emptySelectionAllowed) {
-		getInstance().setNullSelectionAllowed(emptySelectionAllowed);
-		return builder();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.SelectFieldBuilder#nullSelectionItemId(java.lang.Object)
-	 */
-	@Override
-	public B nullSelectionItemId(S nullSelectionItemId) {
-		getInstance().setNullSelectionItemId(nullSelectionItemId);
-		return builder();
-	}
-
-	/*
-	 * (non-Javadoc)
 	 * @see
 	 * com.holonplatform.vaadin.components.builders.SelectFieldBuilder#itemCaptionGenerator(com.holonplatform.vaadin.
 	 * components.ItemSetComponent.ItemCaptionGenerator)

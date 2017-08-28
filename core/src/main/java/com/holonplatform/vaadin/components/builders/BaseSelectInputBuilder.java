@@ -68,26 +68,6 @@ public interface BaseSelectInputBuilder<T, C extends Input<T>, S, ITEM, B extend
 	}
 
 	/**
-	 * Allow or disallow empty selection by the user. If the select is in single-select mode, you can make an item
-	 * represent the empty selection by calling <code>nullSelectionItemId()</code>. This way you can for instance set an
-	 * icon and caption for the null selection item.
-	 * @param emptySelectionAllowed whether or not to allow empty selection
-	 * @return this
-	 */
-	B emptySelectionAllowed(boolean emptySelectionAllowed);
-
-	/**
-	 * Sets the item id that represents null value of this select.
-	 * <p>
-	 * Data interface does not support nulls as item ids. Selecting the item identified by this id is the same as
-	 * selecting no items at all. This setting only affects the single select mode.
-	 * </p>
-	 * @param nullSelectionItemId the Null value item id to set.
-	 * @return this
-	 */
-	B nullSelectionItemId(S nullSelectionItemId);
-
-	/**
 	 * Set the item caption generator to use to display item captions.
 	 * @param itemCaptionGenerator The generator to set
 	 * @return this
