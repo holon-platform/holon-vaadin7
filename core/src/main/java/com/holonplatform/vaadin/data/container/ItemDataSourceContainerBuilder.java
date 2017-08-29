@@ -20,9 +20,9 @@ import com.holonplatform.core.query.QueryFilter;
 import com.holonplatform.core.query.QuerySort;
 import com.holonplatform.vaadin.data.ItemDataProvider;
 import com.holonplatform.vaadin.data.ItemDataSource;
-import com.holonplatform.vaadin.data.ItemIdentifierProvider;
 import com.holonplatform.vaadin.data.ItemDataSource.CommitHandler;
 import com.holonplatform.vaadin.data.ItemDataSource.PropertySortGenerator;
+import com.holonplatform.vaadin.data.ItemIdentifierProvider;
 import com.vaadin.data.Buffered;
 import com.vaadin.data.Container;
 import com.vaadin.data.Container.ItemSetChangeListener;
@@ -237,12 +237,6 @@ public interface ItemDataSourceContainerBuilder<ITEM, PROPERTY, B extends ItemDa
 	public interface BaseItemDataSourceContainerBuilder<ITEM, PROPERTY>
 			extends ItemDataSourceContainerBuilder<ITEM, PROPERTY, BaseItemDataSourceContainerBuilder<ITEM, PROPERTY>> {
 
-		/**
-		 * Get the current data source properties.
-		 * @return data source properties
-		 */
-		Iterable<PROPERTY> getProperties();
-		
 	}
 
 }

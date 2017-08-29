@@ -29,10 +29,6 @@ public class DefaultPropertyListing extends DefaultItemListing<PropertyBox, Prop
 
 	private static final long serialVersionUID = 681884060927291257L;
 
-	/**
-	 * Constructor
-	 * @param renderingMode Rendering mode (not null)
-	 */
 	public DefaultPropertyListing(RenderingMode renderingMode) {
 		super(renderingMode);
 	}

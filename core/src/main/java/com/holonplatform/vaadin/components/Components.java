@@ -21,6 +21,7 @@ import java.util.Date;
 
 import com.holonplatform.core.property.Property;
 import com.holonplatform.core.property.PropertyBox;
+import com.holonplatform.core.property.PropertySet;
 import com.holonplatform.vaadin.components.ComposableComponent.Composer;
 import com.holonplatform.vaadin.components.Dialog.DialogBuilder;
 import com.holonplatform.vaadin.components.Dialog.QuestionDialogBuilder;
@@ -83,16 +84,12 @@ import com.holonplatform.vaadin.internal.components.builders.DefaultComponentCon
 import com.holonplatform.vaadin.internal.components.builders.DefaultCssLayoutBuilder;
 import com.holonplatform.vaadin.internal.components.builders.DefaultFieldConfigurator;
 import com.holonplatform.vaadin.internal.components.builders.DefaultFormLayoutBuilder;
-import com.holonplatform.vaadin.internal.components.builders.DefaultGridItemListingBuilder;
 import com.holonplatform.vaadin.internal.components.builders.DefaultGridLayoutBuilder;
-import com.holonplatform.vaadin.internal.components.builders.DefaultGridPropertyListingBuilder;
 import com.holonplatform.vaadin.internal.components.builders.DefaultHorizontalLayoutBuilder;
 import com.holonplatform.vaadin.internal.components.builders.DefaultLabelBuilder;
 import com.holonplatform.vaadin.internal.components.builders.DefaultLayoutConfigurator;
 import com.holonplatform.vaadin.internal.components.builders.DefaultOrderedLayoutConfigurator;
 import com.holonplatform.vaadin.internal.components.builders.DefaultPanelBuilder;
-import com.holonplatform.vaadin.internal.components.builders.DefaultTableItemListingBuilder;
-import com.holonplatform.vaadin.internal.components.builders.DefaultTablePropertyListingBuilder;
 import com.holonplatform.vaadin.internal.components.builders.DefaultVerticalLayoutBuilder;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.AbsoluteLayout;
@@ -729,36 +726,64 @@ public interface Components {
 		 * Builder to create an {@link ItemListing} instance using a {@link Grid} as backing component.
 		 * @param <T> Item data type
 		 * @param <P> Item property type
+		 * @param itemType Item bean type
 		 * @return Grid {@link ItemListing} builder
 		 */
-		static <T, P> GridItemListingBuilder<T, P> items() {
-			return new DefaultGridItemListingBuilder<>();
+		static <T> GridItemListingBuilder<T> items(Class<T> itemType) {
+			return BeanListing.builder(itemType);
 		}
 
 		/**
 		 * Builder to create an {@link PropertyListing} instance using a {@link Grid} as backing component.
+		 * @param <P> Actual property type
+		 * @param properties The property set to use for the listing
 		 * @return Grid {@link PropertyListing} builder
 		 */
-		static GridPropertyListingBuilder properties() {
-			return new DefaultGridPropertyListingBuilder();
+		@SafeVarargs
+		static <P extends Property<?>> GridPropertyListingBuilder properties(P... properties) {
+			return properties(PropertySet.of(properties));
+		}
+
+		/**
+		 * Builder to create an {@link PropertyListing} instance using a {@link Grid} as backing component.
+		 * @param <P> Actual property type
+		 * @param properties The property set to use for the listing
+		 * @return Grid {@link PropertyListing} builder
+		 */
+		static <P extends Property<?>> GridPropertyListingBuilder properties(Iterable<P> properties) {
+			return PropertyListing.builder(properties);
 		}
 
 		/**
 		 * Builder to create an {@link ItemListing} instance using a {@link Table} as backing component.
 		 * @param <T> Item data type
 		 * @param <P> Item property type
+		 * @param itemType Item bean type
 		 * @return Table {@link ItemListing} builder
 		 */
-		static <T, P> TableItemListingBuilder<T, P> itemsUsingTable() {
-			return new DefaultTableItemListingBuilder<>();
+		static <T> TableItemListingBuilder<T> itemsUsingTable(Class<T> itemType) {
+			return BeanListing.tableBuilder(itemType);
 		}
 
 		/**
 		 * Builder to create an {@link PropertyListing} instance using a {@link Table} as backing component.
+		 * @param <P> Actual property type
+		 * @param properties The property set to use for the listing
 		 * @return Table {@link PropertyListing} builder
 		 */
-		static TablePropertyListingBuilder propertiesUsingTable() {
-			return new DefaultTablePropertyListingBuilder();
+		@SafeVarargs
+		static <P extends Property<?>> TablePropertyListingBuilder propertiesUsingTable(P... properties) {
+			return propertiesUsingTable(PropertySet.of(properties));
+		}
+
+		/**
+		 * Builder to create an {@link PropertyListing} instance using a {@link Table} as backing component.
+		 * @param <P> Actual property type
+		 * @param properties The property set to use for the listing
+		 * @return Table {@link PropertyListing} builder
+		 */
+		static <P extends Property<?>> TablePropertyListingBuilder propertiesUsingTable(Iterable<P> properties) {
+			return PropertyListing.tableBuilder(properties);
 		}
 
 	}

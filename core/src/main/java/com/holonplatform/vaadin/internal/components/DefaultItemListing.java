@@ -1294,10 +1294,19 @@ public class DefaultItemListing<T, P> extends CustomComponent
 		ObjectUtils.argumentNotNull(property, "Property must be not null");
 		PropertyColumn<T, P> propertyColumn = propertyColumnDefinitions.get(property);
 		if (propertyColumn == null) {
-			propertyColumn = new DefaultPropertyColumn<>(property);
+			propertyColumn = buildPropertyColumn(property);
 			propertyColumnDefinitions.put(property, propertyColumn);
 		}
 		return propertyColumn;
+	}
+	
+	/**
+	 * Build a {@link PropertyColumn} definition.
+	 * @param property Property id
+	 * @return a new {@link PropertyColumn} definition
+	 */
+	protected PropertyColumn<T, P> buildPropertyColumn(P property) {
+		return new DefaultPropertyColumn<>(property);
 	}
 
 	/**

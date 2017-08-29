@@ -15,11 +15,8 @@
  */
 package com.holonplatform.vaadin.components.builders;
 
-import java.util.Arrays;
-
 import com.holonplatform.core.datastore.DataTarget;
 import com.holonplatform.core.datastore.Datastore;
-import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.property.Property;
 import com.holonplatform.core.property.PropertyBox;
 import com.holonplatform.vaadin.components.PropertyListing;
@@ -42,24 +39,6 @@ import com.vaadin.ui.renderers.Renderer;
 @SuppressWarnings("rawtypes")
 public interface PropertyListingBuilder<B extends PropertyListingBuilder<B, X>, X extends Component>
 		extends ItemListingBuilder<PropertyBox, Property, PropertyListing, B, X> {
-
-	/**
-	 * Add properties to include in {@link PropertyBox} items.
-	 * @param <P> Property type
-	 * @param properties Properties to add (not null)
-	 * @return this
-	 */
-	<P extends Property> B withProperties(Iterable<P> properties);
-
-	/**
-	 * Add properties to include in {@link PropertyBox} items.
-	 * @param properties Properties to add (not null)
-	 * @return this
-	 */
-	default B withProperties(Property... properties) {
-		ObjectUtils.argumentNotNull(properties, "Properties must be not null");
-		return withProperties(Arrays.asList(properties));
-	}
 
 	/**
 	 * Set the items data provider.

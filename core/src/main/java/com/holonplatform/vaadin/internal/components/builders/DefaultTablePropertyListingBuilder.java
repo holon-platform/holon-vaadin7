@@ -42,23 +42,15 @@ public class DefaultTablePropertyListingBuilder extends
 		AbstractTableItemListingBuilder<PropertyBox, Property, PropertyListing, DefaultPropertyListing, TablePropertyListingBuilder>
 		implements TablePropertyListingBuilder {
 
-	private Datastore datastore;
-	private DataTarget<?> dataTarget;
-	private Property[] identifierProperties;
+	private final Iterable<Property> properties;
 
-	public DefaultTablePropertyListingBuilder() {
+	@SuppressWarnings("unchecked")
+	public <P extends Property<?>> DefaultTablePropertyListingBuilder(Iterable<P> properties) {
 		super(new DefaultPropertyListing(RenderingMode.TABLE));
+		this.properties = (Iterable<Property>) properties;
 		// default adapter
 		dataSourceBuilder.itemAdapter(new PropertyBoxItemAdapter());
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.PropertyListingBuilder#withProperties(java.lang.Iterable)
-	 */
-	@Override
-	public <P extends Property> TablePropertyListingBuilder withProperties(Iterable<P> properties) {
-		ObjectUtils.argumentNotNull(properties, "Properties must be not null");
+		// setup datasource
 		properties.forEach(p -> {
 			dataSourceBuilder.withProperty(p, p.getType());
 			if (p.isReadOnly()) {
@@ -68,7 +60,6 @@ public class DefaultTablePropertyListingBuilder extends
 				dataSourceBuilder.sortable(p, true);
 			}
 		});
-		return builder();
 	}
 
 	/*
@@ -96,9 +87,9 @@ public class DefaultTablePropertyListingBuilder extends
 	@Override
 	public TablePropertyListingBuilder dataSource(Datastore datastore, DataTarget<?> dataTarget,
 			Property... identifierProperties) {
-		this.datastore = datastore;
-		this.dataTarget = dataTarget;
-		this.identifierProperties = identifierProperties;
+		commitHandler(new DatastoreCommitHandler(datastore, dataTarget));
+		dataSource(new DatastoreItemDataProvider(datastore, dataTarget, PropertySet.of(properties)),
+				identifierProperties);
 		return builder();
 	}
 
@@ -119,22 +110,6 @@ public class DefaultTablePropertyListingBuilder extends
 	@Override
 	protected TablePropertyListingBuilder builder() {
 		return this;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.internal.components.builders.AbstractItemListingBuilder#buildAndConfigure(java.lang.
-	 * Iterable)
-	 */
-	@Override
-	protected PropertyListing buildAndConfigure(Iterable<Property> visibleColumns) {
-		if (datastore != null) {
-			commitHandler(new DatastoreCommitHandler(datastore, dataTarget));
-			dataSource(new DatastoreItemDataProvider(datastore, dataTarget,
-					PropertySet.of(dataSourceBuilder.getProperties())), identifierProperties);
-		}
-		return super.buildAndConfigure(visibleColumns);
 	}
 
 }

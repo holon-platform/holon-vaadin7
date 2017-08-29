@@ -19,16 +19,10 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
-import com.holonplatform.vaadin.components.builders.ItemListingBuilder.GridItemListingBuilder;
-import com.holonplatform.vaadin.components.builders.ItemListingBuilder.TableItemListingBuilder;
 import com.holonplatform.vaadin.data.ItemDataSource.ItemSort;
-import com.holonplatform.vaadin.internal.components.builders.DefaultGridItemListingBuilder;
-import com.holonplatform.vaadin.internal.components.builders.DefaultTableItemListingBuilder;
 import com.vaadin.event.MouseEvents.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Table;
 
 /**
  * A component to display a set of items as tabular data, using item properties as column ids.
@@ -359,41 +353,6 @@ public interface ItemListing<T, P> extends ItemSet, Selectable<T>, Component {
 		 */
 		Field<?> getEditor(P property);
 
-	}
-
-	// Builders
-
-	/**
-	 * Builder to create an {@link ItemListing} instance.
-	 * <p>
-	 * By default, a {@link #gridBuilder()} is returned.
-	 * </p>
-	 * @param <T> Item data type
-	 * @param <P> Item property type
-	 * @return {@link ItemListing} builder
-	 */
-	static <T, P> GridItemListingBuilder<T, P> builder() {
-		return gridBuilder();
-	}
-
-	/**
-	 * Builder to create an {@link ItemListing} instance using a {@link Grid} as backing component.
-	 * @param <T> Item data type
-	 * @param <P> Item property type
-	 * @return Grid {@link ItemListing} builder
-	 */
-	static <T, P> GridItemListingBuilder<T, P> gridBuilder() {
-		return new DefaultGridItemListingBuilder<>();
-	}
-
-	/**
-	 * Builder to create an {@link ItemListing} instance using a {@link Table} as backing component.
-	 * @param <T> Item data type
-	 * @param <P> Item property type
-	 * @return Table {@link ItemListing} builder
-	 */
-	static <T, P> TableItemListingBuilder<T, P> tableBuilder() {
-		return new DefaultTableItemListingBuilder<>();
 	}
 
 }

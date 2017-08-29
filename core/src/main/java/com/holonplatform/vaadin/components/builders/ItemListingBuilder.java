@@ -23,6 +23,7 @@ import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.i18n.LocalizationContext;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.query.QuerySort;
+import com.holonplatform.vaadin.components.BeanListing;
 import com.holonplatform.vaadin.components.ItemListing;
 import com.holonplatform.vaadin.components.ItemListing.CellStyleGenerator;
 import com.holonplatform.vaadin.components.ItemListing.ColumnAlignment;
@@ -551,10 +552,9 @@ public interface ItemListingBuilder<T, P, C extends ItemListing<T, P>, B extends
 	/**
 	 * Builder to create an {@link ItemListing} with a {@link Grid} as backing component.
 	 * @param <T> Item data type
-	 * @param <P> Item property type
 	 */
-	public interface GridItemListingBuilder<T, P>
-			extends BaseGridItemListingBuilder<T, P, ItemListing<T, P>, GridItemListingBuilder<T, P>> {
+	public interface GridItemListingBuilder<T>
+			extends BaseGridItemListingBuilder<T, String, BeanListing<T>, GridItemListingBuilder<T>> {
 
 		/**
 		 * Set a custom {@link Converter} for given item property.
@@ -562,7 +562,7 @@ public interface ItemListingBuilder<T, P, C extends ItemListing<T, P>, B extends
 		 * @param converter Converter to use (not null)
 		 * @return this
 		 */
-		GridItemListingBuilder<T, P> converter(P property, Converter<?, ?> converter);
+		GridItemListingBuilder<T> converter(String property, Converter<?, ?> converter);
 
 		/**
 		 * Set a custom {@link Renderer} for given item property.
@@ -570,7 +570,7 @@ public interface ItemListingBuilder<T, P, C extends ItemListing<T, P>, B extends
 		 * @param renderer Renderer to use (not null)
 		 * @return this
 		 */
-		GridItemListingBuilder<T, P> renderer(P property, Renderer<?> renderer);
+		GridItemListingBuilder<T> renderer(String property, Renderer<?> renderer);
 
 	}
 
@@ -691,8 +691,8 @@ public interface ItemListingBuilder<T, P, C extends ItemListing<T, P>, B extends
 	 * @param <T> Item data type
 	 * @param <P> Item property type
 	 */
-	public interface TableItemListingBuilder<T, P>
-			extends BaseTableItemListingBuilder<T, P, ItemListing<T, P>, TableItemListingBuilder<T, P>> {
+	public interface TableItemListingBuilder<T>
+			extends BaseTableItemListingBuilder<T, String, BeanListing<T>, TableItemListingBuilder<T>> {
 
 	}
 

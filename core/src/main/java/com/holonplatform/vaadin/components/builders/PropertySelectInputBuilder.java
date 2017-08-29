@@ -15,13 +15,12 @@
  */
 package com.holonplatform.vaadin.components.builders;
 
-import java.util.Arrays;
-
 import com.holonplatform.core.datastore.DataTarget;
 import com.holonplatform.core.datastore.Datastore;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.property.Property;
 import com.holonplatform.core.property.PropertyBox;
+import com.holonplatform.core.property.PropertySet;
 import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.data.ItemDataProvider;
 import com.holonplatform.vaadin.data.container.ItemAdapter;
@@ -40,42 +39,54 @@ public interface PropertySelectInputBuilder<T, C extends Input<T>, S, B extends 
 		extends BaseSelectInputBuilder<T, C, S, PropertyBox, B> {
 
 	/**
-	 * Add properties to include in {@link PropertyBox} selection items.
-	 * @param <P> Property type
-	 * @param properties Properties to add (not null)
-	 * @return this
-	 */
-	@SuppressWarnings("rawtypes")
-	<P extends Property> B withProperties(Iterable<P> properties);
-
-	/**
-	 * Add properties to include in {@link PropertyBox} selection items.
-	 * @param properties Properties to add (not null)
-	 * @return this
-	 */
-	@SuppressWarnings("rawtypes")
-	default B withProperties(Property... properties) {
-		ObjectUtils.argumentNotNull(properties, "Properties must be not null");
-		return withProperties(Arrays.asList(properties));
-	}
-
-	/**
-	 * Set the selection items data provider to obtain item ids.
-	 * <p>
-	 * Item ids type must be compatible with the selection item type.
-	 * </p>
+	 * Set the selection items data provider to obtain items.
 	 * @param dataProvider Items data provider (not null)
+	 * @param properties Item property set (not null)
 	 * @return this
 	 */
-	B dataSource(ItemDataProvider<PropertyBox> dataProvider);
+	<P extends Property<?>> B dataSource(ItemDataProvider<PropertyBox> dataProvider, Iterable<P> properties);
+
+	/**
+	 * Set the selection items data provider to obtain items.
+	 * @param dataProvider Items data provider (not null)
+	 * @param properties Item property set (not null)
+	 * @return this
+	 */
+	@SuppressWarnings("unchecked")
+	default <P extends Property<?>> B dataSource(ItemDataProvider<PropertyBox> dataProvider, P... properties) {
+		ObjectUtils.argumentNotNull(properties, "Properties must be not null");
+		return dataSource(dataProvider, PropertySet.of(properties));
+	}
 
 	/**
 	 * Use given {@link Datastore} with given <code>dataTarget</code> as items data source.
 	 * @param datastore Datastore to use (not null)
 	 * @param dataTarget Data target to use to load items (not null)
+	 * @param properties Item property set (not null)
 	 * @return this
 	 */
-	B dataSource(Datastore datastore, DataTarget<?> dataTarget);
+	default <P extends Property<?>> B dataSource(Datastore datastore, DataTarget<?> dataTarget,
+			Iterable<P> properties) {
+		ObjectUtils.argumentNotNull(properties, "Properties must be not null");
+		return dataSource(
+				ItemDataProvider.create(datastore, dataTarget,
+						(properties instanceof PropertySet) ? (PropertySet<?>) properties : PropertySet.of(properties)),
+				properties);
+	}
+
+	/**
+	 * Use given {@link Datastore} with given <code>dataTarget</code> as items data source.
+	 * @param datastore Datastore to use (not null)
+	 * @param dataTarget Data target to use to load items (not null)
+	 * @param properties Item property set (not null)
+	 * @return this
+	 */
+	@SuppressWarnings("unchecked")
+	default <P extends Property<?>> B dataSource(Datastore datastore, DataTarget<?> dataTarget, P... properties) {
+		ObjectUtils.argumentNotNull(properties, "Properties must be not null");
+		final PropertySet<?> set = PropertySet.of(properties);
+		return dataSource(ItemDataProvider.create(datastore, dataTarget, set), set);
+	}
 
 	/**
 	 * Set the item adapter to use to convert data source items into container items and back.

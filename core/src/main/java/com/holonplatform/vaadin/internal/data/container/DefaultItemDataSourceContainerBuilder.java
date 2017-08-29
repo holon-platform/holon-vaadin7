@@ -38,14 +38,4 @@ public class DefaultItemDataSourceContainerBuilder<PROPERTY, ITEM> extends
 		return this;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.data.container.ItemDataSourceContainerBuilder.BaseItemDataSourceContainerBuilder#
-	 * getProperties()
-	 */
-	@Override
-	public Iterable<ITEM> getProperties() {
-		return container.getProperties();
-	}
-
 }

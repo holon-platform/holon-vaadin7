@@ -15,10 +15,16 @@
  */
 package com.holonplatform.vaadin.internal.components.builders;
 
-import com.holonplatform.vaadin.components.ItemListing;
+import java.util.LinkedList;
+import java.util.List;
+
+import com.holonplatform.core.beans.BeanPropertySet;
+import com.holonplatform.core.internal.utils.ObjectUtils;
+import com.holonplatform.vaadin.components.BeanListing;
 import com.holonplatform.vaadin.components.builders.ItemListingBuilder.TableItemListingBuilder;
-import com.holonplatform.vaadin.internal.components.DefaultItemListing;
+import com.holonplatform.vaadin.internal.components.DefaultBeanListing;
 import com.holonplatform.vaadin.internal.components.DefaultItemListing.RenderingMode;
+import com.holonplatform.vaadin.internal.data.container.BeanItemAdapter;
 
 /**
  * {@link TableItemListingBuilder} implementation.
@@ -28,12 +34,28 @@ import com.holonplatform.vaadin.internal.components.DefaultItemListing.Rendering
  *
  * @since 5.0.0
  */
-public class DefaultTableItemListingBuilder<T, P> extends
-		AbstractTableItemListingBuilder<T, P, ItemListing<T, P>, DefaultItemListing<T, P>, TableItemListingBuilder<T, P>>
-		implements TableItemListingBuilder<T, P> {
+public class DefaultTableItemListingBuilder<T> extends
+		AbstractTableItemListingBuilder<T, String, BeanListing<T>, DefaultBeanListing<T>, TableItemListingBuilder<T>>
+		implements TableItemListingBuilder<T> {
 
-	public DefaultTableItemListingBuilder() {
-		super(new DefaultItemListing<>(RenderingMode.TABLE));
+	@SuppressWarnings("unchecked")
+	public DefaultTableItemListingBuilder(Class<T> beanType) {
+		super(new DefaultBeanListing<>(RenderingMode.TABLE));
+		ObjectUtils.argumentNotNull(beanType, "Item bean type must be not null");
+		// setup datasource
+		BeanPropertySet<T> ps = BeanPropertySet.create(beanType);
+		getInstance().setPropertySet(ps);
+		final List<String> nested = new LinkedList<>();
+		ps.forEach(p -> {
+			final String name = p.fullName();
+			dataSourceBuilder.withProperty(name, p.getType());
+
+			if (p.getParent().isPresent()) {
+				nested.add(p.relativeName());
+			}
+		});
+		// item adapter
+		dataSourceBuilder.itemAdapter(new BeanItemAdapter(nested));
 	}
 
 	/*
@@ -42,7 +64,7 @@ public class DefaultTableItemListingBuilder<T, P> extends
 	 * AbstractComponent)
 	 */
 	@Override
-	protected ItemListing<T, P> build(DefaultItemListing<T, P> instance) {
+	protected BeanListing<T> build(DefaultBeanListing<T> instance) {
 		return instance;
 	}
 
@@ -51,7 +73,7 @@ public class DefaultTableItemListingBuilder<T, P> extends
 	 * @see com.holonplatform.vaadin.internal.components.builders.AbstractComponentConfigurator#builder()
 	 */
 	@Override
-	protected TableItemListingBuilder<T, P> builder() {
+	protected TableItemListingBuilder<T> builder() {
 		return this;
 	}
 

@@ -15,11 +15,16 @@
  */
 package com.holonplatform.vaadin.internal.components.builders;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import com.holonplatform.core.beans.BeanPropertySet;
 import com.holonplatform.core.internal.utils.ObjectUtils;
-import com.holonplatform.vaadin.components.ItemListing;
+import com.holonplatform.vaadin.components.BeanListing;
 import com.holonplatform.vaadin.components.builders.ItemListingBuilder.GridItemListingBuilder;
-import com.holonplatform.vaadin.internal.components.DefaultItemListing;
+import com.holonplatform.vaadin.internal.components.DefaultBeanListing;
 import com.holonplatform.vaadin.internal.components.DefaultItemListing.RenderingMode;
+import com.holonplatform.vaadin.internal.data.container.BeanItemAdapter;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.ui.renderers.Renderer;
 
@@ -31,12 +36,28 @@ import com.vaadin.ui.renderers.Renderer;
  *
  * @since 5.0.0
  */
-public class DefaultGridItemListingBuilder<T, P> extends
-		AbstractGridItemListingBuilder<T, P, ItemListing<T, P>, DefaultItemListing<T, P>, GridItemListingBuilder<T, P>>
-		implements GridItemListingBuilder<T, P> {
+public class DefaultGridItemListingBuilder<T> extends
+		AbstractGridItemListingBuilder<T, String, BeanListing<T>, DefaultBeanListing<T>, GridItemListingBuilder<T>>
+		implements GridItemListingBuilder<T> {
 
-	public DefaultGridItemListingBuilder() {
-		super(new DefaultItemListing<>(RenderingMode.GRID));
+	@SuppressWarnings("unchecked")
+	public DefaultGridItemListingBuilder(Class<T> beanType) {
+		super(new DefaultBeanListing<>(RenderingMode.GRID));
+		ObjectUtils.argumentNotNull(beanType, "Item bean type must be not null");
+		// setup datasource
+		BeanPropertySet<T> ps = BeanPropertySet.create(beanType);
+		getInstance().setPropertySet(ps);
+		final List<String> nested = new LinkedList<>();
+		ps.forEach(p -> {
+			final String name = p.fullName();
+			dataSourceBuilder.withProperty(name, p.getType());
+			
+			if (p.getParent().isPresent()) {
+				nested.add(p.relativeName());
+			}
+		});
+		// item adapter
+		dataSourceBuilder.itemAdapter(new BeanItemAdapter(nested));	
 	}
 
 	/*
@@ -45,7 +66,7 @@ public class DefaultGridItemListingBuilder<T, P> extends
 	 * Object, com.vaadin.data.util.converter.Converter)
 	 */
 	@Override
-	public GridItemListingBuilder<T, P> converter(P property, Converter<?, ?> converter) {
+	public GridItemListingBuilder<T> converter(String property, Converter<?, ?> converter) {
 		ObjectUtils.argumentNotNull(property, "Property must be not null");
 		getInstance().getPropertyColumn(property).setConverter(converter);
 		return builder();
@@ -57,7 +78,7 @@ public class DefaultGridItemListingBuilder<T, P> extends
 	 * Object, com.vaadin.ui.renderers.Renderer)
 	 */
 	@Override
-	public GridItemListingBuilder<T, P> renderer(P property, Renderer<?> renderer) {
+	public GridItemListingBuilder<T> renderer(String property, Renderer<?> renderer) {
 		ObjectUtils.argumentNotNull(property, "Property must be not null");
 		getInstance().getPropertyColumn(property).setRenderer(renderer);
 		return builder();
@@ -69,7 +90,7 @@ public class DefaultGridItemListingBuilder<T, P> extends
 	 * AbstractComponent)
 	 */
 	@Override
-	protected ItemListing<T, P> build(DefaultItemListing<T, P> instance) {
+	protected BeanListing<T> build(DefaultBeanListing<T> instance) {
 		return instance;
 	}
 
@@ -78,7 +99,7 @@ public class DefaultGridItemListingBuilder<T, P> extends
 	 * @see com.holonplatform.vaadin.internal.components.builders.AbstractComponentConfigurator#builder()
 	 */
 	@Override
-	protected GridItemListingBuilder<T, P> builder() {
+	protected GridItemListingBuilder<T> builder() {
 		return this;
 	}
 

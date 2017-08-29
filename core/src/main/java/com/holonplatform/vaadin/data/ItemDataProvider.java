@@ -15,8 +15,16 @@
  */
 package com.holonplatform.vaadin.data;
 
+import java.util.function.Function;
+
+import com.holonplatform.core.datastore.DataTarget;
+import com.holonplatform.core.datastore.Datastore;
 import com.holonplatform.core.exceptions.DataAccessException;
+import com.holonplatform.core.property.PropertyBox;
+import com.holonplatform.core.property.PropertySet;
+import com.holonplatform.vaadin.internal.data.DatastoreItemDataProvider;
 import com.holonplatform.vaadin.internal.data.DefaultItemDataProvider;
+import com.holonplatform.vaadin.internal.data.ItemDataProviderWrapper;
 
 /**
  * Iterface to load items data from a data source.
@@ -27,7 +35,8 @@ import com.holonplatform.vaadin.internal.data.DefaultItemDataProvider;
  */
 public interface ItemDataProvider<ITEM> extends ItemSetCounter, ItemSetLoader<ITEM>, ItemRefresher<ITEM> {
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.data.ItemRefresher#refresh(java.lang.Object)
 	 */
 	@Override
@@ -57,6 +66,27 @@ public interface ItemDataProvider<ITEM> extends ItemSetCounter, ItemSetLoader<IT
 	static <ITEM> ItemDataProvider<ITEM> create(ItemSetCounter counter, ItemSetLoader<ITEM> loader,
 			ItemRefresher<ITEM> refresher) {
 		return new DefaultItemDataProvider<>(counter, loader, refresher);
+	}
+
+	/**
+	 * Construct a {@link ItemDataProvider} using a {@link Datastore}.
+	 * @param datastore Datastore to use (not null)
+	 * @param target Data target (not null)
+	 * @param propertySet Property set to load
+	 */
+	static ItemDataProvider<PropertyBox> create(Datastore datastore, DataTarget<?> target, PropertySet<?> propertySet) {
+		return new DatastoreItemDataProvider(datastore, target, propertySet);
+	}
+
+	/**
+	 * Create a new {@link ItemDataProvider} which wraps a concrete data provider and converts items into a different
+	 * type using a converter function.
+	 * @param provider Concrete data privider (not null)
+	 * @param converter Converter function (not null)
+	 * @return the data provider wrapper
+	 */
+	static <T, ITEM> ItemDataProvider<T> convert(ItemDataProvider<ITEM> provider, Function<ITEM, T> converter) {
+		return new ItemDataProviderWrapper<>(provider, converter);
 	}
 
 }

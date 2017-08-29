@@ -40,26 +40,32 @@ public interface PropertyListing extends ItemListing<PropertyBox, Property> {
 	 * <p>
 	 * By default, a {@link #gridBuilder()} is returned.
 	 * </p>
+	 * @param <P> Actual property type
+	 * @param properties The property set to use for the listing
 	 * @return {@link PropertyListing} builder
 	 */
-	static GridPropertyListingBuilder builder() {
-		return gridBuilder();
+	static <P extends Property<?>> GridPropertyListingBuilder builder(Iterable<P> properties) {
+		return gridBuilder(properties);
 	}
 
 	/**
 	 * Builder to create an {@link PropertyListing} instance using a {@link Grid} as backing component.
+	 * @param <P> Actual property type
+	 * @param properties The property set to use for the listing
 	 * @return Grid {@link PropertyListing} builder
 	 */
-	static GridPropertyListingBuilder gridBuilder() {
-		return new DefaultGridPropertyListingBuilder();
+	static <P extends Property<?>> GridPropertyListingBuilder gridBuilder(Iterable<P> properties) {
+		return new DefaultGridPropertyListingBuilder(properties);
 	}
 
 	/**
 	 * Builder to create an {@link PropertyListing} instance using a {@link Table} as backing component.
+	 * @param <P> Actual property type
+	 * @param properties The property set to use for the listing
 	 * @return Table {@link PropertyListing} builder
 	 */
-	static TablePropertyListingBuilder tableBuilder() {
-		return new DefaultTablePropertyListingBuilder();
+	static <P extends Property<?>> TablePropertyListingBuilder tableBuilder(Iterable<P> properties) {
+		return new DefaultTablePropertyListingBuilder(properties);
 	}
 
 }
