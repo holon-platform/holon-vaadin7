@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.holonplatform.vaadin.data.ItemDataSource.ItemSort;
-import com.vaadin.event.MouseEvents.ClickEvent;
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
 
@@ -258,7 +258,7 @@ public interface ItemListing<T, P> extends ItemSet, Selectable<T>, Component {
 		 * @param clickedProperty Clicked column property
 		 * @param clickEvent Event details to obtain informations on mouse button and clicked point
 		 */
-		void onItemClick(T item, P clickedProperty, ClickEvent clickEvent);
+		void onItemClick(T item, P clickedProperty, MouseEventDetails clickEvent);
 
 	}
 

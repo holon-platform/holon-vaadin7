@@ -53,10 +53,12 @@ import com.vaadin.data.fieldgroup.FieldGroup;
 import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.sort.Sort;
 import com.vaadin.data.util.converter.Converter;
+import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.SelectionEvent;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FontIcon;
 import com.vaadin.server.ThemeResource;
+import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.shared.data.sort.SortDirection;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
@@ -226,11 +228,12 @@ public class DefaultItemListing<T, P> extends CustomComponent
 
 		super.setWidth(100, Unit.PERCENTAGE);
 		addStyleName("h-itemlisting", false);
-		
+
 		setCompositionRoot(content);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see com.vaadin.ui.AbstractComponent#setHeight(float, com.vaadin.server.Sizeable.Unit)
 	 */
 	@Override
@@ -241,7 +244,8 @@ public class DefaultItemListing<T, P> extends CustomComponent
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see com.vaadin.ui.AbstractComponent#setWidth(float, com.vaadin.server.Sizeable.Unit)
 	 */
 	@Override
@@ -621,9 +625,9 @@ public class DefaultItemListing<T, P> extends CustomComponent
 
 	public void setPropertyColumns(Iterable<P> columns) {
 		ObjectUtils.argumentNotNull(columns, "Property columns must be not null");
-		
+
 		final Object[] columnsArray = ConversionUtils.iterableAsList(columns).toArray();
-		
+
 		switch (getRenderingMode()) {
 		case GRID: {
 			final Grid grid = getGrid();
@@ -1104,17 +1108,31 @@ public class DefaultItemListing<T, P> extends CustomComponent
 		switch (getRenderingMode()) {
 		case GRID:
 			getGrid().addItemClickListener(e -> getItem(e.getItemId()).ifPresent(i -> {
-				listener.onItemClick(i, (P) e.getPropertyId(), e);
+				listener.onItemClick(i, (P) e.getPropertyId(), fromClickEvent(e));
 			}));
 			break;
 		case TABLE:
 			getTable().addItemClickListener(e -> getItem(e.getItemId()).ifPresent(i -> {
-				listener.onItemClick(i, (P) e.getPropertyId(), e);
+				listener.onItemClick(i, (P) e.getPropertyId(), fromClickEvent(e));
 			}));
 			break;
 		default:
 			break;
 		}
+	}
+
+	private static MouseEventDetails fromClickEvent(ItemClickEvent event) {
+		MouseEventDetails d = new MouseEventDetails();
+		d.setButton(event.getButton());
+		d.setAltKey(event.isAltKey());
+		d.setCtrlKey(event.isCtrlKey());
+		d.setShiftKey(event.isShiftKey());
+		d.setType(event.isDoubleClick() ? 0x00002 : 0);
+		d.setClientX(event.getClientX());
+		d.setClientY(event.getClientY());
+		d.setRelativeX(event.getRelativeX());
+		d.setRelativeY(event.getRelativeY());
+		return d;
 	}
 
 	/**
@@ -1286,7 +1304,7 @@ public class DefaultItemListing<T, P> extends CustomComponent
 		}
 		return propertyColumn;
 	}
-	
+
 	/**
 	 * Build a {@link PropertyColumn} definition.
 	 * @param property Property id
