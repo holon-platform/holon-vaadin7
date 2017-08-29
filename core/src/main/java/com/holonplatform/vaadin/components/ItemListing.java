@@ -35,21 +35,6 @@ import com.vaadin.ui.Field;
 public interface ItemListing<T, P> extends ItemSet, Selectable<T>, Component {
 
 	/**
-	 * Sets the item properties to display as columns of the listing, in given order.
-	 * @param columns Item properties to display as listing columns
-	 */
-	@SuppressWarnings("unchecked")
-	void setPropertyColumns(P... columns);
-
-	/**
-	 * Sets the item properties to display as columns of the listing, in the order the are returned from given
-	 * {@link Iterable}.
-	 * @param <C> Actual property type
-	 * @param columns Item properties to display as listing columns
-	 */
-	<C extends P> void setPropertyColumns(Iterable<C> columns);
-
-	/**
 	 * Gets the current displayed item properties as listing columns
 	 * @return Property columns list, in the order they are displayed
 	 */

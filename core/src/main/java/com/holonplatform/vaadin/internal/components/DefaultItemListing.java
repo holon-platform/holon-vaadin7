@@ -224,8 +224,32 @@ public class DefaultItemListing<T, P> extends CustomComponent
 			duringSetup = false;
 		}
 
-		setWidth(100, Unit.PERCENTAGE);
+		super.setWidth(100, Unit.PERCENTAGE);
 		addStyleName("h-itemlisting", false);
+		
+		setCompositionRoot(content);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.vaadin.ui.AbstractComponent#setHeight(float, com.vaadin.server.Sizeable.Unit)
+	 */
+	@Override
+	public void setHeight(float height, Unit unit) {
+		super.setHeight(height, unit);
+		if (height > -1 && getCompositionRoot() != null) {
+			getCompositionRoot().setHeight(100, Unit.PERCENTAGE);
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see com.vaadin.ui.AbstractComponent#setWidth(float, com.vaadin.server.Sizeable.Unit)
+	 */
+	@Override
+	public void setWidth(float width, Unit unit) {
+		super.setWidth(width, unit);
+		if (width > -1 && getCompositionRoot() != null) {
+			getCompositionRoot().setWidth(100, Unit.PERCENTAGE);
+		}
 	}
 
 	/*
@@ -270,17 +294,6 @@ public class DefaultItemListing<T, P> extends CustomComponent
 		getContent().setReadOnly(readOnly);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.vaadin.ui.AbstractComponent#attach()
-	 */
-	@Override
-	public void attach() {
-		super.attach();
-		// init
-		init();
-	}
-
 	/**
 	 * Get the rendering mode
 	 * @return the rendering mode
@@ -311,18 +324,6 @@ public class DefaultItemListing<T, P> extends CustomComponent
 	protected void initTable(Table table) {
 		table.setTableFieldFactory(this);
 		table.setCellStyleGenerator(this);
-	}
-
-	/**
-	 * Init and set content
-	 */
-	protected void init() {
-		final Component content = getContent();
-		content.setWidth(100, Unit.PERCENTAGE);
-		if (getHeight() > -1) {
-			content.setHeight(100, Unit.PERCENTAGE);
-		}
-		setCompositionRoot(content);
 	}
 
 	/**
@@ -618,19 +619,16 @@ public class DefaultItemListing<T, P> extends CustomComponent
 		fireSelectionListeners();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.ItemListing#setPropertyColumns(java.lang.Object[])
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public void setPropertyColumns(P... columns) {
+	public void setPropertyColumns(Iterable<P> columns) {
 		ObjectUtils.argumentNotNull(columns, "Property columns must be not null");
+		
+		final Object[] columnsArray = ConversionUtils.iterableAsList(columns).toArray();
+		
 		switch (getRenderingMode()) {
 		case GRID: {
 			final Grid grid = getGrid();
 			// set columns
-			grid.setColumns((Object[]) columns);
+			grid.setColumns(columnsArray);
 			// setup columns
 			for (P column : columns) {
 				Column c = grid.getColumn(column);
@@ -661,23 +659,12 @@ public class DefaultItemListing<T, P> extends CustomComponent
 				duringSetup = false;
 			}
 			// set columns
-			table.setVisibleColumns((Object[]) columns);
+			table.setVisibleColumns(columnsArray);
 		}
 			break;
 		default:
 			break;
 		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.ItemListing#setPropertyColumns(java.lang.Iterable)
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public <C extends P> void setPropertyColumns(Iterable<C> columns) {
-		ObjectUtils.argumentNotNull(columns, "Property columns must be not null");
-		setPropertyColumns((P[]) ConversionUtils.iterableAsList(columns).toArray());
 	}
 
 	/*
