@@ -65,24 +65,27 @@ public interface PropertyListingBuilder<B extends PropertyListingBuilder<B, X>, 
 	 */
 	public interface GridPropertyListingBuilder extends PropertyListingBuilder<GridPropertyListingBuilder, Grid>,
 			BaseGridItemListingBuilder<PropertyBox, Property, PropertyListing, GridPropertyListingBuilder> {
-
-		/**
-		 * Set a custom {@link Converter} for given item property.
-		 * @param <T> Property type
-		 * @param property Item property to set the converter for (not null)
-		 * @param converter Converter to use (not null)
-		 * @return this
-		 */
-		<T> GridPropertyListingBuilder converter(Property<T> property, Converter<?, T> converter);
-
+		
 		/**
 		 * Set a custom {@link Renderer} for given item property.
 		 * @param <T> Property type
 		 * @param property Item property to set the renderer for (not null)
-		 * @param renderer Renderer to use (not null)
+		 * @param renderer Renderer to use
 		 * @return this
 		 */
-		<T> GridPropertyListingBuilder renderer(Property<T> property, Renderer<T> renderer);
+		<T> GridPropertyListingBuilder render(Property<T> property, Renderer<? super T> renderer);
+		
+		/**
+		 * Set a custom {@link Renderer} and {@link Converter} for given item property.
+		 * @param <T> Property type
+		 * @param <P> Presentation value type
+		 * @param property Item property to set the renderer for
+		 * @param converter Value converter
+		 * @param renderer Renderer to use
+		 * @return this
+		 */
+		<T, P> GridPropertyListingBuilder render(Property<T> property, Converter<T, P> converter,
+				Renderer<? super P> renderer);
 
 	}
 

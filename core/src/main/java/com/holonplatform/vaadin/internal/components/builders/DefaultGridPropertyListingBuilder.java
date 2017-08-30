@@ -97,25 +97,26 @@ public class DefaultGridPropertyListingBuilder extends
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.components.builders.PropertyListingBuilder.GridPropertyListingBuilder#converter(com.
-	 * holonframework.core.property.Property, com.vaadin.data.util.converter.Converter)
+	 * @see com.holonplatform.vaadin.components.builders.PropertyListingBuilder.GridPropertyListingBuilder#render(com.
+	 * holonplatform.core.property.Property, com.vaadin.ui.renderers.Renderer)
 	 */
 	@Override
-	public <T> GridPropertyListingBuilder converter(Property<T> property, Converter<?, T> converter) {
+	public <T> GridPropertyListingBuilder render(Property<T> property, Renderer<? super T> renderer) {
 		ObjectUtils.argumentNotNull(property, "Property must be not null");
-		getInstance().getPropertyColumn(property).setConverter(converter);
+		getInstance().getPropertyColumn(property).setRenderer(renderer);
 		return builder();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.PropertyListingBuilder.GridPropertyListingBuilder#renderer(com.
-	 * holonframework.core.property.Property, com.vaadin.ui.renderers.Renderer)
+	 * @see com.holonplatform.vaadin.components.builders.PropertyListingBuilder.GridPropertyListingBuilder#render(com.
+	 * holonplatform.core.property.Property, com.vaadin.data.util.converter.Converter, com.vaadin.ui.renderers.Renderer)
 	 */
 	@Override
-	public <T> GridPropertyListingBuilder renderer(Property<T> property, Renderer<T> renderer) {
+	public <T, P> GridPropertyListingBuilder render(Property<T> property, Converter<T, P> converter,
+			Renderer<? super P> renderer) {
 		ObjectUtils.argumentNotNull(property, "Property must be not null");
+		getInstance().getPropertyColumn(property).setConverter(converter);
 		getInstance().getPropertyColumn(property).setRenderer(renderer);
 		return builder();
 	}

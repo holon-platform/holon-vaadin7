@@ -51,35 +51,39 @@ public class DefaultGridItemListingBuilder<T> extends
 		ps.forEach(p -> {
 			final String name = p.fullName();
 			dataSourceBuilder.withProperty(name, p.getType());
-			
+
 			if (p.getParent().isPresent()) {
 				nested.add(p.relativeName());
 			}
 		});
 		// item adapter
-		dataSourceBuilder.itemAdapter(new BeanItemAdapter(nested));	
+		dataSourceBuilder.itemAdapter(new BeanItemAdapter(nested));
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder.GridItemListingBuilder#converter(java.lang.
-	 * Object, com.vaadin.data.util.converter.Converter)
+	 * @see
+	 * com.holonplatform.vaadin.components.builders.ItemListingBuilder.GridItemListingBuilder#render(java.lang.String,
+	 * com.vaadin.ui.renderers.Renderer)
 	 */
 	@Override
-	public GridItemListingBuilder<T> converter(String property, Converter<?, ?> converter) {
+	public GridItemListingBuilder<T> render(String property, Renderer<?> renderer) {
 		ObjectUtils.argumentNotNull(property, "Property must be not null");
-		getInstance().getPropertyColumn(property).setConverter(converter);
+		getInstance().getPropertyColumn(property).setRenderer(renderer);
 		return builder();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder.GridItemListingBuilder#renderer(java.lang.
-	 * Object, com.vaadin.ui.renderers.Renderer)
+	 * @see
+	 * com.holonplatform.vaadin.components.builders.ItemListingBuilder.GridItemListingBuilder#render(java.lang.String,
+	 * com.vaadin.data.util.converter.Converter, com.vaadin.ui.renderers.Renderer)
 	 */
 	@Override
-	public GridItemListingBuilder<T> renderer(String property, Renderer<?> renderer) {
+	public <V, P> GridItemListingBuilder<T> render(String property, Converter<V, P> converter,
+			Renderer<? super P> renderer) {
 		ObjectUtils.argumentNotNull(property, "Property must be not null");
+		getInstance().getPropertyColumn(property).setConverter(converter);
 		getInstance().getPropertyColumn(property).setRenderer(renderer);
 		return builder();
 	}
