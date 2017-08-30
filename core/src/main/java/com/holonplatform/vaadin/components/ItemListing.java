@@ -147,6 +147,12 @@ public interface ItemListing<T, P> extends ItemSet, Selectable<T>, Component {
 	 */
 	void discard();
 
+	/**
+	 * Get whether the listing is in buffered mode.
+	 * @return whether the listing is in buffered mode
+	 */
+	boolean isBuffered();
+
 	// -------
 
 	/**

@@ -978,6 +978,14 @@ public class DefaultItemListing<T, P> extends CustomComponent
 		requireDataSource().discard();
 	}
 
+	/* (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.ItemListing#isBuffered()
+	 */
+	@Override
+	public boolean isBuffered() {
+		return requireDataSource().isBuffered();
+	}
+
 	/**
 	 * Add a {@link RowStyleGenerator}
 	 * @param rowStyleGenerator Generator to add (not null)
