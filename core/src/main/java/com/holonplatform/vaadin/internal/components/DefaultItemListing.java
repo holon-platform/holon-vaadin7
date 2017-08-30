@@ -166,11 +166,6 @@ public class DefaultItemListing<T, P> extends CustomComponent
 	private boolean columnHidingAllowed = true;
 
 	/**
-	 * Whether the table is editable
-	 */
-	private boolean tableEditable = false;
-
-	/**
 	 * Initialization state
 	 */
 	private boolean duringSetup = false;
@@ -905,46 +900,6 @@ public class DefaultItemListing<T, P> extends CustomComponent
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.ItemListing#edit(java.lang.Object)
-	 */
-	@Override
-	public void editItem(T item) {
-		switch (getRenderingMode()) {
-		case GRID:
-			ObjectUtils.argumentNotNull(item, "Item must be not null");
-			getGrid().editItem(requireDataSource().getId(item));
-			break;
-		case TABLE:
-			if (!tableEditable) {
-				throw new IllegalStateException("The table is not editable");
-			}
-			getTable().setEditable(true);
-			break;
-		default:
-			break;
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.ItemListing#cancelEditing()
-	 */
-	@Override
-	public void cancelEditing() {
-		switch (getRenderingMode()) {
-		case GRID:
-			getGrid().cancelEditor();
-			break;
-		case TABLE:
-			getTable().setEditable(false);
-			break;
-		default:
-			break;
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.ItemListing#getItemById(java.lang.Object)
 	 */
 	@Override
@@ -1068,7 +1023,7 @@ public class DefaultItemListing<T, P> extends CustomComponent
 			getGrid().setEditorEnabled(editable);
 			break;
 		case TABLE:
-			this.tableEditable = editable;
+			getTable().setEditable(true);
 			break;
 		default:
 			break;
