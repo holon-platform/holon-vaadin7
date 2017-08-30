@@ -95,16 +95,6 @@ public interface ItemListing<T, P> extends ItemSet, Selectable<T>, Component {
 	void sort(ItemSort<P>... sorts);
 
 	/**
-	 * Re-draw the rows which corresponds to the items, reflecting current data source values.
-	 * <p>
-	 * Note that the data is not explicitly reloaded from data source using this method.
-	 * </p>
-	 * @param items Items for which to repaint the listing rows
-	 */
-	@SuppressWarnings("unchecked")
-	void repaintRows(T... items);
-
-	/**
 	 * Set the listing in edit mode for given <code>item</code>, if available.
 	 * @param item Item to edit
 	 */

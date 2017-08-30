@@ -876,13 +876,8 @@ public class DefaultItemListing<T, P> extends CustomComponent
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.ItemListing#repaintRows(java.lang.Object[])
-	 */
 	@SuppressWarnings("unchecked")
-	@Override
-	public void repaintRows(T... items) {
+	protected void repaintRows(T... items) {
 		if (items != null) {
 			switch (getRenderingMode()) {
 			case GRID: {
