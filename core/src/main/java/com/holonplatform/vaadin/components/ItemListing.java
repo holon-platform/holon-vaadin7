@@ -22,7 +22,6 @@ import java.util.Optional;
 import com.holonplatform.vaadin.data.ItemDataSource.ItemSort;
 import com.vaadin.shared.MouseEventDetails;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Field;
 
 /**
  * A component to display a set of items as tabular data, using item properties as column ids.
@@ -300,21 +299,6 @@ public interface ItemListing<T, P> extends ItemSet, Selectable<T>, Component {
 		 * @return Row details component
 		 */
 		Component getItemDetails(T item);
-
-	}
-
-	/**
-	 * Factory to provide an editor field to edit a specific property column.
-	 */
-	@FunctionalInterface
-	public interface PropertyEditorFactory<P> extends Serializable {
-
-		/**
-		 * Build an provide the editor field for given <code>property</code>.
-		 * @param property Property to which the column to edit is bound
-		 * @return Editor (not null)
-		 */
-		Field<?> getEditor(P property);
 
 	}
 

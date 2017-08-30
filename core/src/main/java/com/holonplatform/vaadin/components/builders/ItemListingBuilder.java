@@ -30,7 +30,6 @@ import com.holonplatform.vaadin.components.ItemListing.ColumnAlignment;
 import com.holonplatform.vaadin.components.ItemListing.ItemClickListener;
 import com.holonplatform.vaadin.components.ItemListing.ItemDescriptionGenerator;
 import com.holonplatform.vaadin.components.ItemListing.ItemDetailsGenerator;
-import com.holonplatform.vaadin.components.ItemListing.PropertyEditorFactory;
 import com.holonplatform.vaadin.components.ItemListing.PropertyReorderListener;
 import com.holonplatform.vaadin.components.ItemListing.PropertyResizeListener;
 import com.holonplatform.vaadin.components.ItemListing.PropertyVisibilityListener;
@@ -44,6 +43,7 @@ import com.vaadin.event.Action;
 import com.vaadin.event.dd.DropHandler;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Field;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.FooterRow;
 import com.vaadin.ui.Grid.HeaderRow;
@@ -188,13 +188,13 @@ public interface ItemListingBuilder<T, P, C extends ItemListing<T, P>, B extends
 	B editable(P property, boolean editable);
 
 	/**
-	 * Set the {@link PropertyEditorFactory} to use for given property in edit mode to obtain the field to use as
-	 * property editor.
+	 * Set the editor {@link Field} to use for given property in edit mode to obtain the field to use as property
+	 * editor.
 	 * @param property Item property to set the editor for (not null)
-	 * @param propertyEditorFactory {@link PropertyEditorFactory} to set (not null)
+	 * @param editor Editor field to set (not null)
 	 * @return this
 	 */
-	B editor(P property, PropertyEditorFactory<P> propertyEditorFactory);
+	B editor(P property, Field<?> editor);
 
 	/**
 	 * Sets whether the column which corresponds to given property can be hidden by the user.

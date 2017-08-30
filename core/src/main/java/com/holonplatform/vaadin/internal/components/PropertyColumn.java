@@ -16,12 +16,12 @@
 package com.holonplatform.vaadin.internal.components;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.vaadin.components.ItemListing;
 import com.holonplatform.vaadin.components.ItemListing.CellStyleGenerator;
 import com.holonplatform.vaadin.components.ItemListing.ColumnAlignment;
-import com.holonplatform.vaadin.components.ItemListing.PropertyEditorFactory;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.Field;
@@ -140,20 +140,16 @@ public interface PropertyColumn<T, P> extends Serializable {
 	void setEditable(boolean editable);
 
 	/**
-	 * Gets the {@link PropertyEditorFactory} to use to provide the editor {@link Field} for the property to which the
-	 * column is bound
-	 * @return The {@link PropertyEditorFactory} to use to provide the editor {@link Field} for the property to which
-	 *         the column is bound
+	 * Get the editor field to use for this property column.
+	 * @return the optional editor field
 	 */
-	PropertyEditorFactory<P> getEditorFactory();
-
+	Optional<Field<?>> getEditor();
+	
 	/**
-	 * Sets the {@link PropertyEditorFactory} to use to provide the editor {@link Field} for the property to which the
-	 * column is bound
-	 * @param editorFactory The {@link PropertyEditorFactory} to use to provide the editor {@link Field} for the
-	 *        property to which the column is bound
+	 * Set the editor field to use for this property column.
+	 * @param editor Editor field
 	 */
-	void setEditorFactory(PropertyEditorFactory<P> editorFactory);
+	void setEditor(Field<?> editor);
 
 	/**
 	 * Gets whether the column is initially hidden when rendered in table

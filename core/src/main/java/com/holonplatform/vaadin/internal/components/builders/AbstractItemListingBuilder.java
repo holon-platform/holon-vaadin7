@@ -29,7 +29,6 @@ import com.holonplatform.vaadin.components.ItemListing.CellStyleGenerator;
 import com.holonplatform.vaadin.components.ItemListing.ColumnAlignment;
 import com.holonplatform.vaadin.components.ItemListing.ItemClickListener;
 import com.holonplatform.vaadin.components.ItemListing.ItemDescriptionGenerator;
-import com.holonplatform.vaadin.components.ItemListing.PropertyEditorFactory;
 import com.holonplatform.vaadin.components.ItemListing.PropertyReorderListener;
 import com.holonplatform.vaadin.components.ItemListing.PropertyResizeListener;
 import com.holonplatform.vaadin.components.ItemListing.PropertyVisibilityListener;
@@ -48,6 +47,7 @@ import com.holonplatform.vaadin.data.container.ItemDataSourceContainerBuilder.Ba
 import com.holonplatform.vaadin.internal.components.DefaultItemListing;
 import com.holonplatform.vaadin.internal.data.container.BeanItemAdapter;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Field;
 
 /**
  * Base {@link ItemListingBuilder} implementation.
@@ -82,6 +82,18 @@ public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, 
 		super(instance);
 		// default adapter
 		dataSourceBuilder.itemAdapter(new BeanItemAdapter());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#editor(java.lang.Object,
+	 * com.vaadin.ui.Field)
+	 */
+	@Override
+	public B editor(P property, Field<?> editor) {
+		ObjectUtils.argumentNotNull(property, "Property must be not null");
+		getInstance().getPropertyColumn(property).setEditor(editor);
+		return builder();
 	}
 
 	/*
@@ -329,19 +341,6 @@ public abstract class AbstractItemListingBuilder<T, P, C extends ItemListing<T, 
 	public B editable(P property, boolean editable) {
 		ObjectUtils.argumentNotNull(property, "Property must be not null");
 		getInstance().getPropertyColumn(property).setEditable(editable);
-		return builder();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see com.holonplatform.vaadin.components.builders.ItemListingBuilder#editor(java.lang.Object,
-	 * com.holonplatform.vaadin.components.ItemListing.PropertyEditorFactory)
-	 */
-	@Override
-	public B editor(P property, PropertyEditorFactory<P> propertyEditorFactory) {
-		ObjectUtils.argumentNotNull(property, "Property must be not null");
-		ObjectUtils.argumentNotNull(propertyEditorFactory, "Factory must be not null");
-		getInstance().getPropertyColumn(property).setEditorFactory(propertyEditorFactory);
 		return builder();
 	}
 

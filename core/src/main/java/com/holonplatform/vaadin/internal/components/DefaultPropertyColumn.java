@@ -15,13 +15,15 @@
  */
 package com.holonplatform.vaadin.internal.components;
 
+import java.util.Optional;
+
 import com.holonplatform.core.Path;
 import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.vaadin.components.ItemListing.CellStyleGenerator;
 import com.holonplatform.vaadin.components.ItemListing.ColumnAlignment;
-import com.holonplatform.vaadin.components.ItemListing.PropertyEditorFactory;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.server.Resource;
+import com.vaadin.ui.Field;
 import com.vaadin.ui.renderers.Renderer;
 
 /**
@@ -72,10 +74,11 @@ public class DefaultPropertyColumn<T, P> implements PropertyColumn<T, P> {
 	 * Editable
 	 */
 	private boolean editable = true;
+
 	/**
-	 * Editor Field factory
+	 * Editor Field
 	 */
-	private PropertyEditorFactory<P> editorFactory;
+	private Field<?> editor;
 
 	/**
 	 * Hidden
@@ -259,20 +262,22 @@ public class DefaultPropertyColumn<T, P> implements PropertyColumn<T, P> {
 		this.editable = editable;
 	}
 
-	/**
-	 * {@inheritDoc}
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.internal.components.PropertyColumn#getEditor()
 	 */
 	@Override
-	public PropertyEditorFactory<P> getEditorFactory() {
-		return editorFactory;
+	public Optional<Field<?>> getEditor() {
+		return Optional.ofNullable(editor);
 	}
 
-	/**
-	 * {@inheritDoc}
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.internal.components.PropertyColumn#setEditor(com.vaadin.ui.Field)
 	 */
 	@Override
-	public void setEditorFactory(PropertyEditorFactory<P> editorFactory) {
-		this.editorFactory = editorFactory;
+	public void setEditor(Field<?> editor) {
+		this.editor = editor;
 	}
 
 	/**

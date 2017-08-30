@@ -1443,8 +1443,8 @@ public class DefaultItemListing<T, P> extends CustomComponent
 				column.setEditable(false);
 			} else {
 				column.setEditable(propertyColumn.isEditable());
-				if (propertyColumn.isEditable() && propertyColumn.getEditorFactory() != null) {
-					column.setEditorField(propertyColumn.getEditorFactory().getEditor(property));
+				if (propertyColumn.isEditable()) {
+					propertyColumn.getEditor().ifPresent(e -> column.setEditorField(e));
 				}
 			}
 			// hiding
@@ -1718,11 +1718,8 @@ public class DefaultItemListing<T, P> extends CustomComponent
 				return null;
 			}
 
-			if (propertyColumn.getEditorFactory() != null) {
-				Field<?> field = propertyColumn.getEditorFactory().getEditor(property);
-				if (field != null) {
-					return field;
-				}
+			if (propertyColumn.getEditor().isPresent()) {
+				return propertyColumn.getEditor().get();
 			}
 		}
 
