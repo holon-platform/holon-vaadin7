@@ -1765,7 +1765,6 @@ public class DefaultItemListing<T, P> extends CustomComponent
 			}
 
 			// get property box
-			// TODO
 			final PropertyBox propertyBox = (PropertyBox) requireDataSource().get(itemId).orElse(null);
 
 			try {

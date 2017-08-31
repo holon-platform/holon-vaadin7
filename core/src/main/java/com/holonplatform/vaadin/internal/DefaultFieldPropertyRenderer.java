@@ -210,9 +210,6 @@ public class DefaultFieldPropertyRenderer<T> implements PropertyRenderer<Field, 
 	protected <F> Field<F> postProcessField(Field field, Property<T> property) {
 		// caption
 		field.setCaption(LocalizationContext.translate(property, true));
-		// validation
-		// TODO remove
-		// ValidationUtils.registerValidators(property, field);
 		return field;
 	}
 
