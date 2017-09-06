@@ -96,6 +96,11 @@ public class NavigatorActuator<N extends Navigator & ViewNavigatorAdapter> imple
 	private boolean navigateToDefaultViewWhenViewNotAvailable;
 
 	/**
+	 * Default view window configurator
+	 */
+	private Consumer<ViewWindowConfigurator> defaultViewWindowConfigurator;
+
+	/**
 	 * Default view display, i.e. the ViewDisplay to use to display Views when is not requested to display View in a
 	 * Window
 	 */
@@ -308,6 +313,22 @@ public class NavigatorActuator<N extends Navigator & ViewNavigatorAdapter> imple
 	 */
 	public void setNavigateToDefaultViewWhenViewNotAvailable(boolean navigateToDefaultViewWhenViewNotAvailable) {
 		this.navigateToDefaultViewWhenViewNotAvailable = navigateToDefaultViewWhenViewNotAvailable;
+	}
+
+	/**
+	 * Get the default view window configurator.
+	 * @return the default view window configurator, <code>null</code> if not available
+	 */
+	public Consumer<ViewWindowConfigurator> getDefaultViewWindowConfigurator() {
+		return defaultViewWindowConfigurator;
+	}
+
+	/**
+	 * Set the default view window configurator
+	 * @param defaultViewWindowConfigurator the default view window configurator to set
+	 */
+	public void setDefaultViewWindowConfigurator(Consumer<ViewWindowConfigurator> defaultViewWindowConfigurator) {
+		this.defaultViewWindowConfigurator = defaultViewWindowConfigurator;
 	}
 
 	/**
@@ -953,6 +974,13 @@ public class NavigatorActuator<N extends Navigator & ViewNavigatorAdapter> imple
 		if (viewConfiguration != null) {
 			viewConfiguration.accept(configurator);
 		}
+
+		// default
+		if (defaultViewWindowConfigurator != null) {
+			defaultViewWindowConfigurator.accept(configurator);
+		}
+
+		// provided
 		if (windowConfigurator != null) {
 			windowConfigurator.accept(configurator);
 		}

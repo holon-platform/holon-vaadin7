@@ -15,8 +15,11 @@
  */
 package com.holonplatform.vaadin.navigator.internal;
 
+import java.util.function.Consumer;
+
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.vaadin.navigator.ViewNavigator.NavigatorBuilder;
+import com.holonplatform.vaadin.navigator.ViewWindowConfigurator;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
@@ -76,13 +79,23 @@ public abstract class AbstractNavigatorBuilder<B extends NavigatorBuilder<B>, C 
 
 	/*
 	 * (non-Javadoc)
-	 * @see
-	 * com.holonplatform.vaadin.navigator.ViewNavigator.NavigatorBuilder#navigateToDefaultViewWhenViewNotAvailable(
+	 * @see com.holonplatform.vaadin.navigator.ViewNavigator.NavigatorBuilder#navigateToDefaultViewWhenViewNotAvailable(
 	 * boolean)
 	 */
 	@Override
 	public B navigateToDefaultViewWhenViewNotAvailable(boolean navigateToDefaultViewWhenViewNotAvailable) {
 		navigator.getActuator().setNavigateToDefaultViewWhenViewNotAvailable(navigateToDefaultViewWhenViewNotAvailable);
+		return builder();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.navigator.ViewNavigator.NavigatorBuilder#defaultViewWindowConfigurator(java.util.
+	 * function.Consumer)
+	 */
+	@Override
+	public B defaultViewWindowConfigurator(Consumer<ViewWindowConfigurator> configurator) {
+		navigator.getActuator().setDefaultViewWindowConfigurator(configurator);
 		return builder();
 	}
 
