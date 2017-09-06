@@ -22,6 +22,7 @@ import java.time.LocalTime;
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import com.holonplatform.auth.AuthContext;
 import com.holonplatform.auth.annotations.Authenticate;
@@ -174,12 +175,12 @@ public interface ViewNavigator extends Serializable {
 	 * {@link #navigateTo(String, Map)} but rendering the View contents in an application Window, using optional
 	 * <code>windowConfiguration</code> to setup Window features.
 	 * @param viewName View name
-	 * @param windowConfiguration Optional Window configuration settings
+	 * @param windowConfiguration View Window configurator
 	 * @param parameters Optional view parameters
 	 * @return The UI Window in which the View is displayed
 	 * @throws ViewNavigationException View with given name cannot be found or other view handling error
 	 */
-	Window navigateInWindow(String viewName, ViewWindowConfiguration windowConfiguration,
+	Window navigateInWindow(String viewName, Consumer<ViewWindowConfigurator> windowConfiguration,
 			Map<String, Object> parameters) throws ViewNavigationException;
 
 	/**
@@ -200,11 +201,11 @@ public interface ViewNavigator extends Serializable {
 	 * {@link #navigateTo(String, Map)} but rendering the View contents in an application Window, using optional
 	 * <code>windowConfiguration</code> to setup Window features.
 	 * @param viewName View name
-	 * @param windowConfiguration Optional Window configuration settings
+	 * @param windowConfiguration View Window configurator
 	 * @return The UI Window in which the View is displayed
 	 * @throws ViewNavigationException View with given name cannot be found or other view handling error
 	 */
-	default Window navigateInWindow(String viewName, ViewWindowConfiguration windowConfiguration)
+	default Window navigateInWindow(String viewName, Consumer<ViewWindowConfigurator> windowConfiguration)
 			throws ViewNavigationException {
 		return navigateInWindow(viewName, windowConfiguration, null);
 	}
@@ -533,13 +534,22 @@ public interface ViewNavigator extends Serializable {
 		void navigate() throws ViewNavigationException;
 
 		/**
-		 * Navigate to view with registered parameters, rendering the View contents in an application Window, using
-		 * optional <code>windowConfiguration</code> to setup Window features.
-		 * @param windowConfiguration Optional Window configuration settings
+		 * Navigate to view with registered parameters, rendering the View contents in an application Window.
 		 * @return The UI Window in which the View is displayed
 		 * @throws ViewNavigationException Navigation failed
 		 */
-		Window navigateInWindow(ViewWindowConfiguration windowConfiguration) throws ViewNavigationException;
+		default Window navigateInWindow() throws ViewNavigationException {
+			return navigateInWindow(null);
+		}
+
+		/**
+		 * Navigate to view with registered parameters, rendering the View contents in an application Window, using
+		 * optional <code>windowConfiguration</code> to setup Window features.
+		 * @param windowConfiguration View Window configurator
+		 * @return The UI Window in which the View is displayed
+		 * @throws ViewNavigationException Navigation failed
+		 */
+		Window navigateInWindow(Consumer<ViewWindowConfigurator> windowConfiguration) throws ViewNavigationException;
 
 	}
 
