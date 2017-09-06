@@ -20,8 +20,8 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 
 import com.holonplatform.vaadin.navigator.ViewNavigator;
 import com.holonplatform.vaadin.navigator.annotations.ViewContext;
-import com.holonplatform.vaadin.navigator.internal.ViewNavigationUtils;
 import com.holonplatform.vaadin.navigator.internal.ViewConfiguration.ViewConfigurationProvider;
+import com.holonplatform.vaadin.navigator.internal.ViewNavigationUtils;
 import com.vaadin.navigator.View;
 
 /**
