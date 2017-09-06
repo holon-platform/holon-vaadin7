@@ -121,8 +121,8 @@ public interface ViewNavigator extends Serializable {
 	/**
 	 * Navigates to a view and initialize the view with given parameters.
 	 * <p>
-	 * The view string consists of a view name optionally followed by a slash and a parameters part that is passed as-is
-	 * to the view. ViewProviders are used to find and create the correct type of view.
+	 * The <code>navigationState</code> string consists of a view name optionally followed by a slash and a parameters
+	 * part that is passed as-is to the view. ViewProviders are used to find and create the correct type of view.
 	 * <p>
 	 * If multiple providers return a matching view, the view with the longest name is selected. This way, e.g.
 	 * hierarchies of subviews can be registered like "admin/", "admin/users", "admin/settings" and the longest match is
@@ -132,19 +132,14 @@ public interface ViewNavigator extends Serializable {
 	 * for the confirmation.
 	 * <p>
 	 * Registered {@link ViewChangeListener}s are called upon successful view change.
-	 * 
+	 * </p>
 	 * @param navigationState View name and parameters
 	 */
-	void navigateTo(String navigationState);
+	void navigateToState(String navigationState);
 
 	/**
 	 * Navigates to the {@link View} identified by given <code>viewName</code> using given <code>parameters</code>, if
 	 * any, and linking them to View fields using {@link ViewParameter} annotated view class fields.
-	 * <p>
-	 * A new view instance is created and used for each view navigation request, unless View class is declared as
-	 * stateful using {@link StatefulView} annotation: in this case the same view instance for each view class/name is
-	 * shared during application UI lifecycle.
-	 * </p>
 	 * <p>
 	 * If the view being deactivated indicates it wants a confirmation for the navigation operation, the user is asked
 	 * for the confirmation.
@@ -157,6 +152,23 @@ public interface ViewNavigator extends Serializable {
 	 * @throws ViewNavigationException View with given name cannot be found or other view handling error
 	 */
 	void navigateTo(String viewName, Map<String, Object> parameters) throws ViewNavigationException;
+
+	/**
+	 * Navigates to the {@link View} identified by given <code>viewName</code>.
+	 * <p>
+	 * If the view being deactivated indicates it wants a confirmation for the navigation operation, the user is asked
+	 * for the confirmation.
+	 * </p>
+	 * <p>
+	 * Registered {@link ViewChangeListener}s are called upon successful view change.
+	 * </p>
+	 * @param viewName View name
+	 * @param parameters Optional view parameters
+	 * @throws ViewNavigationException View with given name cannot be found or other view handling error
+	 */
+	default void navigateTo(String viewName) throws ViewNavigationException {
+		navigateTo(viewName, null);
+	}
 
 	/**
 	 * Navigate to the {@link View} identified by given <code>viewName</code> using the same behaviour of
