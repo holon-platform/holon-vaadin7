@@ -1,0 +1,288 @@
+== Navigator
+
+The `holon-vaadin-navigator` artifact makes available an extension of the default *view navigator*, represented by the link:{apidir}/com/holonplatform/vaadin/navigator/ViewNavigator.html[ViewNavigator^] interface, which provides additional features and configuration capabilities:
+
+* `View` navigation history tracking, allowing to navigate back to the previous view
+* `View` _parameters_ management, allowing to obtain the parameters values by injection in the `View` instance
+* Easy `View` lifecycle management, supporting `OnShow` and `OnLeave` annotated methods to be notified when the view is loaded and unloaded in the UI 
+* _Default_ view support, acting as the application's "home page" 
+* The possibility to show a view in a `Window`, instead of using the default view display component
+* Support for _context_ resources injection in `View` instances
+
+_Maven coordinates_:
+[source, xml, subs="attributes+"]
+----
+<groupId>com.holon-platform.vaadin7</groupId>
+<artifactId>holon-vaadin-navigator</artifactId>
+<version>{revnumber}</version>
+----
+
+=== View configuration
+
+[[ViewParameters]]
+==== Parameters injection
+
+The _navigation parameters_ can be injected in the `View` class fields using the link:{apidir}/com/holonplatform/vaadin/navigator/annotations/ViewParameter.html[ViewParameter^] annotation.
+
+The parameter *name* for which the value has to be injected in an annotated field is assumed to be equal to the _field name_. Otherwise, it can be specified using the annotation `value()` property.
+
+When a named parameter value is not available (not provided by the current navigation state), the parameter field will be setted to `null` or the default value for primitive types (for example `0` for `int`, `long`, `float` and `double` types, false for `boolean` types).
+
+The supported parameter value types are:
+
+* `String`
+* `Number` s (including primitive types)
+* `Boolean` (including primitive type)
+* `Enum` 
+* `Date`
+* `LocalDate`
+* `LocalTime`
+* `LocalDateTime`
+
+A view parameter can be declared as *required* using the `required()` annotation property. A navigation error will be thrown if a required parameter value is missing.
+
+Furthermore, a *default value* can be provided for a parameter, using the `defaultValue()` annotation property. See the link:{apidir}/com/holonplatform/vaadin/navigator/annotations/ViewParameter.html[ViewParameter^] javadocs for information about the default value representation.
+
+[source, java]
+----
+include::{examplesdir}/com/holonplatform/vaadin/examples/ExampleView.java[tag=viewparams,indent=0]
+----
+<1> View parameter injection using the `myparam` parameter name
+<2> View parameter with a default value. The parameter name will be the `intParam` field name
+<3> A required view parameter declaration
+
+==== View lifecycle hooks
+
+In addition to the standard `enter(...)` method of the `View` interface, two annotations can be used to intercept `View` lifecycle events using `public` View methods:
+
+* link:{apidir}/com/holonplatform/vaadin/navigator/annotations/OnShow.html[OnShow^], called by the view navigator right before the view is shown (i.e. rendered in target display component)
+* link:{apidir}/com/holonplatform/vaadin/navigator/annotations/OnLeave.html[OnLeave^], called by the view navigator  when the view is about to be deactivated (i.e. a navigation to another view was triggered)
+
+If more than one `OnShow` or `OnLeave` annotated method in present in the `View` class or in it's class hierarchy, all these methods will be called and the following behaviour will be adopted:
+
+* Methods will be called following the class hierarchy, starting from the top (the first superclass after `Object`)
+* For methods of the same class, no calling order is guaranteed
+
+The `OnShow` and `OnLeave` annotated method supports an optional parameter, which can be either of the standard `com.vaadin.navigator.ViewChangeEvent` type or of the extended `ViewNavigatorChangeEvent` type, to obtain informations about the current view navigator, the previous or next `View`, the `View` name and parameters and the optional `Window` in which the View is displayed.
+
+The `OnShow` annotation provides an additional `onRefresh()` property which, if setted to `true`, instruct the navigator to invoke the `OnShow` annotated method also at browser page refresh.
+
+[source, java]
+----
+include::{examplesdir}/com/holonplatform/vaadin/examples/ExampleView.java[tag=showleave,indent=0]
+----
+<1> Basic `OnShow` annotated method, invoked right before the view is shown
+<2> `OnShow` method with `onRefresh()` setted to `true`: this method will be invoked also at browser page refresh
+<3> `OnShow` method with a default `ViewChangeEvent` parameter
+<4> Get the View name
+<5> Get the previous View
+<6> `OnShow` method with a `ViewNavigatorChangeEvent` parameter
+<7> Get the `ViewNavigator`
+<8> Get the `Window` in which the view is displayed if it was requested to open the View in a window
+<9> Basic `onLeave` annotated method
+<10> `onLeave` method with a `ViewNavigatorChangeEvent` parameter
+<11> Get the View being activated
+
+==== Providing the View contents
+
+By default, the `View` is rendered as the UI component which is represented by the `View` class.
+
+The link:{apidir}/com/holonplatform/vaadin/navigator/ViewContentProvider.html[ViewContentProvider^] interface can be implemented by a `View` class to control which UI content to provide through the `getViewContent()` method. The method is called by the `ViewNavigator` to display the `View` when it is activated.
+
+[source, java]
+----
+include::{examplesdir}/com/holonplatform/vaadin/examples/ExampleView.java[tag=viewcontent,indent=0]
+----
+<1> Default `View` implementation extending a `Component` class (a `VerticalLayout`). The displayed `View` content will be the component itself
+<2> A `View` implementing the `ViewContentProvider` interface: the displayed UI content will be provided by the `getViewContent()` method
+<3> Provide the `View` content. In this example, a different UI component is provided according to the device type, checking if the user is running the application in a _mobile_ device
+
+=== Navigator Configuration
+
+Just like the standard Vaadin navigator, the `ViewNavigator` requires two elements which must be configured in order to work properly:
+
+* A `ViewProvider` to provide th `View` instances by view _name_
+* A `View` display component to show the view contents in the UI, which can be a `ComponentContainer` (replacing the contents of the container with the active `View` content), a `SingleComponentContainer` (using the `setContent(...)` method to set the active `View` content) or a `ViewDisplay` object to implement a custom `View` display logic.
+
+In addition to the required configuration elements, the `ViewNavigator` supports:
+
+* Setting a *default view* name, which will be used as target of the `ViewNavigator.navigateToDefault()` method and as a fallback by the `ViewNavigator.navigateBack()` method if no other `View` is available in navigation history
+* Setting a *error view* or a error `ViewProvider` to provide the `View` to be displayed when no other `View` matches a navigation state
+* Setting the max *navigation history* size
+* Register a `ViewChangeListener` for listening to `View` changes before and after they occur
+
+The `builder()` method of the `ViewNavigator` interface provides a _fluent_ builder to configure a navigator and bind it to a Vaadin `UI`.
+
+[source, java]
+----
+include::{examplesdir}/com/holonplatform/vaadin/examples/ExampleNavigator.java[tag=config,indent=0]
+----
+<1> Obtain the `ViewNavigator` builder
+<2> Set the component to which the `View` contents display is delegated
+<3> Add a `ViewProvider`
+<4> Set the _default_ `View` name
+<5> Set the error `View`
+<6> Set the error `View` provider
+<7> Set the max navigation history size
+<8> Configure the navigator to navigate to _default_ `View` (if availablr) when a view is not available according to current navigation state
+<9> Add a `ViewChangeListener`
+<10> Build the `ViewNavigator` and bind it to the `UI`
+
+The `ViewNavigator` builder makes available a default `View` provider, which supports a fixed set of `Views` configured using a View _name_ bound to a View _class_.
+
+_Stateful_ views are supported by this provider. To declare a View as stateful, the link:{apidir}/com/holonplatform/vaadin/navigator/annotations/StatefulView.html[StatefulView^] annotation can be used on the View class.
+
+View instances will be created according to view scope: for _stateful_ views, an instance is created at first request (for each UI) and the same instance is returned to subsequent view requests. On the contrary, for standard views, a new instance is created and returned to navigator for every view request.
+
+To register this view provider and configure the `View` set, the `ViewNavigator` builder method `withView(String viewName, Class<? extends View> viewClass)` can be used.
+
+[source, java]
+----
+include::{examplesdir}/com/holonplatform/vaadin/examples/ExampleNavigator.java[tag=config2,indent=0]
+----
+<1> Register the view class `View1` and bind it the `view1` name
+<2> Register the view class `View2` and bind it the `view2` name
+<3> Set the `view1` View as the default view
+
+=== Excluding a View form navigation history
+
+By default, the `ViewNavigator` tacks views navigation history, to made available navigation operations such `navigateBack()` to navigate to the previous view.
+
+To exclude a `View` from the navigation history, skipping such View when a `navigateBack()` operation is performed or the user presses the browser _back_ button, the link:{apidir}/com/holonplatform/vaadin/navigator/annotations/VolatileView.html[VolatileView^] annotation can be used on the `View` class.
+
+[source, java]
+----
+include::{examplesdir}/com/holonplatform/vaadin/examples/ExampleView.java[tag=volatile,indent=0]
+----
+
+=== Opening Views in a `Window`
+
+The `ViewNavigator` supports displaying a `View` content in a application `Window`. The view navigation is tracked in navigator history just like any other navigation operation.
+
+To open a `View` in a `Window`, the `navigateInWindow(...)` view navigator methods can be used (see the next section), or a `View` class can be forced to be always opened in a window using the link:{apidir}/com/holonplatform/vaadin/navigator/annotations/WindowView.html[WindowView^] annotation. 
+
+If the `@WindowView` annotation is found on a view class, such view will be always opened in a window, regardless of the navigation operation that is used.
+
+The `Window` is automatically created by the `ViewNavigator`, and can be configured using either a `ViewWindowConfigurator`, when the navigator method is used, or the `@WindowView` annotation attributes.
+
+[source, java]
+----
+include::{examplesdir}/com/holonplatform/vaadin/examples/ExampleView.java[tag=window,indent=0]
+----
+
+=== View navigation operations
+
+The `ViewNavigator` API provides navigation methods to provide a set of *parameters* to the `View` being activated. 
+
+These parameters are serialized in the navigation state String, and are automatically bound to the any `View` class field annotated with the `@ViewParameter` annotation.
+
+See <<ViewParameters>> for further informations about `View` parameters injection.
+
+NOTE: When using `@ViewParameter` annotated `View` methods, the parameter value types provided to a view navigation method through the _name-value Map_ must be consistent with the corresponding `@ViewParameter` view class field type.
+
+The `ViewNavigator` API provides the following operations for `View` navigation:
+
+* `navigateTo(String viewName, Map<String, Object> parameters)`: navigate to given `View` name, providing an optional Map of parameters with parameters names and corresponding values.
+
+* `navigateTo(String viewName)`: navigate to given `View` name without providing any view parameter.
+
+[source, java]
+----
+include::{examplesdir}/com/holonplatform/vaadin/examples/ExampleNavigator.java[tag=nav1,indent=0]
+----
+<1> Navigate to the view named `myView`
+<2> Navigate to the view named `myView` providing a map of *parameters* (names and values)
+
+* `navigateInWindow(...)`: `View` navigation methods that force the View content to be displayed in an `Window`, supporting a `ViewWindowConfiguration` Consumer function to setup the view `Window` features.
+
+[source, java]
+----
+include::{examplesdir}/com/holonplatform/vaadin/examples/ExampleNavigator.java[tag=nav2,indent=0]
+----
+<1> Navigate to the view named `myView` and display the view in a Window
+<2> Navigate to the view named `myView`  and display the view in a Window, providing a window configuration consumer and a map of *parameters*
+
+* Using the `NavigationBuilder` through the `toView(String viewName)` method, which accepts the view name and the optional view parameters using a _fluent_ builder style.
+
+[source, java]
+----
+include::{examplesdir}/com/holonplatform/vaadin/examples/ExampleNavigator.java[tag=nav3,indent=0]
+----
+<1> Navigate to the view named `myView` using given parameters
+<2> Navigate to the view named `myView` and display the view in a Window
+<3> Navigate to the view named `myView` and display the view in a Window, providing a window configuration consumer
+
+* The `navigateToDefault()` method can be used to navigate to the default view, if configured.
+
+* The `navigateBack()` method can be used to navigate back to previous `View`, if any. In no previous `View` is available and a default view is defined, navigator will navigate to the default view.
+
+=== Sub views
+
+The `ViewNavigator` supports the concept of *sub view*: a sub view is a `View` which is always displayed using a parent _view container_, and the sub view display strategy is delegated to the container.
+
+A sub view container is a conventional `View` which implements the link:{apidir}/com/holonplatform/vaadin/navigator/SubViewOf.html[SubViewOf^] interface. 
+
+Any sub view must declare its parent container view name using the link:{apidir}/com/holonplatform/vaadin/navigator/annotations/WindowView.html[WindowView^] annotation.
+
+When the navigation to a sub view is triggered, the `ViewNavigator` first of all will navigate to the declared sub view container, displaying it as a normal `View`, than the `display(View view, String viewName, Map<String, String> parameters)` method of the sub view container is invoked providing the sub view instance, the sub view name and any navigation parameter. At this point, the container should display the sub view contents in a suitable way.
+
+TIP: The `getViewContent(View view)` static method of the `ViewNavigator` interface can be used to obtain the view contents from a `View` instance.
+
+[source, java]
+----
+include::{examplesdir}/com/holonplatform/vaadin/examples/ExampleNavigator.java[tag=sub,indent=0]
+----
+<1> A view declared as `SubViewContainer` using a `TabSheet` to display each sub view in a new tab. We suppose this view is bound to the `mycontainer` view name
+<2> A sub view bound to the `mycontainer` sub view container using the `@SubViewOf` annotation
+
+[[ViewContext]]
+=== Context resources injection
+
+The `ViewNavigator` supports *Context* resources injection into the `View` instances. A resource available form the Holon platform `Context` registry can be injected in a `View` using the link:{apidir}/com/holonplatform/vaadin/navigator/annotations/ViewContext.html[ViewContext^] annotation on a `View` field.
+
+The resource to be injected is looked up by _key_, and by the default the resource key is assumed to be the fully qualified class name of the injectable field *type*. To override this strategy, the `value()` annotation attribute of the `ViewContext` annotation can be used to provide the resource key to look up.
+
+TIP: See the link:holon-core.html#Context[Context] documentation for further information about context resources.
+
+[source, java]
+----
+include::{examplesdir}/com/holonplatform/vaadin/examples/ExampleNavigator.java[tag=ctx,indent=0]
+----
+
+=== Obtain the ViewNavigator
+
+The `ViewNavigator` interface provides methods to obtain the current navigator using the following strategy:
+
+* If the `ViewNavigator` is available as _Context_ resource using the default navigator resource key, that instance is returned;
+* If a current Vaadin `UI` is available and a `ViewNavigator` is bound to the `UI`, that instance is returned.
+
+TIP: See the link:holon-core.html#Context[Context] documentation for further information about context resources.
+
+[source, java]
+----
+include::{examplesdir}/com/holonplatform/vaadin/examples/ExampleNavigator.java[tag=obtain,indent=0]
+----
+<1> Try to obtain the `ViewNavigator` from context or current `UI`
+<2> Obtain the `ViewNavigator` from context or current `UI`, failing with an exception if not found
+
+[[ViewAuthentication]]
+=== Authentication support
+
+The `ViewNavigator` architecture provides support for `View` authentication, relying on the default Holon platform `AuthContext` API.
+
+TIP: See the link:holon-core.html#Realm[Realm] and link:holon-core.html#AuthContext[AuthContext] documentation for information about the Holon platform authentication and authorization architecture.
+
+In order for the authentication to work, an `AuthContext` instance must be available as a _context_ resource, and it will be used to perform user authentication and resource access control, relying on the `Realm` bound to the auth context. 
+
+The authentication support is enabled by default, but it can be configured using the `authenticationEnabled(...)` `ViewNavigator` builder method.
+
+The *authentication* support is enabled through the standard `com.holonplatform.auth.annotations.Authenticate` annotation, which can be used on a `View` class or on the application `UI` class.
+
+When the `Authenticate` annotation is used at `UI` level, all the views managed by the navigator bound to such `UI` will be under authentication, and the access to any `View` will be denied if an authenticated subject is not available from the current `AuthContext`.
+
+Each time the navigation to a protected `View` is requested, the `AuthContext` is checked, and if it not authenticated, the following strategy is implemented:
+
+1. An _implicit_ authentication attempt is performed, using the current `VaadinRequest` and the optional authentication schemes which can be specified using the `schemes()` attribute of the `Authenticate` annotation. This behaviour can be used, for example, to support authentication using the current HTTP request and schemes such the `Authorization` HTTP header.
+
+2. If the _implicit_ authentication is not successfull and a valid *redirect URI* is provided through the `redirectURI()` property of the `Authenticate` annotation, the navigation is redirected to that URI. If the redirect URI does not specify a scheme, or the scheme is equal to the special `view://` scheme, the navigation is redirected to the navigation state specified by the redirect URI (escluding the `view://` part, if present). This way, the redirect URI can be used to delegate to a `View` an _explicit_ authentication entry point (for example using conventional username and password credentials). 
+

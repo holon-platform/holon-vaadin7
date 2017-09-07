@@ -1,6 +1,6 @@
-= Holon Vaadin UI
+= Holon Vaadin 7 UI
 :revnumber: {project-version}
-:apidir: ../api/holon-vaadin
+:apidir: ../api/holon-vaadin7
 :linkattrs:
 :sectnums:
 :nofooter:
@@ -13,10 +13,77 @@ _Copies of this document may be made for your own use and for distribution to ot
 
 == Introduction
 
-The introduction goes here.
+The Holon *Vaadin 7* module represents the platform support for the https://vaadin.com[Vaadin] *7.7.x* web applications framework.
+
+This module makes available an API which matches at 99% the official Holon Vaadin module API (which requires Vaadin version *8.1.x*), only not compatible classes or methods are different for obvious reasons.
+
+The main differences between the two modules API are:
+
+* The Vaadin 7 module supports the `com.vaadin.ui.Field` interface for `Input` components and `Property` renderers, while the Vaadin 8 module relies on the `HasValue` interface
+* The Vaadin 7 `Table` component is available as `ItemListing` backing component, in addition to the `Grid` component
+* The `com.vaadin.data.provider.DataProvider` interface is not available in Vaadin 7, so it is not supported as item components data source
+
+See the official link:holon-vaadin.html[Holon Vaadin module] documentation to use Vaadin version *8* instead.
+
+== Obtaining the artifacts
+
+The Holon Platform uses https://maven.apache.org[Maven^] for projects build and configuration. All the platform artifacts are published in the *Maven Central Repository*, so there is no need to explicitly declare additional repositories in your project `pom` file.
+
+At the top of each _section_ of this documentation you will find the Maven _coordinates_ (group id, artifact id and version) to obtain the artifact(s) as a dependency for your project.
+
+A *BOM (Bill Of Materials)* `pom` is provided to import the available dependencies for a specific version in your projects. The Maven coordinates for the core BOM are the following:
+
+_Maven coordinates_:
+[source, xml, subs="attributes+"]
+----
+<groupId>com.holon-platform.vaadin7</groupId>
+<artifactId>holon-vaadin-bom</artifactId>
+<version>{revnumber}</version>
+----
+
+The BOM can be imported in a Maven project in the following way:
+
+[source, xml, subs="verbatim,quotes,attributes+"]
+----
+<dependencyManagement>
+	<dependencies>
+		<dependency>
+			<groupId>com.holon-platform.vaadin7</groupId>
+			<artifactId>holon-vaadin-bom</artifactId>
+			<version>{revnumber}</version>
+			*<type>pom</type>*
+			*<scope>import</scope>*
+		</dependency>
+	</dependencies>
+</dependencyManagement>
+----
+
+=== Using the Platform BOM
+
+The Holon Platform provides an *overall Maven BOM (Bill of Materials)* to easily obtain all the available platform artifacts.
+
+See link:index.html#obtain-the-platform-artifacts[Obtain the platform artifacts] for details.
+
+// Inclusions
+
+include::_core.adoc[]
+
+include::_navigator.adoc[]
+
+include::_spring.adoc[]
+
+== Loggers
+
+By default, the Holon platform uses the https://www.slf4j.org[SLF4J^] API for logging. The use of SLF4J is optional: it is enabled when the presence of SLF4J is detected in the classpath. Otherwise, logging will fall back to JUL (`java.util.logging`).
+
+The logger name for the *Vaadin* module is `com.holonplatform.vaadin`.
 
 == System requirements
 
 === Java
 
 The Holon Platform Vaadin module requires https://www.java.com[Java] *8* or higher.
+
+=== Vaadin
+
+The Holon Platform Vaadin module requires https://vaadin.com[Vaadin] *7.7* or higher.
