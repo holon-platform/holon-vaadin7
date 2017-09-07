@@ -221,6 +221,16 @@ public interface ItemListingBuilder<T, P, C extends ItemListing<T, P>, B extends
 	B style(P property, CellStyleGenerator<T, P> cellStyleGenerator);
 
 	/**
+	 * Set the column cell style name for given <code>property</code>
+	 * @param property Item property to set the style for (not null)
+	 * @param styleName The property column style name
+	 * @return this
+	 */
+	default B style(P property, String styleName) {
+		return style(property, (p, item) -> styleName);
+	}
+
+	/**
 	 * Set whether the editor mode is buffered or not. Default is <code>true</code>.
 	 * <p>
 	 * When buffered, the listing component requires a specific action to commit item modifications to persistence
