@@ -482,7 +482,7 @@ For each property:
 include::{examplesdir}/com/holonplatform/vaadin/examples/ExampleListing.java[tag=propertyListing,indent=0]
 ----
 <1> Create a `PropertyListing` using given `Property` set
-<5> Create a `PropertyListing` using a `Table` as backing component
+<2> Create a `PropertyListing` using a `Table` as backing component
 
 === Items data source
 
