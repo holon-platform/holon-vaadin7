@@ -44,12 +44,12 @@ public class DefaultTablePropertyListingBuilder extends
 		AbstractTableItemListingBuilder<PropertyBox, Property, PropertyListing, DefaultPropertyListing, TablePropertyListingBuilder>
 		implements TablePropertyListingBuilder {
 
-	private final Iterable<Property> properties;
+	private final Iterable<Property<?>> properties;
 
 	@SuppressWarnings("unchecked")
 	public <P extends Property<?>> DefaultTablePropertyListingBuilder(Iterable<P> properties) {
 		super(new DefaultPropertyListing(RenderingMode.TABLE));
-		this.properties = (Iterable<Property>) properties;
+		this.properties = (Iterable<Property<?>>) properties;
 		// default adapter
 		dataSourceBuilder.itemAdapter(new PropertyBoxItemAdapter());
 		// setup datasource
