@@ -166,6 +166,30 @@ public interface PropertyColumn<T, P> extends Serializable {
 	List<Validator> getValidators();
 
 	/**
+	 * Get whether the property editor value is required.
+	 * @return whether the property editor value is required
+	 */
+	boolean isRequired();
+
+	/**
+	 * Set whether the property editor value is required.
+	 * @param required <code>true</code> if the property editor value is required
+	 */
+	void setRequired(boolean required);
+
+	/**
+	 * Get the required property editor value validation failed message.
+	 * @return the required property editor value validation failed message
+	 */
+	Localizable getRequiredMessage();
+
+	/**
+	 * Set the required property editor value validation failed message
+	 * @param message required property editor value validation failed message
+	 */
+	void setRequiredMessage(Localizable message);
+
+	/**
 	 * Gets whether the column is initially hidden when rendered in table
 	 * @return <code>true</code> if the column is initially hidden when rendered in table
 	 */

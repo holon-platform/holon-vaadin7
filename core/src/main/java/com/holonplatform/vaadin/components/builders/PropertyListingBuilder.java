@@ -18,8 +18,10 @@ package com.holonplatform.vaadin.components.builders;
 import com.holonplatform.core.Validator;
 import com.holonplatform.core.datastore.DataTarget;
 import com.holonplatform.core.datastore.Datastore;
+import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.property.Property;
 import com.holonplatform.core.property.PropertyBox;
+import com.holonplatform.vaadin.components.Input;
 import com.holonplatform.vaadin.components.PropertyListing;
 import com.holonplatform.vaadin.data.ItemDataProvider;
 import com.holonplatform.vaadin.data.ItemDataSource.CommitHandler;
@@ -62,6 +64,50 @@ public interface PropertyListingBuilder<B extends PropertyListingBuilder<B, X>, 
 	 * @return this
 	 */
 	<V> B withValidator(Property<V> property, com.vaadin.data.Validator validator);
+
+	/**
+	 * Set the given property as required in the item listing editor. If a property is required, the field bound to the
+	 * property will be setted as required, and its validation will fail when empty.
+	 * @param property Property to set as required (not null)
+	 * @return this
+	 */
+	default B required(Property<?> property) {
+		return required(property, (Localizable) null);
+	}
+
+	/**
+	 * Set the given property as required in the item listing editor. If a property is required, the field bound to the
+	 * property will be setted as required, and its validation will fail when empty.
+	 * @param property Property to set as required (not null)
+	 * @param message The message to use to notify the required validation failure
+	 * @return this
+	 */
+	B required(Property<?> property, Localizable message);
+
+	/**
+	 * Set the given property as required in the item listing editor. If a property is required, the field bound to the
+	 * property will be setted as required, and its validation will fail when empty.
+	 * @param property Property to set as required (not null)
+	 * @param message The default message to use to notify the required validation failure
+	 * @param messageCode The message localization code
+	 * @param arguments Optional message translation arguments
+	 * @return this
+	 */
+	default B required(Property<?> property, String message, String messageCode, Object... arguments) {
+		return required(property,
+				Localizable.builder().message(message).messageCode(messageCode).messageArguments(arguments).build());
+	}
+
+	/**
+	 * Set the given property as required. If a property is required, the {@link Input} bound to the property will be
+	 * setted as required, and its validation will fail when empty.
+	 * @param property Property to set as required (not null)
+	 * @param message The default message to use to notify the required validation failure
+	 * @return this
+	 */
+	default B required(Property<?> property, String message) {
+		return required(property, Localizable.builder().message(message).build());
+	}
 
 	/**
 	 * Set the items data provider.

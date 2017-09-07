@@ -1390,6 +1390,12 @@ public class DefaultItemListing<T, P> extends CustomComponent
 	protected void setupField(P property, Field<?> field) {
 		PropertyColumn<T, P> column = getPropertyColumn(property);
 		if (column != null) {
+			if (column.isRequired()) {
+				field.setRequired(true);
+				if (column.getRequiredMessage() != null) {
+					field.setRequiredError(LocalizationContext.translate(column.getRequiredMessage(), true));
+				}
+			}
 			column.getValidators().forEach(v -> {
 				field.addValidator(v);
 			});

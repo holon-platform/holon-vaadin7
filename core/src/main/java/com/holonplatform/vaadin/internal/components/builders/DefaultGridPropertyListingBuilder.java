@@ -18,6 +18,7 @@ package com.holonplatform.vaadin.internal.components.builders;
 import com.holonplatform.core.Path;
 import com.holonplatform.core.datastore.DataTarget;
 import com.holonplatform.core.datastore.Datastore;
+import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.core.internal.utils.ObjectUtils;
 import com.holonplatform.core.property.Property;
 import com.holonplatform.core.property.PropertyBox;
@@ -106,6 +107,19 @@ public class DefaultGridPropertyListingBuilder extends
 	public <V> GridPropertyListingBuilder withValidator(Property<V> property, Validator validator) {
 		ObjectUtils.argumentNotNull(validator, "Validator must be not null");
 		getInstance().getPropertyColumn(property).addValidator(validator);
+		return builder();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.holonplatform.vaadin.components.builders.PropertyListingBuilder#required(com.holonplatform.core.property.
+	 * Property, com.holonplatform.core.i18n.Localizable)
+	 */
+	@Override
+	public GridPropertyListingBuilder required(Property<?> property, Localizable message) {
+		getInstance().getPropertyColumn(property).setRequired(true);
+		getInstance().getPropertyColumn(property).setRequiredMessage(message);
 		return builder();
 	}
 
