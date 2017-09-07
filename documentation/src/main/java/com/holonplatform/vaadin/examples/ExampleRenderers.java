@@ -52,7 +52,7 @@ public class ExampleRenderers {
 		PropertyRendererRegistry.get().register(p -> p == TEXT, textAreaInputRenderer); // <2>
 
 		Input<String> input = TEXT.render(Input.class); // <3>
-		
+
 		InputFieldPropertyRenderer<String> fieldRenderer = p -> new TextArea(); // <4>
 		// end::renderers2[]
 	}

@@ -506,36 +506,38 @@ public class TestItemQueryContainer {
 					sb.append("'");
 				}
 			}
-			
+
 			if (applySorts) {
 				QuerySort sort = configuration.getQuerySort();
 				if (sort != null) {
 					sb.append(" order by ");
 					if (sort instanceof CompositeQuerySort) {
-						List<QuerySort> sorts = ((CompositeQuerySort)sort).getComposition();
+						List<QuerySort> sorts = ((CompositeQuerySort) sort).getComposition();
 						sorts.forEach(s -> {
 							if (s instanceof PathQuerySort) {
-								sb.append(((PathQuerySort)s).getPath().getName());
+								sb.append(((PathQuerySort) s).getPath().getName());
 								sb.append(" ");
-								sb.append(((PathQuerySort)s).getDirection() == SortDirection.ASCENDING ? "asc" : "desc");
+								sb.append(
+										((PathQuerySort) s).getDirection() == SortDirection.ASCENDING ? "asc" : "desc");
 								sb.append(" ");
 							}
 						});
 					} else {
 						if (sort instanceof PathQuerySort) {
-							sb.append(((PathQuerySort)sort).getPath().getName());
+							sb.append(((PathQuerySort) sort).getPath().getName());
 							sb.append(" ");
-							sb.append(((PathQuerySort)sort).getDirection() == SortDirection.ASCENDING ? "asc" : "desc");
+							sb.append(
+									((PathQuerySort) sort).getDirection() == SortDirection.ASCENDING ? "asc" : "desc");
 						}
 					}
 				}
 			}
 
-			/*if (applySorts && !configuration.getItemSorts().isEmpty()) {
-				sb.append(configuration.getItemSorts().stream()
-						.map(s -> s.getProperty() + " " + (s.isAscending() ? "asc" : "desc"))
-						.collect(Collectors.joining(",", " order by ", "")));
-			}*/
+			/*
+			 * if (applySorts && !configuration.getItemSorts().isEmpty()) {
+			 * sb.append(configuration.getItemSorts().stream() .map(s -> s.getProperty() + " " + (s.isAscending() ?
+			 * "asc" : "desc")) .collect(Collectors.joining(",", " order by ", ""))); }
+			 */
 		}
 
 		private Connection getConnection() throws DataAccessException {

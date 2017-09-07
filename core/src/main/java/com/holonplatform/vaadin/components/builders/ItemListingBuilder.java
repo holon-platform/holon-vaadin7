@@ -558,7 +558,6 @@ public interface ItemListingBuilder<T, P, C extends ItemListing<T, P>, B extends
 
 		/**
 		 * Set a custom {@link Renderer} for given item property.
-		 * @param <V> Property value type
 		 * @param property Item property to set the renderer for (not null)
 		 * @param renderer Renderer to use
 		 * @return this
@@ -694,7 +693,6 @@ public interface ItemListingBuilder<T, P, C extends ItemListing<T, P>, B extends
 	/**
 	 * Builder to create an {@link ItemListing} with a {@link Table} as backing component.
 	 * @param <T> Item data type
-	 * @param <P> Item property type
 	 */
 	public interface TableItemListingBuilder<T>
 			extends BaseTableItemListingBuilder<T, String, BeanListing<T>, TableItemListingBuilder<T>> {

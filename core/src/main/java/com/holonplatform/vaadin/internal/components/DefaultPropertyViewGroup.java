@@ -195,7 +195,8 @@ public class DefaultPropertyViewGroup implements PropertyViewGroup, PropertyValu
 		return Optional.ofNullable(propertyViews.get(property));
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.PropertyValueComponentSource#streamOfValueComponents()
 	 */
 	@SuppressWarnings("unchecked")

@@ -164,8 +164,7 @@ public class ExampleListing {
 					public Class<String> getPresentationType() {
 						return String.class;
 					}
-				}, new TextRenderer())
-				.build();
+				}, new TextRenderer()).build();
 		// end::listing5[]
 	}
 

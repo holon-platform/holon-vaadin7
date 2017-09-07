@@ -40,7 +40,7 @@ import com.holonplatform.vaadin.data.ItemDataProvider;
 public class DatastoreItemDataProvider implements ItemDataProvider<PropertyBox> {
 
 	private static final long serialVersionUID = -3647676181555142846L;
-	
+
 	/**
 	 * Datastore
 	 */

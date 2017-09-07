@@ -236,7 +236,8 @@ public class TestPropertyQueryContainer {
 	public void testPropertyContainerDatastore() {
 
 		ItemDataSourceContainer<PropertyBox, Property> container = ItemDataSourceContainer
-				.<PropertyBox, Property>builder().dataSource(new DatastoreItemDataProvider(datastore, TARGET, TestData.PROPERTIES))
+				.<PropertyBox, Property>builder()
+				.dataSource(new DatastoreItemDataProvider(datastore, TARGET, TestData.PROPERTIES))
 				.itemAdapter(new PropertyBoxItemAdapter()).withProperty(TestData.ID, TestData.ID.getType())
 				.withProperty(TestData.DESCRIPTION, TestData.DESCRIPTION.getType())
 				.withProperty(TestData.SEQUENCE, TestData.SEQUENCE.getType())
@@ -306,8 +307,8 @@ public class TestPropertyQueryContainer {
 		 * ItemDataSource.Configuration, int, int)
 		 */
 		@Override
-		public Stream<PropertyBox> load(QueryConfigurationProvider configuration,
-				int offset, int limit) throws DataAccessException {
+		public Stream<PropertyBox> load(QueryConfigurationProvider configuration, int offset, int limit)
+				throws DataAccessException {
 			Query q = datastore.query().target(TARGET);
 
 			if (configuration.getQueryFilter() != null) {
@@ -330,8 +331,7 @@ public class TestPropertyQueryContainer {
 		 * ItemDataSource.Configuration)
 		 */
 		@Override
-		public long size(QueryConfigurationProvider configuration)
-				throws DataAccessException {
+		public long size(QueryConfigurationProvider configuration) throws DataAccessException {
 			Query q = datastore.query().target(TARGET);
 			if (configuration.getQueryFilter() != null) {
 				q.filter(configuration.getQueryFilter());

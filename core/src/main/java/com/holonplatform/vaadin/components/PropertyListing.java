@@ -38,7 +38,7 @@ public interface PropertyListing extends ItemListing<PropertyBox, Property> {
 	/**
 	 * Builder to create an {@link PropertyListing} instance.
 	 * <p>
-	 * By default, a {@link #gridBuilder()} is returned.
+	 * By default, a {@link #gridBuilder(Iterable)} is returned.
 	 * </p>
 	 * @param <P> Actual property type
 	 * @param properties The property set to use for the listing

@@ -31,7 +31,7 @@ public class BeanItemAdapter implements ItemAdapter {
 	private static final long serialVersionUID = -9058266880411104997L;
 
 	private final Set<String> nestedPropertyIds;
-	
+
 	public BeanItemAdapter() {
 		this(null);
 	}

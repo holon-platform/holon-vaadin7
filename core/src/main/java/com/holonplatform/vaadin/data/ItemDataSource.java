@@ -124,7 +124,7 @@ public interface ItemDataSource<ITEM, PROPERTY> extends Serializable {
 	 * Discards all changes since last commit.
 	 */
 	void discard();
-	
+
 	/**
 	 * Get whether the data source is in buffered mode.
 	 * @return whether the data source is in buffered mode

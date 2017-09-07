@@ -73,6 +73,7 @@ public interface ItemDataProvider<ITEM> extends ItemSetCounter, ItemSetLoader<IT
 	 * @param datastore Datastore to use (not null)
 	 * @param target Data target (not null)
 	 * @param propertySet Property set to load
+	 * @return A new {@link ItemDataProvider} instance
 	 */
 	static ItemDataProvider<PropertyBox> create(Datastore datastore, DataTarget<?> target, PropertySet<?> propertySet) {
 		return new DatastoreItemDataProvider(datastore, target, propertySet);
@@ -81,6 +82,8 @@ public interface ItemDataProvider<ITEM> extends ItemSetCounter, ItemSetLoader<IT
 	/**
 	 * Create a new {@link ItemDataProvider} which wraps a concrete data provider and converts items into a different
 	 * type using a converter function.
+	 * @param <ITEM> Item type
+	 * @param <T> Conversion type
 	 * @param provider Concrete data privider (not null)
 	 * @param converter Converter function (not null)
 	 * @return the data provider wrapper

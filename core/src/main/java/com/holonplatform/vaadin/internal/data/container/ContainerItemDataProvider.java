@@ -46,7 +46,8 @@ public class ContainerItemDataProvider<ITEM> implements ItemDataProvider<Item> {
 	 * @param configuration Data source configuration
 	 * @param adapter Item adapter (not null)
 	 */
-	public ContainerItemDataProvider(ItemDataProvider<ITEM> provider, Configuration<?> configuration, ItemAdapter<ITEM> adapter) {
+	public ContainerItemDataProvider(ItemDataProvider<ITEM> provider, Configuration<?> configuration,
+			ItemAdapter<ITEM> adapter) {
 		super();
 		ObjectUtils.argumentNotNull(provider, "ItemDataProvider must be not null");
 		ObjectUtils.argumentNotNull(adapter, "ItemAdapter must be not null");
@@ -63,7 +64,8 @@ public class ContainerItemDataProvider<ITEM> implements ItemDataProvider<Item> {
 		return configuration;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.data.ItemSetCounter#size(com.holonplatform.core.query.QueryConfigurationProvider)
 	 */
 	@Override
@@ -71,8 +73,10 @@ public class ContainerItemDataProvider<ITEM> implements ItemDataProvider<Item> {
 		return provider.size(configuration);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.holonplatform.vaadin.data.ItemSetLoader#load(com.holonplatform.core.query.QueryConfigurationProvider, int, int)
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin.data.ItemSetLoader#load(com.holonplatform.core.query.QueryConfigurationProvider,
+	 * int, int)
 	 */
 	@Override
 	public Stream<Item> load(QueryConfigurationProvider configuration, int offset, int limit)
@@ -80,7 +84,8 @@ public class ContainerItemDataProvider<ITEM> implements ItemDataProvider<Item> {
 		return provider.load(configuration, offset, limit).map(i -> adapter.adapt(getConfiguration(), i));
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.data.ItemDataProvider#refresh(java.lang.Object)
 	 */
 	@Override
