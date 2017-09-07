@@ -197,7 +197,7 @@ public class DefaultItemDataSourceContainer<ITEM, PROPERTY>
 
 	/**
 	 * Constructor which do not perform internal initialization. The container initialization must be performed later
-	 * using the {@link #init()} method.
+	 * using the init method.
 	 */
 	protected DefaultItemDataSourceContainer() {
 		super();
@@ -214,6 +214,7 @@ public class DefaultItemDataSourceContainer<ITEM, PROPERTY>
 
 	/**
 	 * Init the data source container, configuring the internal {@link ItemStore}.
+	 * @param batchSize batch size
 	 */
 	protected void init(int batchSize) {
 		this.itemStore = new DefaultItemStore<>(this, new ContainerItemDataProvider<>(

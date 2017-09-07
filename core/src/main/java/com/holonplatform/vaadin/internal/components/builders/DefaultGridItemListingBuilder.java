@@ -32,7 +32,6 @@ import com.vaadin.ui.renderers.Renderer;
  * {@link GridItemListingBuilder} implementation.
  * 
  * @param <T> Item data type
- * @param <P> Item property type
  *
  * @since 5.0.0
  */

@@ -30,7 +30,6 @@ import com.holonplatform.vaadin.internal.data.container.BeanItemAdapter;
  * {@link TableItemListingBuilder} implementation.
  * 
  * @param <T> Item data type
- * @param <P> Item property type
  *
  * @since 5.0.0
  */
