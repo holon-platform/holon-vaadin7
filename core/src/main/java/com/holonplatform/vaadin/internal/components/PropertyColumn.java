@@ -16,12 +16,14 @@
 package com.holonplatform.vaadin.internal.components;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Optional;
 
 import com.holonplatform.core.i18n.Localizable;
 import com.holonplatform.vaadin.components.ItemListing;
 import com.holonplatform.vaadin.components.ItemListing.CellStyleGenerator;
 import com.holonplatform.vaadin.components.ItemListing.ColumnAlignment;
+import com.vaadin.data.Validator;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.Field;
@@ -144,12 +146,24 @@ public interface PropertyColumn<T, P> extends Serializable {
 	 * @return the optional editor field
 	 */
 	Optional<Field<?>> getEditor();
-	
+
 	/**
 	 * Set the editor field to use for this property column.
 	 * @param editor Editor field
 	 */
 	void setEditor(Field<?> editor);
+
+	/**
+	 * Add a property editor validator.
+	 * @param validator the validator to add
+	 */
+	void addValidator(Validator validator);
+
+	/**
+	 * Get the property editor validators.
+	 * @return property editor validators, empty if none
+	 */
+	List<Validator> getValidators();
 
 	/**
 	 * Gets whether the column is initially hidden when rendered in table

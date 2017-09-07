@@ -15,6 +15,7 @@
  */
 package com.holonplatform.vaadin.components.builders;
 
+import com.holonplatform.core.Validator;
 import com.holonplatform.core.datastore.DataTarget;
 import com.holonplatform.core.datastore.Datastore;
 import com.holonplatform.core.property.Property;
@@ -22,6 +23,7 @@ import com.holonplatform.core.property.PropertyBox;
 import com.holonplatform.vaadin.components.PropertyListing;
 import com.holonplatform.vaadin.data.ItemDataProvider;
 import com.holonplatform.vaadin.data.ItemDataSource.CommitHandler;
+import com.holonplatform.vaadin.internal.components.ValidatorWrapper;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
@@ -39,6 +41,27 @@ import com.vaadin.ui.renderers.Renderer;
 @SuppressWarnings("rawtypes")
 public interface PropertyListingBuilder<B extends PropertyListingBuilder<B, X>, X extends Component>
 		extends ItemListingBuilder<PropertyBox, Property, PropertyListing, B, X> {
+
+	/**
+	 * Adds a {@link Validator} to the field bound to given <code>property</code> in the item listing editor.
+	 * @param <V> Property type
+	 * @param property Property (not null)
+	 * @param validator Validator to add (not null)
+	 * @return this
+	 */
+	default <V> B withValidator(Property<V> property, Validator<V> validator) {
+		return withValidator(property, new ValidatorWrapper<>(validator));
+	}
+
+	/**
+	 * Adds a {@link com.vaadin.data.Validator} to the field bound to given <code>property</code> in the item listing
+	 * editor.
+	 * @param <V> Property type
+	 * @param property Property (not null)
+	 * @param validator Validator to add (not null)
+	 * @return this
+	 */
+	<V> B withValidator(Property<V> property, com.vaadin.data.Validator validator);
 
 	/**
 	 * Set the items data provider.
@@ -65,7 +88,7 @@ public interface PropertyListingBuilder<B extends PropertyListingBuilder<B, X>, 
 	 */
 	public interface GridPropertyListingBuilder extends PropertyListingBuilder<GridPropertyListingBuilder, Grid>,
 			BaseGridItemListingBuilder<PropertyBox, Property, PropertyListing, GridPropertyListingBuilder> {
-		
+
 		/**
 		 * Set a custom {@link Renderer} for given item property.
 		 * @param <T> Property type
@@ -74,7 +97,7 @@ public interface PropertyListingBuilder<B extends PropertyListingBuilder<B, X>, 
 		 * @return this
 		 */
 		<T> GridPropertyListingBuilder render(Property<T> property, Renderer<? super T> renderer);
-		
+
 		/**
 		 * Set a custom {@link Renderer} and {@link Converter} for given item property.
 		 * @param <T> Property type
@@ -84,7 +107,7 @@ public interface PropertyListingBuilder<B extends PropertyListingBuilder<B, X>, 
 		 * @param renderer Renderer to use
 		 * @return this
 		 */
-		<T, P> GridPropertyListingBuilder render(Property<T> property, Converter<T, P> converter,
+		<T, P> GridPropertyListingBuilder render(Property<T> property, Converter<P, T> converter,
 				Renderer<? super P> renderer);
 
 	}

@@ -31,6 +31,7 @@ import com.holonplatform.vaadin.internal.data.DatastoreCommitHandler;
 import com.holonplatform.vaadin.internal.data.DatastoreItemDataProvider;
 import com.holonplatform.vaadin.internal.data.PropertiesItemIdentifier;
 import com.holonplatform.vaadin.internal.data.container.PropertyBoxItemAdapter;
+import com.vaadin.data.Validator;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.ui.renderers.Renderer;
 
@@ -97,6 +98,19 @@ public class DefaultGridPropertyListingBuilder extends
 
 	/*
 	 * (non-Javadoc)
+	 * @see
+	 * com.holonplatform.vaadin.components.builders.PropertyListingBuilder#withValidator(com.holonplatform.core.property
+	 * .Property, com.vaadin.data.Validator)
+	 */
+	@Override
+	public <V> GridPropertyListingBuilder withValidator(Property<V> property, Validator validator) {
+		ObjectUtils.argumentNotNull(validator, "Validator must be not null");
+		getInstance().getPropertyColumn(property).addValidator(validator);
+		return builder();
+	}
+
+	/*
+	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.builders.PropertyListingBuilder.GridPropertyListingBuilder#render(com.
 	 * holonplatform.core.property.Property, com.vaadin.ui.renderers.Renderer)
 	 */
@@ -113,7 +127,7 @@ public class DefaultGridPropertyListingBuilder extends
 	 * holonplatform.core.property.Property, com.vaadin.data.util.converter.Converter, com.vaadin.ui.renderers.Renderer)
 	 */
 	@Override
-	public <T, P> GridPropertyListingBuilder render(Property<T> property, Converter<T, P> converter,
+	public <T, P> GridPropertyListingBuilder render(Property<T> property, Converter<P, T> converter,
 			Renderer<? super P> renderer) {
 		ObjectUtils.argumentNotNull(property, "Property must be not null");
 		getInstance().getPropertyColumn(property).setConverter(converter);

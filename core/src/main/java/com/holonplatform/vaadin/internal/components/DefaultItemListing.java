@@ -978,7 +978,8 @@ public class DefaultItemListing<T, P> extends CustomComponent
 		requireDataSource().discard();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.ItemListing#isBuffered()
 	 */
 	@Override
@@ -1381,6 +1382,20 @@ public class DefaultItemListing<T, P> extends CustomComponent
 		return Optional.empty();
 	}
 
+	/**
+	 * Setup a renderer field, setting up validators if available.
+	 * @param property Property
+	 * @param field Field
+	 */
+	protected void setupField(P property, Field<?> field) {
+		PropertyColumn<T, P> column = getPropertyColumn(property);
+		if (column != null) {
+			column.getValidators().forEach(v -> {
+				field.addValidator(v);
+			});
+		}
+	}
+
 	// ------- Grid
 
 	/*
@@ -1574,6 +1589,7 @@ public class DefaultItemListing<T, P> extends CustomComponent
 			// If property is a Property, try to render Field using UIContext
 			if (propertyId != null && Property.class.isAssignableFrom(propertyId.getClass())) {
 				Field<?> field = renderField((P) propertyId).map((f) -> {
+					setupField((P) propertyId, f);
 					if (f instanceof CheckBox)
 						f.setCaption(null);
 					bind(f, propertyId);

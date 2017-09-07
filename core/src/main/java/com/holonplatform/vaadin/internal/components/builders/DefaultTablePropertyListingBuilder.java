@@ -31,6 +31,7 @@ import com.holonplatform.vaadin.internal.data.DatastoreCommitHandler;
 import com.holonplatform.vaadin.internal.data.DatastoreItemDataProvider;
 import com.holonplatform.vaadin.internal.data.PropertiesItemIdentifier;
 import com.holonplatform.vaadin.internal.data.container.PropertyBoxItemAdapter;
+import com.vaadin.data.Validator;
 
 /**
  * Defauklt {@link TablePropertyListingBuilder} implementation.
@@ -90,6 +91,19 @@ public class DefaultTablePropertyListingBuilder extends
 		commitHandler(new DatastoreCommitHandler(datastore, dataTarget));
 		dataSource(new DatastoreItemDataProvider(datastore, dataTarget, PropertySet.of(properties)),
 				identifierProperties);
+		return builder();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see
+	 * com.holonplatform.vaadin.components.builders.PropertyListingBuilder#withValidator(com.holonplatform.core.property
+	 * .Property, com.vaadin.data.Validator)
+	 */
+	@Override
+	public <V> TablePropertyListingBuilder withValidator(Property<V> property, Validator validator) {
+		ObjectUtils.argumentNotNull(validator, "Validator must be not null");
+		getInstance().getPropertyColumn(property).addValidator(validator);
 		return builder();
 	}
 
