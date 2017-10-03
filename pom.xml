@@ -41,21 +41,21 @@
 	</developers>
 
 	<issueManagement>
-		<url>https://github.com/holon-platform/holon-vaadin/issues</url>
+		<url>https://github.com/holon-platform/holon-vaadin7/issues</url>
 		<system>GitHub Issues</system>
 	</issueManagement>
 
 	<scm>
-		<connection>scm:git:https://github.com/holon-platform/holon-vaadin.git</connection>
-		<url>https://github.com/holon-platform/holon-vaadin</url>
-		<developerConnection>scm:git:https://github.com/holon-platform/holon-vaadin.git</developerConnection>
+		<connection>scm:git:https://github.com/holon-platform/holon-vaadin7.git</connection>
+		<url>https://github.com/holon-platform/holon-vaadin7</url>
+		<developerConnection>scm:git:https://github.com/holon-platform/holon-vaadin7.git</developerConnection>
 	</scm>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
 		<!-- pre-releases package name -->
-		<bintray.package>holon-vaadin</bintray.package>
+		<bintray.package>holon-vaadin7</bintray.package>
 
 		<!-- Holon core -->
 		<holon.core.version>5.0.0</holon.core.version>
