@@ -54,7 +54,6 @@ import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
 import com.vaadin.data.sort.Sort;
 import com.vaadin.data.util.converter.Converter;
 import com.vaadin.event.ItemClickEvent;
-import com.vaadin.event.SelectionEvent;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FontIcon;
 import com.vaadin.server.ThemeResource;
@@ -512,6 +511,11 @@ public class DefaultItemListing<T, P> extends CustomComponent
 		default:
 			break;
 		}
+
+		return convertSelectionItems(selectedIds);
+	}
+
+	protected Set<T> convertSelectionItems(Collection<Object> selectedIds) {
 		if (selectedIds != null) {
 			Set<T> selected = new HashSet<>(selectedIds.size());
 			selectedIds.forEach(s -> {
@@ -602,10 +606,11 @@ public class DefaultItemListing<T, P> extends CustomComponent
 
 	/**
 	 * Fire registered {@link SelectionListener}s.
+	 * @param event Selection event (not null)
 	 */
-	protected void fireSelectionListeners() {
+	protected void fireSelectionListeners(SelectionEvent<T> event) {
 		for (SelectionListener<T> selectionListener : selectionListeners) {
-			selectionListener.onSelectionChange(this);
+			selectionListener.onSelectionChange(event);
 		}
 	}
 
@@ -614,8 +619,8 @@ public class DefaultItemListing<T, P> extends CustomComponent
 	 * @see com.vaadin.event.SelectionEvent.SelectionListener#select(com.vaadin.event.SelectionEvent)
 	 */
 	@Override
-	public void select(SelectionEvent event) {
-		fireSelectionListeners();
+	public void select(com.vaadin.event.SelectionEvent event) {
+		fireSelectionListeners(new DefaultSelectionEvent<>(convertSelectionItems(event.getSelected())));
 	}
 
 	public void setPropertyColumns(Iterable<P> columns) {
@@ -1806,9 +1811,11 @@ public class DefaultItemListing<T, P> extends CustomComponent
 	@SuppressWarnings("serial")
 	private final ValueChangeListener tableSelectionChangeListener = new ValueChangeListener() {
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public void valueChange(com.vaadin.data.Property.ValueChangeEvent event) {
-			fireSelectionListeners();
+			fireSelectionListeners(new DefaultSelectionEvent<>(
+					convertSelectionItems((Collection<Object>) event.getProperty().getValue())));
 		}
 	};
 

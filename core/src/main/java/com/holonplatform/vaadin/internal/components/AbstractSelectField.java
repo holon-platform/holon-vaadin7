@@ -21,6 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import com.holonplatform.core.i18n.Caption;
 import com.holonplatform.core.i18n.Localizable;
@@ -213,9 +214,22 @@ public abstract class AbstractSelectField<T, S, ITEM> extends AbstractCustomFiel
 		}
 
 		// selection notifier
-		field.addValueChangeListener(e -> fireSelectionListeners());
+		field.addValueChangeListener(e -> fireSelectionListeners(buildSelectionEvent(e)));
 
 		return field;
+	}
+
+	@SuppressWarnings("unchecked")
+	protected SelectionEvent<S> buildSelectionEvent(com.vaadin.data.Property.ValueChangeEvent event) {
+		Object value = event.getProperty().getValue();
+		if (value != null) {
+			if (Set.class.isAssignableFrom(value.getClass())) {
+				return new DefaultSelectionEvent<>((Set<S>) value);
+			} else {
+				return new DefaultSelectionEvent<>((S) value);
+			}
+		}
+		return new DefaultSelectionEvent<>(null);
 	}
 
 	/**
@@ -492,9 +506,10 @@ public abstract class AbstractSelectField<T, S, ITEM> extends AbstractCustomFiel
 
 	/**
 	 * Triggers registered {@link SelectionListener}s.
+	 * @param event Selection event (not null)
 	 */
-	protected void fireSelectionListeners() {
-		selectionListeners.forEach(l -> l.onSelectionChange(this));
+	protected void fireSelectionListeners(SelectionEvent<S> event) {
+		selectionListeners.forEach(l -> l.onSelectionChange(event));
 	}
 
 	/**
