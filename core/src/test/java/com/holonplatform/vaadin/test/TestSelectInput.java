@@ -22,6 +22,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Set;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.holonplatform.vaadin.components.Components;
@@ -29,8 +30,14 @@ import com.holonplatform.vaadin.components.MultiSelect;
 import com.holonplatform.vaadin.components.SingleSelect;
 import com.holonplatform.vaadin.test.data.TestBean;
 import com.holonplatform.vaadin.test.data.TestEnum1;
+import com.vaadin.server.VaadinSession;
 
 public class TestSelectInput {
+	
+	@BeforeClass
+	public static void init() {
+		VaadinSession.setCurrent(null);
+	}
 
 	@Test
 	public void testInitialValue() {
