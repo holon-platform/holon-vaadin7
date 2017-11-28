@@ -137,6 +137,11 @@ public class StringArea extends TextArea implements Input<String>, RequiredIndic
 	 */
 	public void setEmptyValuesAsNull(boolean emptyValuesAsNull) {
 		this.emptyValuesAsNull = emptyValuesAsNull;
+		if (!emptyValuesAsNull && !blankValuesAsNull) {
+			super.setInternalValue("");
+		} else {
+			initWithNullValue();
+		}
 	}
 
 	/**
@@ -155,6 +160,11 @@ public class StringArea extends TextArea implements Input<String>, RequiredIndic
 	 */
 	public void setBlankValuesAsNull(boolean blankValuesAsNull) {
 		this.blankValuesAsNull = blankValuesAsNull;
+		if (!emptyValuesAsNull && !blankValuesAsNull) {
+			super.setInternalValue("");
+		} else {
+			initWithNullValue();
+		}
 	}
 
 	/*

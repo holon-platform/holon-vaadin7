@@ -137,6 +137,11 @@ public class StringField extends TextField implements Input<String>, RequiredInd
 	 */
 	public void setEmptyValuesAsNull(boolean emptyValuesAsNull) {
 		this.emptyValuesAsNull = emptyValuesAsNull;
+		if (!emptyValuesAsNull && !blankValuesAsNull) {
+			super.setInternalValue("");
+		} else {
+			initWithNullValue();
+		}
 	}
 
 	/**
@@ -155,6 +160,11 @@ public class StringField extends TextField implements Input<String>, RequiredInd
 	 */
 	public void setBlankValuesAsNull(boolean blankValuesAsNull) {
 		this.blankValuesAsNull = blankValuesAsNull;
+		if (!emptyValuesAsNull && !blankValuesAsNull) {
+			super.setInternalValue("");
+		} else {
+			initWithNullValue();
+		}
 	}
 
 	/*
