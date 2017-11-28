@@ -15,6 +15,9 @@
  */
 package com.holonplatform.vaadin.components.builders;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 import com.holonplatform.vaadin.components.Input;
@@ -30,5 +33,16 @@ import com.holonplatform.vaadin.components.MultiSelect;
 public interface MultiSelectInputBuilder<T>
 		extends SelectInputBuilder.MultiSelectConfigurator<T, T, MultiSelectInputBuilder<T>>,
 		SelectItemDataSourceBuilder<Set<T>, MultiSelect<T>, T, T, MultiSelectInputBuilder<T>> {
+
+	/**
+	 * Sets the initial values for the field.
+	 * @param values The values to set
+	 * @return this
+	 */
+	@SuppressWarnings("unchecked")
+	default MultiSelectInputBuilder<T> withValue(T... values) {
+		return withValue(
+				(values == null || values.length == 0) ? Collections.emptySet() : new HashSet<>(Arrays.asList(values)));
+	}
 
 }
