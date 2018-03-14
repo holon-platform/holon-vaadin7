@@ -48,7 +48,7 @@ public class DefaultGridItemListingBuilder<T> extends
 		getInstance().setPropertySet(ps);
 		final List<String> nested = new LinkedList<>();
 		ps.forEach(p -> {
-			final String name = p.fullName();
+			final String name = p.relativeName();
 			dataSourceBuilder.withProperty(name, p.getType());
 
 			if (p.getParent().isPresent()) {
