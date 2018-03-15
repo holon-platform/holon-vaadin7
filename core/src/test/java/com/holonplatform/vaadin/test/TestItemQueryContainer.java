@@ -36,7 +36,6 @@ import org.junit.Test;
 
 import com.holonplatform.core.Path;
 import com.holonplatform.core.exceptions.DataAccessException;
-import com.holonplatform.core.internal.query.QueryUtils;
 import com.holonplatform.core.internal.query.filter.EqualFilter;
 import com.holonplatform.core.internal.utils.ConversionUtils;
 import com.holonplatform.core.internal.utils.TestUtils;
@@ -44,8 +43,8 @@ import com.holonplatform.core.property.PathProperty;
 import com.holonplatform.core.property.Property;
 import com.holonplatform.core.property.PropertyBox;
 import com.holonplatform.core.property.PropertySet;
+import com.holonplatform.core.query.ConstantExpression;
 import com.holonplatform.core.query.QueryConfigurationProvider;
-import com.holonplatform.core.query.QueryExpression;
 import com.holonplatform.core.query.QueryFilter;
 import com.holonplatform.core.query.QuerySort;
 import com.holonplatform.core.query.QuerySort.CompositeQuerySort;
@@ -502,7 +501,7 @@ public class TestItemQueryContainer {
 					sb.append(" where ");
 					sb.append(((Path) ef.getLeftOperand()).getName());
 					sb.append(" = '");
-					sb.append(QueryUtils.getConstantExpressionValue((QueryExpression<?>) ef.getRightOperand().get()));
+					sb.append(((ConstantExpression<?>) ef.getRightOperand().get()).getValue());
 					sb.append("'");
 				}
 			}
