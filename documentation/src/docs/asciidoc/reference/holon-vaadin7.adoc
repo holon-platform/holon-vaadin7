@@ -1,4 +1,6 @@
-= Holon Vaadin 7 UI
+= Holon Platform Vaadin 7 Module - Reference manual
+:description: Holon platform Vaadin 7 module reference documentation. \
+The Holon Vaadin 7 module represents the platform support for the Vaadin 7.7.x web applications UI framework and makes available an API compatible with the official Holon Vaadin module API
 :revnumber: {project-version}
 :apidir: ../api/holon-vaadin7
 :linkattrs:
@@ -7,7 +9,7 @@
 :toc: left
 :toclevels: 3
 
-Copyright © 2016-2017
+Copyright © 2016-2018
 
 _Copies of this document may be made for your own use and for distribution to others, provided that you do not charge any fee for such copies and further provided that each copy contains this Copyright Notice, whether distributed in print or electronically._
 
@@ -24,6 +26,17 @@ The main differences between the two modules API are:
 * The `com.vaadin.data.provider.DataProvider` interface is not available in Vaadin 7, so it is not supported as item components data source
 
 See the official link:holon-vaadin.html[Holon Vaadin module] documentation to use Vaadin version *8* instead.
+
+=== Sources and contributions
+
+The Holon Platform *Vaadin 7* module source code is available from the GitHub repository link:https://github.com/holon-platform/holon-vaadin7[https://github.com/holon-platform/holon-vaadin7^].
+
+See the repository `README` file for information about:
+
+* The source code structure.
+* How to build the module artifacts from sources.
+* Where to find the code examples.
+* How to contribute to the module development.
 
 == Obtaining the artifacts
 
