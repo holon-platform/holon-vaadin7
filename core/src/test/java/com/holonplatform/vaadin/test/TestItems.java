@@ -30,7 +30,6 @@ import java.util.concurrent.Callable;
 import org.junit.Test;
 
 import com.holonplatform.core.Expression.InvalidExpressionException;
-import com.holonplatform.core.internal.query.QueryUtils;
 import com.holonplatform.core.internal.query.filter.AndFilter;
 import com.holonplatform.core.internal.query.filter.BetweenFilter;
 import com.holonplatform.core.internal.query.filter.EqualFilter;
@@ -38,14 +37,15 @@ import com.holonplatform.core.internal.query.filter.GreaterFilter;
 import com.holonplatform.core.internal.query.filter.LessFilter;
 import com.holonplatform.core.internal.query.filter.NotFilter;
 import com.holonplatform.core.internal.query.filter.NullFilter;
+import com.holonplatform.core.internal.query.filter.OperationQueryFilter;
 import com.holonplatform.core.internal.query.filter.OrFilter;
 import com.holonplatform.core.internal.query.filter.StringMatchFilter;
 import com.holonplatform.core.internal.utils.TestUtils;
 import com.holonplatform.core.property.PathProperty;
 import com.holonplatform.core.property.PropertyBox;
+import com.holonplatform.core.query.ConstantExpression;
 import com.holonplatform.core.query.QueryFilter;
 import com.holonplatform.core.query.QueryFilter.CompositeQueryFilter;
-import com.holonplatform.core.query.QueryFilter.OperationQueryFilter;
 import com.holonplatform.vaadin.data.ItemDataSource.Configuration;
 import com.holonplatform.vaadin.data.container.PropertyBoxItem;
 import com.holonplatform.vaadin.internal.data.ItemCacheMap;
@@ -219,7 +219,7 @@ public class TestItems {
 		assertTrue(qf instanceof StringMatchFilter);
 		StringMatchFilter lf = (StringMatchFilter) qf;
 		assertFalse(lf.isIgnoreCase());
-		assertEquals("test", QueryUtils.getConstantExpressionValue(lf.getRightOperand().get()));
+		assertEquals("test", ((ConstantExpression<?>) lf.getRightOperand().get()).getValue());
 
 		filter = new SimpleStringFilter(TestData.ID, "test", false, true);
 		qf = ContainerUtils.convertContainerFilter(CFG, filter).orElse(null);
@@ -228,7 +228,7 @@ public class TestItems {
 		assertTrue(qf instanceof StringMatchFilter);
 		lf = (StringMatchFilter) qf;
 		assertFalse(lf.isIgnoreCase());
-		assertEquals("test", QueryUtils.getConstantExpressionValue(lf.getRightOperand().get()));
+		assertEquals("test", ((ConstantExpression<?>) lf.getRightOperand().get()).getValue());
 
 		filter = new SimpleStringFilter(TestData.ID, "test", true, true);
 		qf = ContainerUtils.convertContainerFilter(CFG, filter).orElse(null);
@@ -237,7 +237,7 @@ public class TestItems {
 		assertTrue(qf instanceof StringMatchFilter);
 		lf = (StringMatchFilter) qf;
 		assertTrue(lf.isIgnoreCase());
-		assertEquals("test", QueryUtils.getConstantExpressionValue(lf.getRightOperand().get()));
+		assertEquals("test", ((ConstantExpression<?>) lf.getRightOperand().get()).getValue());
 
 		filter = new Like(TestData.ID, "%test%", false);
 		qf = ContainerUtils.convertContainerFilter(CFG, filter).orElse(null);
@@ -246,14 +246,13 @@ public class TestItems {
 		assertTrue(qf instanceof StringMatchFilter);
 		lf = (StringMatchFilter) qf;
 		assertTrue(lf.isIgnoreCase());
-		assertEquals("test", QueryUtils.getConstantExpressionValue(lf.getRightOperand().get()));
+		assertEquals("test", ((ConstantExpression<?>) lf.getRightOperand().get()).getValue());
 
 		filter = new Equal(TestData.ID, "test");
 		qf = ContainerUtils.convertContainerFilter(CFG, filter).orElse(null);
 		assertNotNull(qf);
 		assertEquals(TestData.ID, ((OperationQueryFilter<?>) qf).getLeftOperand());
 		assertTrue(qf instanceof EqualFilter);
-		assertEquals("test", QueryUtils.getConstantExpressionValue(((EqualFilter<?>) qf).getRightOperand().get()));
 
 		filter = new Compare.Greater(TestData.SEQUENCE, 1);
 		qf = ContainerUtils.convertContainerFilter(CFG, filter).orElse(null);
