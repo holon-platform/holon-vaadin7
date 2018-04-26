@@ -30,12 +30,12 @@ import org.junit.Test;
 import com.holonplatform.core.exceptions.DataAccessException;
 import com.holonplatform.core.query.QueryConfigurationProvider;
 import com.holonplatform.core.query.QueryFilter;
-import com.holonplatform.vaadin.data.ItemDataProvider;
-import com.holonplatform.vaadin.data.ItemDataSource.Configuration;
-import com.holonplatform.vaadin.data.ItemIdentifierProvider;
-import com.holonplatform.vaadin.internal.data.DefaultItemStore;
-import com.holonplatform.vaadin.internal.data.ItemStore;
 import com.holonplatform.vaadin.test.data.TestData;
+import com.holonplatform.vaadin7.data.ItemDataProvider;
+import com.holonplatform.vaadin7.data.ItemIdentifierProvider;
+import com.holonplatform.vaadin7.data.ItemDataSource.Configuration;
+import com.holonplatform.vaadin7.internal.data.DefaultItemStore;
+import com.holonplatform.vaadin7.internal.data.ItemStore;
 import com.vaadin.data.Property;
 
 public class TestItemStore {

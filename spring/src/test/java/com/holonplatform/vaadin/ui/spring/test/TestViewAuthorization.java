@@ -36,13 +36,13 @@ import com.holonplatform.auth.Account.AccountProvider;
 import com.holonplatform.core.i18n.LocalizationContext;
 import com.holonplatform.core.internal.utils.TestUtils;
 import com.holonplatform.spring.EnableBeanContext;
-import com.holonplatform.vaadin.navigator.ViewNavigator;
-import com.holonplatform.vaadin.navigator.ViewNavigator.ViewNavigationException;
-import com.holonplatform.vaadin.spring.config.EnableViewAuthorization;
-import com.holonplatform.vaadin.spring.config.EnableViewNavigator;
-import com.holonplatform.vaadin.spring.utils.AbstractVaadinSpringTest;
 import com.holonplatform.vaadin.ui.spring.test.components.SpringTestUI;
 import com.holonplatform.vaadin.ui.spring.test.components.ViewOne;
+import com.holonplatform.vaadin7.navigator.ViewNavigator;
+import com.holonplatform.vaadin7.navigator.ViewNavigator.ViewNavigationException;
+import com.holonplatform.vaadin7.spring.config.EnableViewAuthorization;
+import com.holonplatform.vaadin7.spring.config.EnableViewNavigator;
+import com.holonplatform.vaadin7.spring.utils.AbstractVaadinSpringTest;
 import com.vaadin.navigator.View;
 
 @ContextConfiguration

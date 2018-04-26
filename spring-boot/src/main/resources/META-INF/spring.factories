@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.holonplatform.vaadin.spring.boot.HolonVaadinAutoConfiguration
+com.holonplatform.vaadin7.spring.boot.HolonVaadinAutoConfiguration

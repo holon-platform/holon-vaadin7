@@ -15,11 +15,11 @@
  */
 package com.holonplatform.vaadin.ui.spring.test.components;
 
-import com.holonplatform.vaadin.navigator.ViewContentProvider;
-import com.holonplatform.vaadin.navigator.annotations.OnShow;
-import com.holonplatform.vaadin.navigator.annotations.ViewParameter;
-import com.holonplatform.vaadin.navigator.annotations.WindowView;
 import com.holonplatform.vaadin.ui.spring.test.TestNavigator;
+import com.holonplatform.vaadin7.navigator.ViewContentProvider;
+import com.holonplatform.vaadin7.navigator.annotations.OnShow;
+import com.holonplatform.vaadin7.navigator.annotations.ViewParameter;
+import com.holonplatform.vaadin7.navigator.annotations.WindowView;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.spring.annotation.SpringView;

@@ -15,8 +15,8 @@
  */
 package com.holonplatform.vaadin.navigator.test.components;
 
-import com.holonplatform.vaadin.navigator.ViewContentProvider;
-import com.holonplatform.vaadin.navigator.annotations.VolatileView;
+import com.holonplatform.vaadin7.navigator.ViewContentProvider;
+import com.holonplatform.vaadin7.navigator.annotations.VolatileView;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Component;

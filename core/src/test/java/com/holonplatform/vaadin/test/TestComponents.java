@@ -21,7 +21,7 @@ import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
-import com.holonplatform.vaadin.internal.components.NumberField;
+import com.holonplatform.vaadin7.internal.components.NumberField;
 
 public class TestComponents {
 

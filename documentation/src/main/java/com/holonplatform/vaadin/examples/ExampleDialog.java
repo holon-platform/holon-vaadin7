@@ -15,8 +15,8 @@
  */
 package com.holonplatform.vaadin.examples;
 
-import com.holonplatform.vaadin.components.Components;
-import com.holonplatform.vaadin.components.Dialog;
+import com.holonplatform.vaadin7.components.Components;
+import com.holonplatform.vaadin7.components.Dialog;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Notification;
 

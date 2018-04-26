@@ -21,11 +21,11 @@ import java.util.Optional;
 
 import com.holonplatform.auth.AuthContext;
 import com.holonplatform.core.i18n.LocalizationContext;
-import com.holonplatform.vaadin.navigator.SubViewContainer;
-import com.holonplatform.vaadin.navigator.ViewNavigator;
-import com.holonplatform.vaadin.navigator.ViewNavigator.ViewNavigationException;
-import com.holonplatform.vaadin.navigator.annotations.SubViewOf;
-import com.holonplatform.vaadin.navigator.annotations.ViewContext;
+import com.holonplatform.vaadin7.navigator.SubViewContainer;
+import com.holonplatform.vaadin7.navigator.ViewNavigator;
+import com.holonplatform.vaadin7.navigator.ViewNavigator.ViewNavigationException;
+import com.holonplatform.vaadin7.navigator.annotations.SubViewOf;
+import com.holonplatform.vaadin7.navigator.annotations.ViewContext;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;

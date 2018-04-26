@@ -26,8 +26,8 @@ import java.util.Optional;
 
 import org.junit.Test;
 
-import com.holonplatform.vaadin.device.DeviceInfo;
-import com.holonplatform.vaadin.internal.test.AbstractVaadinTest;
+import com.holonplatform.vaadin7.device.DeviceInfo;
+import com.holonplatform.vaadin7.internal.test.AbstractVaadinTest;
 import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinServletService;
 import com.vaadin.server.VaadinSession;

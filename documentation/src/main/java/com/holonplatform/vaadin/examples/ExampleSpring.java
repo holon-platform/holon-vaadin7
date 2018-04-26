@@ -20,9 +20,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import com.holonplatform.spring.EnableBeanContext;
-import com.holonplatform.vaadin.navigator.ViewNavigator;
-import com.holonplatform.vaadin.spring.DefaultView;
-import com.holonplatform.vaadin.spring.config.EnableViewNavigator;
+import com.holonplatform.vaadin7.navigator.ViewNavigator;
+import com.holonplatform.vaadin7.spring.DefaultView;
+import com.holonplatform.vaadin7.spring.config.EnableViewNavigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.VaadinRequest;

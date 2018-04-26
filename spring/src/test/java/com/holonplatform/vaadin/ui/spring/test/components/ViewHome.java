@@ -15,8 +15,8 @@
  */
 package com.holonplatform.vaadin.ui.spring.test.components;
 
-import com.holonplatform.vaadin.spring.DefaultView;
 import com.holonplatform.vaadin.ui.spring.test.TestNavigator;
+import com.holonplatform.vaadin7.spring.DefaultView;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.spring.annotation.SpringView;

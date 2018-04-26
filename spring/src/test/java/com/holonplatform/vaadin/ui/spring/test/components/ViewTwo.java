@@ -17,11 +17,11 @@ package com.holonplatform.vaadin.ui.spring.test.components;
 
 import javax.annotation.security.RolesAllowed;
 
-import com.holonplatform.vaadin.navigator.ViewNavigator;
-import com.holonplatform.vaadin.navigator.annotations.OnLeave;
-import com.holonplatform.vaadin.navigator.annotations.OnShow;
-import com.holonplatform.vaadin.navigator.annotations.ViewContext;
 import com.holonplatform.vaadin.ui.spring.test.TestNavigator;
+import com.holonplatform.vaadin7.navigator.ViewNavigator;
+import com.holonplatform.vaadin7.navigator.annotations.OnLeave;
+import com.holonplatform.vaadin7.navigator.annotations.OnShow;
+import com.holonplatform.vaadin7.navigator.annotations.ViewContext;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.spring.annotation.SpringView;

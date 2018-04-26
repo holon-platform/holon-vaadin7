@@ -15,9 +15,9 @@
  */
 package com.holonplatform.vaadin.navigator.test.components;
 
-import com.holonplatform.vaadin.navigator.annotations.OnShow;
-import com.holonplatform.vaadin.navigator.annotations.StatefulView;
-import com.holonplatform.vaadin.navigator.annotations.ViewParameter;
+import com.holonplatform.vaadin7.navigator.annotations.OnShow;
+import com.holonplatform.vaadin7.navigator.annotations.StatefulView;
+import com.holonplatform.vaadin7.navigator.annotations.ViewParameter;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.VerticalLayout;

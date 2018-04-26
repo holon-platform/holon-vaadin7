@@ -38,9 +38,9 @@ import com.holonplatform.core.property.PropertySet;
 import com.holonplatform.core.property.PropertyValueConverter;
 import com.holonplatform.datastore.jdbc.spring.EnableJdbcDatastore;
 import com.holonplatform.jdbc.spring.EnableDataSource;
-import com.holonplatform.vaadin.components.Components;
-import com.holonplatform.vaadin.components.MultiSelect;
-import com.holonplatform.vaadin.components.SingleSelect;
+import com.holonplatform.vaadin7.components.Components;
+import com.holonplatform.vaadin7.components.MultiSelect;
+import com.holonplatform.vaadin7.components.SingleSelect;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestPropertySelect.Config.class)

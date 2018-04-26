@@ -25,11 +25,11 @@ import java.util.Set;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.holonplatform.vaadin.components.Components;
-import com.holonplatform.vaadin.components.MultiSelect;
-import com.holonplatform.vaadin.components.SingleSelect;
 import com.holonplatform.vaadin.test.data.TestBean;
 import com.holonplatform.vaadin.test.data.TestEnum1;
+import com.holonplatform.vaadin7.components.Components;
+import com.holonplatform.vaadin7.components.MultiSelect;
+import com.holonplatform.vaadin7.components.SingleSelect;
 import com.vaadin.server.VaadinSession;
 
 public class TestSelectInput {
