@@ -336,13 +336,17 @@ public class TestViewNavigator extends AbstractVaadinTest {
 		assertTrue(((ViewFive) current).isShowed());
 		assertTrue(((ViewFive) current).isEntered());
 
-		assertTrue(navigator.navigateBack());
+		assertFalse(navigator.navigateBack());
 
-		assertEquals(VIEW_FOUR, navigator.getCurrentViewName());
+		assertEquals(1, ui.getWindows().size());
 
 		navigator.navigateTo(VIEW_ONE, null);
 
 		assertEquals(0, ui.getWindows().size());
+
+		wnd = navigator.navigateInWindow(VIEW_FOUR);
+
+		assertEquals(1, ui.getWindows().size());
 
 	}
 

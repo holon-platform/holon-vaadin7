@@ -279,6 +279,8 @@ public class TestNavigator extends AbstractVaadinSpringTest {
 	@Test
 	public void testNavigateInWindow() {
 
+		navigator.navigateTo(VIEW_ONE);  
+		
 		Window wnd = navigator.navigateInWindow(VIEW_FOUR, null, null);
 
 		assertEquals(VIEW_FOUR, navigator.getCurrentViewName());
@@ -311,8 +313,6 @@ public class TestNavigator extends AbstractVaadinSpringTest {
 		assertTrue(((ViewFive) current).isEntered());
 
 		assertTrue(navigator.navigateBack());
-
-		assertEquals(VIEW_FOUR, navigator.getCurrentViewName());
 
 		navigator.navigateTo(VIEW_ONE, null);
 
