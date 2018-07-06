@@ -20,8 +20,9 @@ import com.holonplatform.vaadin7.components.Input;
 import com.holonplatform.vaadin7.components.ValidationStatusHandler;
 
 /**
- * @author BODSI08
+ * Configurator API for Inputs which supports validation.
  *
+ * @since 5.1.0
  */
 public interface ValidatableInputConfigurator<V> {
 
