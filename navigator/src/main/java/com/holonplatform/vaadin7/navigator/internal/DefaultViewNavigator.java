@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import com.holonplatform.core.internal.utils.ObjectUtils;
+import com.holonplatform.vaadin7.navigator.ViewClassProvider;
 import com.holonplatform.vaadin7.navigator.ViewNavigator;
 import com.holonplatform.vaadin7.navigator.ViewWindowConfigurator;
 import com.vaadin.navigator.NavigationStateManager;
@@ -285,6 +286,16 @@ public class DefaultViewNavigator extends Navigator implements ViewNavigatorAdap
 	 */
 	public void setDefaultViewName(String defaultViewName) {
 		actuator.setDefaultViewName(defaultViewName);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin7.navigator.internal.ViewNavigatorAdapter#setViewClassProvider(com.vaadin.navigator.
+	 * ViewProvider, com.holonplatform.vaadin7.navigator.ViewClassProvider)
+	 */
+	@Override
+	public void setViewClassProvider(ViewProvider provider, ViewClassProvider viewClassProvider) {
+		actuator.setViewClassProvider(provider, viewClassProvider);
 	}
 
 	/*

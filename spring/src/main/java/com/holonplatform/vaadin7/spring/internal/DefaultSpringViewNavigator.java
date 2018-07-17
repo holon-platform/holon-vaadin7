@@ -23,6 +23,7 @@ import org.springframework.context.ApplicationContext;
 
 import com.holonplatform.core.internal.Logger;
 import com.holonplatform.vaadin7.internal.VaadinLogger;
+import com.holonplatform.vaadin7.navigator.ViewClassProvider;
 import com.holonplatform.vaadin7.navigator.ViewNavigator;
 import com.holonplatform.vaadin7.navigator.ViewWindowConfigurator;
 import com.holonplatform.vaadin7.navigator.internal.AbstractNavigatorBuilder;
@@ -30,8 +31,8 @@ import com.holonplatform.vaadin7.navigator.internal.ContainerViewDisplay;
 import com.holonplatform.vaadin7.navigator.internal.NavigatorActuator;
 import com.holonplatform.vaadin7.navigator.internal.SingleContainerViewDisplay;
 import com.holonplatform.vaadin7.navigator.internal.ViewConfiguration;
-import com.holonplatform.vaadin7.navigator.internal.ViewNavigatorAdapter;
 import com.holonplatform.vaadin7.navigator.internal.ViewConfiguration.ViewConfigurationException;
+import com.holonplatform.vaadin7.navigator.internal.ViewNavigatorAdapter;
 import com.holonplatform.vaadin7.spring.AccessDeniedView;
 import com.holonplatform.vaadin7.spring.DefaultView;
 import com.holonplatform.vaadin7.spring.ErrorView;
@@ -365,6 +366,16 @@ public class DefaultSpringViewNavigator extends SpringNavigator implements ViewN
 		return actuator.getViewConfiguration(viewClass);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.holonplatform.vaadin7.navigator.internal.ViewNavigatorAdapter#setViewClassProvider(com.vaadin.navigator.
+	 * ViewProvider, com.holonplatform.vaadin7.navigator.ViewClassProvider)
+	 */
+	@Override
+	public void setViewClassProvider(ViewProvider provider, ViewClassProvider viewClassProvider) {
+		actuator.setViewClassProvider(provider, viewClassProvider);
+	}
+
 	/**
 	 * Configure special type Views
 	 * @throws ViewConfigurationException Error during view configuration
@@ -450,6 +461,16 @@ public class DefaultSpringViewNavigator extends SpringNavigator implements ViewN
 							LOGGER.info("Configured access denied view: " + type.getName());
 						}
 					}
+				}
+			}
+
+			// view class provider
+			if (viewProvider != null) {
+				if (!actuator.getViewClassProvider(viewProvider).isPresent()) {
+					final SpringViewClassProvider springViewClassProvider = new SpringViewClassProvider(
+							applicationContext);
+					springViewClassProvider.init();
+					setViewClassProvider(viewProvider, springViewClassProvider);
 				}
 			}
 
