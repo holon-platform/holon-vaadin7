@@ -18,10 +18,10 @@ package com.holonplatform.vaadin.examples;
 import com.holonplatform.core.property.PathProperty;
 import com.holonplatform.core.property.PropertyBox;
 import com.holonplatform.core.property.PropertySet;
-import com.holonplatform.vaadin.components.Components;
-import com.holonplatform.vaadin.components.PropertyViewForm;
-import com.holonplatform.vaadin.components.PropertyViewGroup;
-import com.holonplatform.vaadin.components.ViewComponent;
+import com.holonplatform.vaadin7.components.Components;
+import com.holonplatform.vaadin7.components.PropertyViewForm;
+import com.holonplatform.vaadin7.components.PropertyViewGroup;
+import com.holonplatform.vaadin7.components.ViewComponent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.FormLayout;
 

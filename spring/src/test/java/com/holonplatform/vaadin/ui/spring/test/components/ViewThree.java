@@ -17,9 +17,9 @@ package com.holonplatform.vaadin.ui.spring.test.components;
 
 import javax.annotation.security.RolesAllowed;
 
-import com.holonplatform.vaadin.navigator.annotations.OnShow;
-import com.holonplatform.vaadin.navigator.annotations.ViewParameter;
 import com.holonplatform.vaadin.ui.spring.test.TestNavigator;
+import com.holonplatform.vaadin7.navigator.annotations.OnShow;
+import com.holonplatform.vaadin7.navigator.annotations.ViewParameter;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.spring.annotation.SpringView;

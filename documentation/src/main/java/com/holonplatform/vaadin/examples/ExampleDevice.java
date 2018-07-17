@@ -15,7 +15,7 @@
  */
 package com.holonplatform.vaadin.examples;
 
-import com.holonplatform.vaadin.device.DeviceInfo;
+import com.holonplatform.vaadin7.device.DeviceInfo;
 
 public class ExampleDevice {
 

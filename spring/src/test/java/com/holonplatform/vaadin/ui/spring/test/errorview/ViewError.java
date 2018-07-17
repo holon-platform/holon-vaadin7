@@ -15,7 +15,7 @@
  */
 package com.holonplatform.vaadin.ui.spring.test.errorview;
 
-import com.holonplatform.vaadin.spring.ErrorView;
+import com.holonplatform.vaadin7.spring.ErrorView;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.spring.annotation.SpringView;

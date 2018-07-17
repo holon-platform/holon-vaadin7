@@ -17,7 +17,7 @@ package com.holonplatform.vaadin.navigator.test.components;
 
 import com.holonplatform.auth.AuthContext;
 import com.holonplatform.core.i18n.LocalizationContext;
-import com.holonplatform.vaadin.navigator.annotations.ViewContext;
+import com.holonplatform.vaadin7.navigator.annotations.ViewContext;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.CssLayout;

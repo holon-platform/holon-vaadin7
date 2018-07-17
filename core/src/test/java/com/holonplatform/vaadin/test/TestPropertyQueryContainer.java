@@ -49,12 +49,12 @@ import com.holonplatform.core.query.QueryFilter;
 import com.holonplatform.core.query.QuerySort;
 import com.holonplatform.datastore.jdbc.spring.EnableJdbcDatastore;
 import com.holonplatform.jdbc.spring.EnableDataSource;
-import com.holonplatform.vaadin.Registration;
-import com.holonplatform.vaadin.data.ItemDataProvider;
-import com.holonplatform.vaadin.data.container.ItemDataSourceContainer;
-import com.holonplatform.vaadin.internal.data.DatastoreItemDataProvider;
-import com.holonplatform.vaadin.internal.data.container.PropertyBoxItemAdapter;
 import com.holonplatform.vaadin.test.data.TestData;
+import com.holonplatform.vaadin7.Registration;
+import com.holonplatform.vaadin7.data.ItemDataProvider;
+import com.holonplatform.vaadin7.data.container.ItemDataSourceContainer;
+import com.holonplatform.vaadin7.internal.data.DatastoreItemDataProvider;
+import com.holonplatform.vaadin7.internal.data.container.PropertyBoxItemAdapter;
 
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)

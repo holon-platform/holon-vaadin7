@@ -19,9 +19,9 @@ import java.time.LocalDate;
 import java.util.Locale;
 
 import com.holonplatform.core.Validator;
-import com.holonplatform.vaadin.components.Components;
-import com.holonplatform.vaadin.components.Input;
-import com.holonplatform.vaadin.components.ValidatableInput;
+import com.holonplatform.vaadin7.components.Components;
+import com.holonplatform.vaadin7.components.Input;
+import com.holonplatform.vaadin7.components.ValidatableInput;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.Notification;

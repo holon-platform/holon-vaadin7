@@ -19,9 +19,9 @@ import com.holonplatform.core.Validator;
 import com.holonplatform.core.property.PathProperty;
 import com.holonplatform.core.property.PropertyBox;
 import com.holonplatform.core.property.PropertySet;
-import com.holonplatform.vaadin.components.Components;
-import com.holonplatform.vaadin.components.PropertyInputForm;
-import com.holonplatform.vaadin.components.PropertyInputGroup;
+import com.holonplatform.vaadin7.components.Components;
+import com.holonplatform.vaadin7.components.PropertyInputForm;
+import com.holonplatform.vaadin7.components.PropertyInputGroup;
 import com.vaadin.ui.FormLayout;
 
 @SuppressWarnings("unused")

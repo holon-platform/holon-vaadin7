@@ -20,8 +20,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Date;
 
-import com.holonplatform.vaadin.navigator.annotations.ViewContext;
-import com.holonplatform.vaadin.navigator.annotations.ViewParameter;
+import com.holonplatform.vaadin7.navigator.annotations.ViewContext;
+import com.holonplatform.vaadin7.navigator.annotations.ViewParameter;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.VerticalLayout;

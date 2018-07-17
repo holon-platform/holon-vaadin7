@@ -33,20 +33,15 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import com.holonplatform.auth.AuthContext;
 import com.holonplatform.auth.Realm;
 import com.holonplatform.core.Context;
 import com.holonplatform.core.i18n.LocalizationContext;
 import com.holonplatform.core.internal.utils.TestUtils;
-import com.holonplatform.vaadin.internal.test.AbstractVaadinTest;
-import com.holonplatform.vaadin.navigator.ViewNavigator;
-import com.holonplatform.vaadin.navigator.ViewNavigator.ViewNavigationException;
-import com.holonplatform.vaadin.navigator.internal.DefaultViewConfigurationCache;
-import com.holonplatform.vaadin.navigator.internal.DefaultViewProvider;
-import com.holonplatform.vaadin.navigator.internal.ViewDisplayUtils;
-import com.holonplatform.vaadin.navigator.internal.ViewNavigationUtils;
 import com.holonplatform.vaadin.navigator.test.components.ContextTestData;
 import com.holonplatform.vaadin.navigator.test.components.NavigatorTestUI;
 import com.holonplatform.vaadin.navigator.test.components.ViewFive;
@@ -56,6 +51,13 @@ import com.holonplatform.vaadin.navigator.test.components.ViewSeven;
 import com.holonplatform.vaadin.navigator.test.components.ViewSix;
 import com.holonplatform.vaadin.navigator.test.components.ViewThree;
 import com.holonplatform.vaadin.navigator.test.components.ViewTwo;
+import com.holonplatform.vaadin7.internal.test.AbstractVaadinTest;
+import com.holonplatform.vaadin7.navigator.ViewNavigator;
+import com.holonplatform.vaadin7.navigator.ViewNavigator.ViewNavigationException;
+import com.holonplatform.vaadin7.navigator.internal.DefaultViewConfigurationCache;
+import com.holonplatform.vaadin7.navigator.internal.DefaultViewProvider;
+import com.holonplatform.vaadin7.navigator.internal.ViewDisplayUtils;
+import com.holonplatform.vaadin7.navigator.internal.ViewNavigationUtils;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.Label;
@@ -78,6 +80,12 @@ public class TestViewNavigator extends AbstractVaadinTest {
 	public TestViewNavigator() {
 		super();
 		viewer = new Panel();
+	}
+
+	@BeforeClass
+	public static void setupLogger() {
+		SLF4JBridgeHandler.removeHandlersForRootLogger();
+		SLF4JBridgeHandler.install();
 	}
 
 	@Test

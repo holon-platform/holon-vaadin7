@@ -17,11 +17,11 @@ package com.holonplatform.vaadin.examples;
 
 import com.holonplatform.core.property.PathProperty;
 import com.holonplatform.core.property.PropertyRendererRegistry;
-import com.holonplatform.vaadin.components.Components;
-import com.holonplatform.vaadin.components.Input;
-import com.holonplatform.vaadin.components.Input.InputFieldPropertyRenderer;
-import com.holonplatform.vaadin.components.Input.InputPropertyRenderer;
-import com.holonplatform.vaadin.components.ViewComponent;
+import com.holonplatform.vaadin7.components.Components;
+import com.holonplatform.vaadin7.components.Input;
+import com.holonplatform.vaadin7.components.ViewComponent;
+import com.holonplatform.vaadin7.components.Input.InputFieldPropertyRenderer;
+import com.holonplatform.vaadin7.components.Input.InputPropertyRenderer;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.TextArea;
 
