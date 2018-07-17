@@ -29,14 +29,14 @@ import com.holonplatform.core.property.Property;
 import com.holonplatform.core.property.PropertyBox;
 import com.holonplatform.core.property.PropertyRenderer;
 import com.holonplatform.core.property.PropertyRendererRegistry.NoSuitableRendererAvailableException;
+import com.holonplatform.core.property.VirtualProperty;
 import com.holonplatform.vaadin7.Registration;
 import com.holonplatform.vaadin7.components.PropertyBinding;
+import com.holonplatform.vaadin7.components.PropertyBinding.PostProcessor;
 import com.holonplatform.vaadin7.components.PropertyValueComponentSource;
 import com.holonplatform.vaadin7.components.PropertyViewGroup;
 import com.holonplatform.vaadin7.components.ValueComponent;
 import com.holonplatform.vaadin7.components.ViewComponent;
-import com.holonplatform.vaadin7.components.PropertyBinding.PostProcessor;
-import com.holonplatform.core.property.VirtualProperty;
 
 /**
  * Default {@link PropertyViewGroup} implementation.
@@ -218,16 +218,9 @@ public class DefaultPropertyViewGroup implements PropertyViewGroup, PropertyValu
 	 * (non-Javadoc)
 	 * @see com.holonplatform.vaadin.components.PropertyViewGroup#getValue()
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public PropertyBox getValue() {
-		final PropertyBox propertyBox = PropertyBox.builder(properties).invalidAllowed(true).build();
-		if (value != null) {
-			properties.forEach(p -> {
-				value.getValueIfPresent(p).ifPresent(v -> propertyBox.setValue(p, v));
-			});
-		}
-		return propertyBox;
+		return value;
 	}
 
 	/*
@@ -319,7 +312,7 @@ public class DefaultPropertyViewGroup implements PropertyViewGroup, PropertyValu
 			}
 			return null;
 		}
-		if (propertyBox.containsValue(property)) {
+		if (propertyBox.contains(property)) {
 			return propertyBox.getValue(property);
 		}
 		return null;

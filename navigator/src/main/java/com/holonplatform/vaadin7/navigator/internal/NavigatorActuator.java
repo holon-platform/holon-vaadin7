@@ -37,8 +37,8 @@ import com.holonplatform.vaadin7.VaadinHttpRequest;
 import com.holonplatform.vaadin7.internal.VaadinLogger;
 import com.holonplatform.vaadin7.navigator.SubViewContainer;
 import com.holonplatform.vaadin7.navigator.ViewNavigator;
-import com.holonplatform.vaadin7.navigator.ViewWindowConfigurator;
 import com.holonplatform.vaadin7.navigator.ViewNavigator.ViewNavigationException;
+import com.holonplatform.vaadin7.navigator.ViewWindowConfigurator;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -483,9 +483,12 @@ public class NavigatorActuator<N extends Navigator & ViewNavigatorAdapter> imple
 				try {
 					// check View was displayed in a window
 					WeakReference<Window> windowRef = viewWindows.get(navigationState);
-					if (windowRef != null && windowRef.get() != null) {
+					if (windowRef != null) {
+						final Window wnd = windowRef.get();
 						// if was displayed in Window, focus the Window
-						windowRef.get().focus();
+						if (wnd != null) {
+							wnd.focus();
+						}
 						// update navigation state and current view
 						String[] vnp = getViewNameAndParameters(navigationState);
 						ViewChangeEvent event = new ViewChangeEvent(navigator, null, null, vnp[0], vnp[1]);
@@ -1021,13 +1024,16 @@ public class NavigatorActuator<N extends Navigator & ViewNavigatorAdapter> imple
 
 			// remove Window
 			WeakReference<Window> windowRef = viewWindows.get(entry.getKey());
-			if (windowRef != null && windowRef.get() != null && windowRef.get().getParent() != null) {
-				// if was displayed in Window, close the Window
-				try {
-					navigateBackOnWindowClose = false;
-					windowRef.get().close();
-				} finally {
-					navigateBackOnWindowClose = true;
+			if (windowRef != null) {
+				final Window wnd = windowRef.get();
+				if (wnd != null && wnd.getParent() != null) {
+					// if was displayed in Window, close the Window
+					try {
+						navigateBackOnWindowClose = false;
+						wnd.close();
+					} finally {
+						navigateBackOnWindowClose = true;
+					}
 				}
 			}
 			viewWindows.remove(entry.getKey());
@@ -1052,13 +1058,16 @@ public class NavigatorActuator<N extends Navigator & ViewNavigatorAdapter> imple
 			String navigationState = getNavigationHistory().pop();
 
 			WeakReference<Window> windowRef = viewWindows.get(navigationState);
-			if (windowRef != null && windowRef.get() != null && windowRef.get().getParent() != null) {
-				// if was displayed in Window, close the Window
-				try {
-					navigateBackOnWindowClose = false;
-					windowRef.get().close();
-				} finally {
-					navigateBackOnWindowClose = true;
+			if (windowRef != null) {
+				final Window wnd = windowRef.get();
+				if (wnd != null && wnd.getParent() != null) {
+					// if was displayed in Window, close the Window
+					try {
+						navigateBackOnWindowClose = false;
+						windowRef.get().close();
+					} finally {
+						navigateBackOnWindowClose = true;
+					}
 				}
 			}
 			viewWindows.remove(navigationState);
@@ -1111,7 +1120,8 @@ public class NavigatorActuator<N extends Navigator & ViewNavigatorAdapter> imple
 			throws ViewNavigationException {
 		if (!suspendAuthenticationCheck) {
 			Authenticate authc = (viewConfiguration != null)
-					? viewConfiguration.getAuthentication().orElse(uiAuthenticate) : uiAuthenticate;
+					? viewConfiguration.getAuthentication().orElse(uiAuthenticate)
+					: uiAuthenticate;
 			if (authc != null) {
 
 				// check auth context
