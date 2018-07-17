@@ -33,7 +33,7 @@ import com.holonplatform.vaadin7.components.SingleSelect;
 import com.vaadin.server.VaadinSession;
 
 public class TestSelectInput {
-	
+
 	@BeforeClass
 	public static void init() {
 		VaadinSession.setCurrent(null);
@@ -61,8 +61,9 @@ public class TestSelectInput {
 		assertNotNull(ss.getValue());
 		assertEquals(new TestBean("2", "b"), ss.getValue());
 
-		MultiSelect<TestBean> ms = Components.input.multiSelect(TestBean.class).addItem(new TestBean("1", "a")).addItem(new TestBean("2", "b"))
-				.addItem(new TestBean("3", "c")).withValue(new TestBean("2", "b"), new TestBean("3", "c")).build();
+		MultiSelect<TestBean> ms = Components.input.multiSelect(TestBean.class).addItem(new TestBean("1", "a"))
+				.addItem(new TestBean("2", "b")).addItem(new TestBean("3", "c"))
+				.withValue(new TestBean("2", "b"), new TestBean("3", "c")).build();
 		assertFalse(ms.isEmpty());
 		final Set<TestBean> mvalues = ms.getValue();
 		assertNotNull(mvalues);

@@ -26,7 +26,7 @@ import org.slf4j.bridge.SLF4JBridgeHandler;
 import com.holonplatform.vaadin7.internal.components.NumberField;
 
 public class TestComponents {
-	
+
 	@BeforeClass
 	public static void setupLogger() {
 		SLF4JBridgeHandler.removeHandlersForRootLogger();

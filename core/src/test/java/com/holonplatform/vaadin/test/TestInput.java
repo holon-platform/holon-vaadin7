@@ -38,7 +38,7 @@ public class TestInput {
 	public static void init() {
 		VaadinSession.setCurrent(null);
 	}
-	
+
 	@Test
 	public void testEmptyInput() {
 

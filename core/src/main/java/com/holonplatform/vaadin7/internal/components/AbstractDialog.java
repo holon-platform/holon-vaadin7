@@ -323,7 +323,8 @@ public abstract class AbstractDialog extends Window implements Dialog, CloseList
 
 	/**
 	 * Closes the dialog
-	 * @param actionId Action id to provide to dialog {@link com.holonplatform.vaadin7.components.Dialog.CloseListener}s.
+	 * @param actionId Action id to provide to dialog
+	 *        {@link com.holonplatform.vaadin7.components.Dialog.CloseListener}s.
 	 */
 	protected void close(Object actionId) {
 		try {

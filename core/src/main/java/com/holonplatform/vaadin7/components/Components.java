@@ -312,8 +312,8 @@ public interface Components {
 	/**
 	 * Gets a builder to create and open a question {@link Dialog} window. The dialog will present by default a
 	 * <em>yes</em> and a <em>no</em> button. Use
-	 * {@link QuestionDialogBuilder#callback(com.holonplatform.vaadin7.components.Dialog.QuestionCallback)} to handle the
-	 * user selected answer.
+	 * {@link QuestionDialogBuilder#callback(com.holonplatform.vaadin7.components.Dialog.QuestionCallback)} to handle
+	 * the user selected answer.
 	 * @return QuestionDialogBuilder
 	 */
 	static QuestionDialogBuilder questionDialog() {
