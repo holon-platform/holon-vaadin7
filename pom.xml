@@ -60,7 +60,7 @@
 		<bintray.package>holon-vaadin7</bintray.package>
 
 		<!-- Holon core -->
-		<holon.core.version>5.2.0-SNAPSHOT</holon.core.version>
+		<holon.core.version>5.2.0-alpha1</holon.core.version>
 		
 		<!-- Vaadin -->
 		<vaadin.version>7.7.13</vaadin.version>
@@ -73,7 +73,7 @@
 		<servlet.version>3.1.0</servlet.version>
 
 		<!-- Test datastores -->
-		<holon.jdbc.version>5.1.2</holon.jdbc.version>
+		<holon.jdbc.version>5.2.0-alpha1</holon.jdbc.version>
 
 	</properties>
 
