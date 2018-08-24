@@ -749,7 +749,8 @@ public interface Components {
 		 * @param properties The property set to use for the listing
 		 * @return Grid {@link PropertyListing} builder
 		 */
-		static <P extends Property<?>> GridPropertyListingBuilder properties(Iterable<P> properties) {
+		@SuppressWarnings("rawtypes")
+		static <P extends Property> GridPropertyListingBuilder properties(Iterable<P> properties) {
 			return PropertyListing.builder(properties);
 		}
 
@@ -780,7 +781,8 @@ public interface Components {
 		 * @param properties The property set to use for the listing
 		 * @return Table {@link PropertyListing} builder
 		 */
-		static <P extends Property<?>> TablePropertyListingBuilder propertiesUsingTable(Iterable<P> properties) {
+		@SuppressWarnings("rawtypes")
+		static <P extends Property> TablePropertyListingBuilder propertiesUsingTable(Iterable<P> properties) {
 			return PropertyListing.tableBuilder(properties);
 		}
 
