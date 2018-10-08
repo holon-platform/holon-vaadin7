@@ -15,19 +15,19 @@
  */
 package com.holonplatform.vaadin.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.holonplatform.core.Expression.InvalidExpressionException;
 import com.holonplatform.core.internal.query.filter.AndFilter;
@@ -40,7 +40,6 @@ import com.holonplatform.core.internal.query.filter.NullFilter;
 import com.holonplatform.core.internal.query.filter.OperationQueryFilter;
 import com.holonplatform.core.internal.query.filter.OrFilter;
 import com.holonplatform.core.internal.query.filter.StringMatchFilter;
-import com.holonplatform.core.internal.utils.TestUtils;
 import com.holonplatform.core.property.PathProperty;
 import com.holonplatform.core.property.PropertyBox;
 import com.holonplatform.core.query.ConstantExpression;
@@ -105,11 +104,6 @@ public class TestItems {
 	};
 
 	@Test
-	public void testWellDefined() {
-		TestUtils.checkUtilityClass(ContainerUtils.class);
-	}
-
-	@Test
 	public void testPropertyBoxItem() {
 		PropertyBox box = PropertyBox.builder(TestData.PROPERTIES).set(TestData.ID, "id")
 				.set(TestData.DESCRIPTION, "des").set(TestData.SEQUENCE, 1).set(TestData.OBSOLETE, true).build();
@@ -158,21 +152,9 @@ public class TestItems {
 		p = item.getItemProperty("invalid");
 		assertNull(p);
 
-		TestUtils.expectedException(UnsupportedOperationException.class, new Runnable() {
+		assertThrows(UnsupportedOperationException.class, () -> item.addItemProperty("invalid", null));
 
-			@Override
-			public void run() {
-				item.addItemProperty("invalid", null);
-			}
-		});
-
-		TestUtils.expectedException(UnsupportedOperationException.class, new Runnable() {
-
-			@Override
-			public void run() {
-				item.removeItemProperty("invalid");
-			}
-		});
+		assertThrows(UnsupportedOperationException.class, () -> item.removeItemProperty("invalid"));
 
 		Item item2 = PropertyBoxItem.create(box);
 
@@ -188,14 +170,7 @@ public class TestItems {
 
 		assertNull(ContainerUtils.getQueryExpression(null, CFG));
 
-		TestUtils.expectedException(InvalidExpressionException.class, new Callable<Void>() {
-
-			@Override
-			public Void call() throws InvalidExpressionException {
-				ContainerUtils.getQueryExpression("invalid", CFG);
-				return null;
-			}
-		});
+		assertThrows(InvalidExpressionException.class, () -> ContainerUtils.getQueryExpression("invalid", CFG));
 	}
 
 	@Test

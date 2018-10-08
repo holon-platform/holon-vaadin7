@@ -15,11 +15,11 @@
  */
 package com.holonplatform.vaadin.navigator.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -33,15 +33,15 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import com.holonplatform.auth.AuthContext;
 import com.holonplatform.auth.Realm;
 import com.holonplatform.core.Context;
 import com.holonplatform.core.i18n.LocalizationContext;
-import com.holonplatform.core.internal.utils.TestUtils;
+import com.holonplatform.test.TestUtils;
 import com.holonplatform.vaadin.navigator.test.components.ContextTestData;
 import com.holonplatform.vaadin.navigator.test.components.NavigatorTestUI;
 import com.holonplatform.vaadin.navigator.test.components.ViewFive;
@@ -82,7 +82,7 @@ public class TestViewNavigator extends AbstractVaadinTest {
 		viewer = new Panel();
 	}
 
-	@BeforeClass
+	@BeforeAll
 	public static void setupLogger() {
 		SLF4JBridgeHandler.removeHandlersForRootLogger();
 		SLF4JBridgeHandler.install();
@@ -299,6 +299,7 @@ public class TestViewNavigator extends AbstractVaadinTest {
 
 	}
 
+	@SuppressWarnings("null")
 	@Test
 	public void testNavigateInWindow() {
 

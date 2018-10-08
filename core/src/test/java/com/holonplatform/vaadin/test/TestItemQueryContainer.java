@@ -15,10 +15,11 @@
  */
 package com.holonplatform.vaadin.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -32,13 +33,12 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.holonplatform.core.Path;
 import com.holonplatform.core.exceptions.DataAccessException;
 import com.holonplatform.core.internal.query.filter.EqualFilter;
 import com.holonplatform.core.internal.utils.ConversionUtils;
-import com.holonplatform.core.internal.utils.TestUtils;
 import com.holonplatform.core.property.PathProperty;
 import com.holonplatform.core.property.Property;
 import com.holonplatform.core.property.PropertyBox;
@@ -350,41 +350,11 @@ public class TestItemQueryContainer {
 
 		assertEquals(1, gic.get());
 
-		TestUtils.expectedException(UnsupportedOperationException.class, new Runnable() {
-
-			@Override
-			public void run() {
-				container2.addItemAfter(null);
-			}
-		});
-		TestUtils.expectedException(UnsupportedOperationException.class, new Runnable() {
-
-			@Override
-			public void run() {
-				container2.addItemAfter(null, null);
-			}
-		});
-		TestUtils.expectedException(UnsupportedOperationException.class, new Runnable() {
-
-			@Override
-			public void run() {
-				container2.addItemAt(0);
-			}
-		});
-		TestUtils.expectedException(UnsupportedOperationException.class, new Runnable() {
-
-			@Override
-			public void run() {
-				container2.addItemAt(0, null);
-			}
-		});
-		TestUtils.expectedException(UnsupportedOperationException.class, new Runnable() {
-
-			@Override
-			public void run() {
-				container2.removeAllItems();
-			}
-		});
+		assertThrows(UnsupportedOperationException.class, () -> container2.addItemAfter(null));
+		assertThrows(UnsupportedOperationException.class, () -> container2.addItemAfter(null, null));
+		assertThrows(UnsupportedOperationException.class, () -> container2.addItemAt(0));
+		assertThrows(UnsupportedOperationException.class, () -> container2.addItemAt(0, null));
+		assertThrows(UnsupportedOperationException.class, () -> container2.removeAllItems());
 
 		container2.discard();
 

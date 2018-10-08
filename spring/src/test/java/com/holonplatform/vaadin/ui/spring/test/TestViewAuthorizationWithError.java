@@ -15,12 +15,15 @@
  */
 package com.holonplatform.vaadin.ui.spring.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Optional;
 
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -28,11 +31,11 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 
 import com.holonplatform.auth.Account;
+import com.holonplatform.auth.Account.AccountProvider;
 import com.holonplatform.auth.AuthContext;
 import com.holonplatform.auth.AuthenticationToken;
 import com.holonplatform.auth.Credentials;
 import com.holonplatform.auth.Realm;
-import com.holonplatform.auth.Account.AccountProvider;
 import com.holonplatform.core.i18n.LocalizationContext;
 import com.holonplatform.spring.EnableBeanContext;
 import com.holonplatform.vaadin.ui.spring.test.components.SpringTestUI;
@@ -82,9 +85,16 @@ public class TestViewAuthorizationWithError extends AbstractVaadinSpringTest {
 
 	}
 
+	@BeforeAll
+	public static void setupLogger() {
+		SLF4JBridgeHandler.removeHandlersForRootLogger();
+		SLF4JBridgeHandler.install();
+	}
+
 	private ViewNavigator navigator;
 	private Panel viewer;
 
+	@BeforeEach
 	@Override
 	public void setup() throws Exception {
 		super.setup();

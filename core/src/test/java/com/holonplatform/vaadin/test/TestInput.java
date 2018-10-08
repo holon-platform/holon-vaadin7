@@ -15,14 +15,14 @@
  */
 package com.holonplatform.vaadin.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import com.holonplatform.vaadin.test.data.TestBean;
 import com.holonplatform.vaadin.test.data.TestEnum1;
@@ -34,7 +34,7 @@ import com.vaadin.server.VaadinSession;
 
 public class TestInput {
 
-	@BeforeClass
+	@BeforeAll
 	public static void init() {
 		VaadinSession.setCurrent(null);
 	}
