@@ -18,6 +18,7 @@ package com.holonplatform.vaadin7.internal.components;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.holonplatform.core.Validator;
 import com.holonplatform.core.Validator.Validatable;
@@ -67,14 +68,9 @@ public final class ValidationUtils implements Serializable {
 		} else {
 			localizedMessage = exception.getMessage();
 		}
-		InvalidValueException[] causes = new InvalidValueException[0];
-		if (exception.getCauses() != null) {
-			causes = new InvalidValueException[exception.getCauses().length];
-			for (int i = 0; i < exception.getCauses().length; i++) {
-				causes[i] = translateValidationException(exception.getCauses()[i]);
-			}
-		}
-		return new InvalidValueException(exception.getMessage(), causes) {
+		List<InvalidValueException> causes = exception.getCauses().stream().map(c -> translateValidationException(c))
+				.collect(Collectors.toList());
+		return new InvalidValueException(exception.getMessage(), causes.toArray(new InvalidValueException[0])) {
 
 			@Override
 			public String getLocalizedMessage() {
@@ -91,16 +87,13 @@ public final class ValidationUtils implements Serializable {
 	 */
 	public static ValidationException translateValidationException(InvalidValueException exception) {
 		ObjectUtils.argumentNotNull(exception, "ValidationException must not be null");
-
-		ValidationException ve = new ValidationException(exception.getLocalizedMessage());
+		List<ValidationException> cs = new LinkedList<>();
 		if (exception.getCauses() != null && exception.getCauses().length > 0) {
-			List<ValidationException> cs = new LinkedList<>();
 			for (InvalidValueException cause : exception.getCauses()) {
 				cs.add(translateValidationException(cause));
 			}
-			ve.setCauses(cs.toArray(new ValidationException[0]));
 		}
-		return ve;
+		return new ValidationException(exception.getLocalizedMessage(), cs);
 	}
 
 }
