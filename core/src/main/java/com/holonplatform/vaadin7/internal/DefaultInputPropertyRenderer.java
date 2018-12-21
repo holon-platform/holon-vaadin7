@@ -52,7 +52,7 @@ public class DefaultInputPropertyRenderer<T> implements PropertyRenderer<Input, 
 	public Input render(Property<? extends T> property) {
 
 		ObjectUtils.argumentNotNull(property, "Property must be not null");
-		
+
 		@SuppressWarnings("unchecked")
 		final Property<T> p = (Property<T>) property;
 
