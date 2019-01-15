@@ -1,10 +1,8 @@
 # Holon Vaadin 7 module
 
-> Latest release: [5.1.2](#obtain-the-artifacts)
+> Latest release: [5.2.0](#obtain-the-artifacts)
 
 This is the __Vaadin 7 compatible__ module of the [Holon Platform](https://holon-platform.com) Vaadin integration, which represents the platform support for the [Vaadin](https://vaadin.com) web applications framework, focusing on the user interface components and data binding features.
-
-See the official [Holon Vaadin module](https://github.com/holon-platform/holon-vaadin) to use __Vaadin 8__ instead.
 
 The module main features are:
 
@@ -18,6 +16,13 @@ See the module [documentation](https://docs.holon-platform.com/current/reference
 Just like any other platform module, this artifact is part of the [Holon Platform](https://holon-platform.com) ecosystem, but can be also used as a _stand-alone_ library.
 
 See the [platform documentation](https://docs.holon-platform.com/current/reference) for further details.
+
+## Other Vaadin platform versions
+
+The Holon Platform Vaadin module si also available for:
+
+* [Vaadin Flow (10+)](https://github.com/holon-platform/holon-vaadin-flow)
+* [Vaadin 8](https://github.com/holon-platform/holon-vaadin)
 
 ## Code structure
 
@@ -47,7 +52,7 @@ _Maven BOM:_
     <dependency>
         <groupId>com.holon-platform.vaadin7</groupId>
         <artifactId>holon-vaadin-bom</artifactId>
-        <version>5.1.2</version>
+        <version>5.2.0</version>
         <type>pom</type>
         <scope>import</scope>
     </dependency>
