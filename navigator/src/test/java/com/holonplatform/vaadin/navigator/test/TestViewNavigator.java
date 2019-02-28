@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
@@ -41,7 +42,6 @@ import com.holonplatform.auth.AuthContext;
 import com.holonplatform.auth.Realm;
 import com.holonplatform.core.Context;
 import com.holonplatform.core.i18n.LocalizationContext;
-import com.holonplatform.test.TestUtils;
 import com.holonplatform.vaadin.navigator.test.components.ContextTestData;
 import com.holonplatform.vaadin.navigator.test.components.NavigatorTestUI;
 import com.holonplatform.vaadin.navigator.test.components.ViewFive;
@@ -54,10 +54,7 @@ import com.holonplatform.vaadin.navigator.test.components.ViewTwo;
 import com.holonplatform.vaadin7.internal.test.AbstractVaadinTest;
 import com.holonplatform.vaadin7.navigator.ViewNavigator;
 import com.holonplatform.vaadin7.navigator.ViewNavigator.ViewNavigationException;
-import com.holonplatform.vaadin7.navigator.internal.DefaultViewConfigurationCache;
 import com.holonplatform.vaadin7.navigator.internal.DefaultViewProvider;
-import com.holonplatform.vaadin7.navigator.internal.ViewDisplayUtils;
-import com.holonplatform.vaadin7.navigator.internal.ViewNavigationUtils;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.Label;
@@ -86,16 +83,6 @@ public class TestViewNavigator extends AbstractVaadinTest {
 	public static void setupLogger() {
 		SLF4JBridgeHandler.removeHandlersForRootLogger();
 		SLF4JBridgeHandler.install();
-	}
-
-	@Test
-	public void testUtils() {
-
-		TestUtils.checkUtilityClass(ViewDisplayUtils.class);
-		TestUtils.checkUtilityClass(ViewNavigationUtils.class);
-
-		TestUtils.checkEnum(DefaultViewConfigurationCache.class);
-
 	}
 
 	@SuppressWarnings("serial")
@@ -192,7 +179,7 @@ public class TestViewNavigator extends AbstractVaadinTest {
 		assertNotNull(viewSix.getLocalizationContext());
 		assertNotNull(viewSix.getAuthContext());
 
-		TestUtils.expectedException(ViewNavigationException.class, () -> navigator.toView(VIEW_FIVE).navigate());
+		assertThrows(ViewNavigationException.class, () -> navigator.toView(VIEW_FIVE).navigate());
 
 		Context.get().threadScope().map(s -> s.remove(LocalizationContext.CONTEXT_KEY));
 		Context.get().threadScope().map(s -> s.remove(AuthContext.CONTEXT_KEY));
@@ -400,7 +387,7 @@ public class TestViewNavigator extends AbstractVaadinTest {
 
 		assertEquals("V", view.getParam());
 
-		TestUtils.expectedException(ViewNavigationException.class, () -> navigator.toView(VIEW_SEVEN).navigate());
+		assertThrows(ViewNavigationException.class, () -> navigator.toView(VIEW_SEVEN).navigate());
 
 		Calendar c = Calendar.getInstance(Locale.ITALIAN);
 		c.set(Calendar.DAY_OF_MONTH, 9);
